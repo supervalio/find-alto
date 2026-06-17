@@ -1,7 +1,14 @@
 "use server";
 
 import { db } from "@/db";
-import { countries, cities, categories, designers, items } from "@/db/schema";
+import {
+  countries,
+  cities,
+  categories,
+  designers,
+  items,
+  itemPhotos,
+} from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -291,4 +298,44 @@ export async function deleteItem(formData: FormData) {
   await db.delete(items).where(eq(items.id, id));
   revalidatePath("/admin/items");
   redirect("/admin/items");
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Item Photos
+   ═══════════════════════════════════════════════════════════ */
+
+export async function addItemPhoto(formData: FormData) {
+  const itemId = parseInt(formData.get("itemId") as string);
+  const url = (formData.get("url") as string)?.trim();
+  const alt = ((formData.get("alt") as string) ?? "").trim();
+
+  if (!itemId || !url) return;
+
+  // Get current max sort_order for this item
+  const existing = await db
+    .select({ maxSort: itemPhotos.sortOrder })
+    .from(itemPhotos)
+    .where(eq(itemPhotos.itemId, itemId))
+    .orderBy(itemPhotos.sortOrder)
+    .all();
+
+  const nextSort =
+    existing.length > 0 ? (existing[existing.length - 1].maxSort ?? 0) + 1 : 0;
+
+  await db.insert(itemPhotos).values({
+    itemId,
+    url,
+    alt,
+    sortOrder: nextSort,
+  });
+
+  revalidatePath("/admin/items");
+}
+
+export async function deleteItemPhoto(formData: FormData) {
+  const id = parseInt(formData.get("id") as string);
+  if (!id) return;
+
+  await db.delete(itemPhotos).where(eq(itemPhotos.id, id));
+  revalidatePath("/admin/items");
 }
