@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { db } from "@/db";
 import {
   countries,
@@ -13,6 +14,30 @@ import { eq, and, count } from "drizzle-orm";
 
 interface Props {
   params: Promise<{ country: string; city: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { country: countrySlug, city: citySlug } = await params;
+  const country = await db
+    .select()
+    .from(countries)
+    .where(eq(countries.slug, countrySlug))
+    .get();
+  const city = country
+    ? await db
+        .select()
+        .from(cities)
+        .where(and(eq(cities.slug, citySlug), eq(cities.countryId, country.id)))
+        .get()
+    : null;
+
+  if (!country || !city) return { title: "Город не найден" };
+
+  return {
+    title: `${city.name} — ${country.name}`,
+    description:
+      city.description || `Локальные дизайнеры в ${city.name}, ${country.name}`,
+  };
 }
 
 export default async function CityPage({ params }: Props) {
