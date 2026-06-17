@@ -1,11 +1,29 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { db } from "@/db";
 import { countries, cities, designers, ads } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 interface Props {
   params: Promise<{ country: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { country: slug } = await params;
+  const country = await db
+    .select()
+    .from(countries)
+    .where(eq(countries.slug, slug))
+    .get();
+
+  if (!country) return { title: "Страна не найдена" };
+
+  return {
+    title: country.name,
+    description:
+      country.description || `Локальные дизайнеры из ${country.name}`,
+  };
 }
 
 export default async function CountryPage({ params }: Props) {
@@ -54,6 +72,15 @@ export default async function CountryPage({ params }: Props) {
         <h1 className="text-3xl font-semibold tracking-tight mb-3">
           {country.name}
         </h1>
+        {country.image && (
+          <div className="w-full aspect-[3/1] rounded-xl bg-zinc-100 overflow-hidden mb-4">
+            <img
+              src={country.image}
+              alt={country.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
         {country.description && (
           <p className="text-zinc-500 text-lg max-w-2xl">
             {country.description}

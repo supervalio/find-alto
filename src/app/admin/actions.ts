@@ -22,10 +22,11 @@ export async function createCountry(formData: FormData) {
   const name = (formData.get("name") as string)?.trim();
   const slug = (formData.get("slug") as string)?.trim();
   const description = ((formData.get("description") as string) ?? "").trim();
+  const image = ((formData.get("image") as string) ?? "").trim();
 
   if (!name || !slug) return;
 
-  await db.insert(countries).values({ name, slug, description });
+  await db.insert(countries).values({ name, slug, description, image });
   revalidatePath("/admin/countries");
   redirect("/admin/countries");
 }
@@ -35,12 +36,13 @@ export async function updateCountry(formData: FormData) {
   const name = (formData.get("name") as string)?.trim();
   const slug = (formData.get("slug") as string)?.trim();
   const description = ((formData.get("description") as string) ?? "").trim();
+  const image = ((formData.get("image") as string) ?? "").trim();
 
   if (!id || !name || !slug) return;
 
   await db
     .update(countries)
-    .set({ name, slug, description })
+    .set({ name, slug, description, image })
     .where(eq(countries.id, id));
   revalidatePath("/admin/countries");
   redirect("/admin/countries");
