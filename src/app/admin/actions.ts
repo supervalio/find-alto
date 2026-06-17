@@ -28,6 +28,7 @@ export async function createCountry(formData: FormData) {
 
   await db.insert(countries).values({ name, slug, description, image });
   revalidatePath("/admin/countries");
+  revalidatePath("/");
   redirect("/admin/countries");
 }
 
@@ -45,6 +46,7 @@ export async function updateCountry(formData: FormData) {
     .set({ name, slug, description, image })
     .where(eq(countries.id, id));
   revalidatePath("/admin/countries");
+  revalidatePath("/");
   redirect("/admin/countries");
 }
 
@@ -54,6 +56,7 @@ export async function deleteCountry(formData: FormData) {
 
   await db.delete(countries).where(eq(countries.id, id));
   revalidatePath("/admin/countries");
+  revalidatePath("/");
   redirect("/admin/countries");
 }
 
