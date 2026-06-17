@@ -1,0 +1,91 @@
+import { NextResponse } from "next/server";
+import { writeFile, mkdir } from "node:fs/promises";
+import { join } from "node:path";
+import { existsSync } from "node:fs";
+import { randomUUID } from "node:crypto";
+
+const UPLOAD_DIR = join(process.cwd(), "public", "uploads");
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+
+/* ── Magic bytes for common image formats ───────────────── */
+const IMAGE_SIGNATURES: Record<string, number[]> = {
+  png: [0x89, 0x50, 0x4e, 0x47],
+  jpg: [0xff, 0xd8, 0xff],
+  gif: [0x47, 0x49, 0x46],
+  webp: [0x52, 0x49, 0x46, 0x46],
+};
+
+function isValidImage(buffer: Buffer): boolean {
+  return Object.values(IMAGE_SIGNATURES).some((sig) =>
+    sig.every((byte, i) => buffer[i] === byte),
+  );
+}
+
+function generateFilename(originalName: string): string {
+  const ext =
+    (originalName.split(".").pop() ?? "jpg")
+      .replace(/[^a-zA-Z0-9]/g, "")
+      .toLowerCase() || "jpg";
+  return `${randomUUID()}.${ext}`;
+}
+
+export async function POST(request: Request) {
+  try {
+    // Ensure upload directory exists
+    if (!existsSync(UPLOAD_DIR)) {
+      await mkdir(UPLOAD_DIR, { recursive: true });
+    }
+
+    const formData = await request.formData();
+    const files = formData.getAll("file") as File[];
+
+    if (files.length === 0) {
+      return NextResponse.json(
+        { error: "No files provided", success: false },
+        { status: 400 },
+      );
+    }
+
+    const uploaded: { url: string }[] = [];
+
+    for (const file of files) {
+      if (!(file instanceof File)) continue;
+
+      // Size limit
+      if (file.size > MAX_FILE_SIZE) continue;
+
+      // MIME type check (client hint)
+      if (!file.type.startsWith("image/")) continue;
+
+      const buffer = Buffer.from(await file.arrayBuffer());
+
+      // Magic-byte validation (defeats MIME spoofing)
+      if (!isValidImage(buffer)) continue;
+
+      const filename = generateFilename(file.name);
+      const filepath = join(UPLOAD_DIR, filename);
+
+      await writeFile(filepath, buffer);
+      uploaded.push({ url: `/uploads/${filename}` });
+    }
+
+    if (uploaded.length === 0) {
+      return NextResponse.json(
+        { error: "No valid image files found", success: false },
+        { status: 400 },
+      );
+    }
+
+    return NextResponse.json({
+      urls: uploaded.map((u) => u.url),
+      url: uploaded[0].url,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Upload error:", error);
+    return NextResponse.json(
+      { error: "Failed to upload files", success: false },
+      { status: 500 },
+    );
+  }
+}
