@@ -2,6 +2,7 @@
 
 import { db } from "@/db";
 import {
+  ads,
   countries,
   cities,
   categories,
@@ -338,4 +339,69 @@ export async function deleteItemPhoto(formData: FormData) {
 
   await db.delete(itemPhotos).where(eq(itemPhotos.id, id));
   revalidatePath("/admin/items");
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Ads
+   ═══════════════════════════════════════════════════════════ */
+
+export async function createAd(formData: FormData) {
+  const name = (formData.get("name") as string)?.trim();
+  const description = ((formData.get("description") as string) ?? "").trim();
+  const photo = ((formData.get("photo") as string) ?? "").trim();
+  const link = ((formData.get("link") as string) ?? "").trim();
+  const linkType = ((formData.get("linkType") as string) ?? "instagram").trim();
+  const countryId = formData.get("countryId")
+    ? parseInt(formData.get("countryId") as string)
+    : null;
+  const cityId = formData.get("cityId")
+    ? parseInt(formData.get("cityId") as string)
+    : null;
+
+  if (!name) return;
+
+  await db.insert(ads).values({
+    name,
+    description,
+    photo,
+    link,
+    linkType,
+    countryId,
+    cityId,
+  });
+  revalidatePath("/admin/ads");
+  redirect("/admin/ads");
+}
+
+export async function updateAd(formData: FormData) {
+  const id = parseInt(formData.get("id") as string);
+  const name = (formData.get("name") as string)?.trim();
+  const description = ((formData.get("description") as string) ?? "").trim();
+  const photo = ((formData.get("photo") as string) ?? "").trim();
+  const link = ((formData.get("link") as string) ?? "").trim();
+  const linkType = ((formData.get("linkType") as string) ?? "instagram").trim();
+  const countryId = formData.get("countryId")
+    ? parseInt(formData.get("countryId") as string)
+    : null;
+  const cityId = formData.get("cityId")
+    ? parseInt(formData.get("cityId") as string)
+    : null;
+
+  if (!id || !name) return;
+
+  await db
+    .update(ads)
+    .set({ name, description, photo, link, linkType, countryId, cityId })
+    .where(eq(ads.id, id));
+  revalidatePath("/admin/ads");
+  redirect("/admin/ads");
+}
+
+export async function deleteAd(formData: FormData) {
+  const id = parseInt(formData.get("id") as string);
+  if (!id) return;
+
+  await db.delete(ads).where(eq(ads.id, id));
+  revalidatePath("/admin/ads");
+  redirect("/admin/ads");
 }
