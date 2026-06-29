@@ -2,6 +2,8 @@ import Link from "next/link";
 import { db } from "@/db";
 import { countries } from "@/db/schema";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   let allCountries: any[] = [];
   let dbError: string | null = null;
@@ -9,8 +11,19 @@ export default async function HomePage() {
   try {
     allCountries = await db.select().from(countries);
   } catch (err: any) {
-    dbError = err?.message || "Unknown database error";
-    console.error("DB connection error:", dbError);
+    // Capture the full error chain for debugging
+    const parts: string[] = [];
+    if (err?.message) parts.push(err.message);
+    if (err?.code) parts.push(`code: ${err.code}`);
+    if (err?.cause?.message) parts.push(`cause: ${err.cause.message}`);
+    if (err?.stack && process.env.NODE_ENV !== "production") {
+      parts.push(err.stack.split("\n").slice(0, 3).join("\n"));
+    }
+    dbError = parts.join(" | ") || "Unknown error";
+    console.error(
+      "DB FULL ERROR:",
+      JSON.stringify(err, Object.getOwnPropertyNames(err)),
+    );
   }
 
   if (dbError) {
@@ -26,7 +39,9 @@ export default async function HomePage() {
           <p className="text-red-700 text-sm font-medium mb-1">
             ⚠️ Ошибка подключения к базе данных:
           </p>
-          <p className="text-red-600 text-xs font-mono break-all">{dbError}</p>
+          <p className="text-red-600 text-xs font-mono break-all whitespace-pre-wrap">
+            {dbError}
+          </p>
         </div>
       </div>
     );
