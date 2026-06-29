@@ -3,20 +3,34 @@ import { db } from "@/db";
 import { countries } from "@/db/schema";
 
 export default async function HomePage() {
-  const allCountries = await db.select().from(countries).all();
+  let allCountries: any[] = [];
+  let dbError = false;
 
-  if (allCountries.length === 0) {
+  try {
+    allCountries = await db.select().from(countries);
+  } catch {
+    dbError = true;
+  }
+
+  if (dbError || allCountries.length === 0) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-24 text-center">
         <h1 className="text-3xl font-semibold tracking-tight mb-4">
-          Shop Locals
+          Find Alto
         </h1>
-        <p className="text-zinc-500 text-lg">
+        <p className="text-zinc-500 text-lg max-w-xl mx-auto">
           Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ.
         </p>
-        <p className="text-zinc-400 mt-8">
-          Контент появится здесь после наполнения базы данных.
-        </p>
+        {dbError ? (
+          <p className="text-amber-600 mt-8 text-sm">
+            ⚠️ База данных пока не подключена — замените DATABASE_URL в
+            .env.local
+          </p>
+        ) : (
+          <p className="text-zinc-400 mt-8">
+            Контент появится здесь после наполнения базы данных.
+          </p>
+        )}
       </div>
     );
   }
@@ -25,7 +39,7 @@ export default async function HomePage() {
     <div className="mx-auto max-w-5xl px-4 py-16">
       <div className="mb-12">
         <h1 className="text-3xl font-semibold tracking-tight mb-3">
-          Shop Locals
+          Find Alto
         </h1>
         <p className="text-zinc-500 text-lg max-w-2xl">
           Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ.

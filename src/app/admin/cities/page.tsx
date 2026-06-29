@@ -16,8 +16,8 @@ export default async function CitiesPage({
   const editId = edit ? parseInt(edit) : null;
 
   const [allCities, allCountries] = await Promise.all([
-    db.select().from(cities).all(),
-    db.select().from(countries).all(),
+    db.select().from(cities),
+    db.select().from(countries),
   ]);
 
   const editing = editId

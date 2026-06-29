@@ -17,8 +17,8 @@ export default async function DesignersPage({
   const editId = edit ? parseInt(edit) : null;
 
   const [allDesigners, allCities] = await Promise.all([
-    db.select().from(designers).all(),
-    db.select().from(cities).all(),
+    db.select().from(designers),
+    db.select().from(cities),
   ]);
 
   const editing = editId

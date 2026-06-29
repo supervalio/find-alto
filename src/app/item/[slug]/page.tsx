@@ -73,7 +73,7 @@ export default async function ItemPage({ params }: Props) {
     .from(itemPhotos)
     .where(eq(itemPhotos.itemId, item.id))
     .orderBy(itemPhotos.sortOrder)
-    .all();
+    ;
 
   /* ── Other items by same designer ───────────────────── */
   const otherItems = await db
@@ -81,7 +81,7 @@ export default async function ItemPage({ params }: Props) {
     .from(items)
     .where(and(eq(items.designerId, designer.id), ne(items.id, item.id)))
     .limit(3)
-    .all();
+    ;
 
   /* ── Helpers ────────────────────────────────────────── */
   const photoCount = photos.length;

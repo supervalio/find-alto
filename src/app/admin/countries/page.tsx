@@ -16,7 +16,7 @@ export default async function CountriesPage({
   const { edit } = await searchParams;
   const editId = edit ? parseInt(edit) : null;
 
-  const allCountries = await db.select().from(countries).all();
+  const allCountries = await db.select().from(countries);
   const editing = editId
     ? (allCountries.find((c) => c.id === editId) ?? null)
     : null;

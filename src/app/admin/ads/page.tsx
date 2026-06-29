@@ -17,9 +17,9 @@ export default async function AdsPage({
   const editId = edit ? parseInt(edit) : null;
 
   const [allAds, allCountries, allCities] = await Promise.all([
-    db.select().from(ads).all(),
-    db.select().from(countries).all(),
-    db.select().from(cities).all(),
+    db.select().from(ads),
+    db.select().from(countries),
+    db.select().from(cities),
   ]);
 
   const editing = editId

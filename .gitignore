@@ -42,6 +42,12 @@ data/
 # user uploads
 public/uploads/
 
+# agent skills (not for git)
+.codewhale/
+
+# temp files
+logo-preview.html
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

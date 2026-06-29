@@ -14,9 +14,9 @@ export default async function ItemsPage({
   const editId = edit ? parseInt(edit) : null;
 
   const [allItems, allDesigners, allCategories] = await Promise.all([
-    db.select().from(items).all(),
-    db.select().from(designers).all(),
-    db.select().from(categories).all(),
+    db.select().from(items),
+    db.select().from(designers),
+    db.select().from(categories),
   ]);
 
   const editing = editId
@@ -29,7 +29,7 @@ export default async function ItemsPage({
         .from(itemPhotos)
         .where(eq(itemPhotos.itemId, editId))
         .orderBy(itemPhotos.sortOrder)
-        .all()
+        
     : [];
 
   function designerName(id: number | null) {
@@ -190,20 +190,9 @@ export default async function ItemsPage({
         </form>
       </details>
 
-      {/* Edit Form */}
+    dit Form */}
       {editing && (
-        <div className="mb-8 rounded-xl border border-zinc-200 bg-white p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">
-              Редактировать: {editing.name}
-            </h2>
-            <a
-              href="/admin/items"
-              className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors"
-            >
-              Отмена
-            </a>
-          </div>
+        ск
           <form action={updateItem} className="space-y-4">
             <input type="hidden" name="id" value={editing.id} />
             <div className="grid grid-cols-2 gap-4">

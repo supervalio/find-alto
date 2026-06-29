@@ -63,7 +63,7 @@ export default async function DesignerPage({ params }: Props) {
     .from(items)
     .leftJoin(categories, eq(items.categoryId, categories.id))
     .where(eq(items.designerId, designer.id))
-    .all();
+    ;
 
   /* Fetch items with photos */
   const itemsWithPhotos = await Promise.all(
@@ -73,7 +73,7 @@ export default async function DesignerPage({ params }: Props) {
         .from(itemPhotos)
         .where(eq(itemPhotos.itemId, row.items.id))
         .orderBy(asc(itemPhotos.sortOrder))
-        .all();
+        ;
       return { ...row, photos };
     }),
   );

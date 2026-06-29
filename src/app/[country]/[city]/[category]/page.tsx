@@ -87,7 +87,7 @@ export default async function CategoryPage({ params }: Props) {
     .where(
       and(eq(items.categoryId, category.id), eq(designers.cityId, city.id)),
     )
-    .all();
+    ;
 
   /* ── Designers who have items here ────────────── */
   const categoryDesigners = await db
@@ -99,7 +99,7 @@ export default async function CategoryPage({ params }: Props) {
     .where(
       and(eq(items.categoryId, category.id), eq(designers.cityId, city.id)),
     )
-    .all();
+    ;
 
   /* ── Display name helper ──────────────────────── */
   const categoryLabel = (cat: {

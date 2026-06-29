@@ -41,20 +41,20 @@ export default async function CountryPage({ params }: Props) {
     .select()
     .from(cities)
     .where(eq(cities.countryId, country.id))
-    .all();
+    ;
 
   const allDesigners = await db
     .select()
     .from(designers)
     .innerJoin(cities, eq(designers.cityId, cities.id))
     .where(eq(cities.countryId, country.id))
-    .all();
+    ;
 
   const countryAds = await db
     .select()
     .from(ads)
     .where(eq(ads.countryId, country.id))
-    .all();
+    ;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">

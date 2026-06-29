@@ -76,13 +76,13 @@ export default async function CityPage({ params }: Props) {
     .innerJoin(designers, eq(items.designerId, designers.id))
     .where(eq(designers.cityId, city.id))
     .groupBy(categories.id)
-    .all();
+    ;
 
   const cityAds = await db
     .select()
     .from(ads)
     .where(eq(ads.cityId, city.id))
-    .all();
+    ;
 
   /* ── Display name helper ─────────────────────── */
   const categoryLabel = (cat: {

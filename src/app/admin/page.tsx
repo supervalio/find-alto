@@ -4,11 +4,11 @@ import { countries, cities, categories, designers, items } from "@/db/schema";
 export default async function AdminDashboard() {
   const [countryList, cityList, categoryList, designerList, itemList] =
     await Promise.all([
-      db.select().from(countries).all(),
-      db.select().from(cities).all(),
-      db.select().from(categories).all(),
-      db.select().from(designers).all(),
-      db.select().from(items).all(),
+      db.select().from(countries),
+      db.select().from(cities),
+      db.select().from(categories),
+      db.select().from(designers),
+      db.select().from(items),
     ]);
 
   const stats = [

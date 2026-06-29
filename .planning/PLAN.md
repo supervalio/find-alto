@@ -1,39 +1,70 @@
 # PLAN.md — Текущий план
 
-**Дата:** 2026-06-17
-**Фаза:** 4 (Launch Prep)
-**Статус:** ✅ ЗАВЕРШЕНА
+**Дата:** 2026-06-29
+**Фаза:** 5 (Infrastructure & DevOps)
+**Статус:** 🔄 В РАБОТЕ
 
-## Все задачи выполнены
+## Выполнено в Фазе 5
 
-| # | Задача | Статус | Коммит |
-|---|--------|--------|--------|
-| 1.1-1.17 | Фаза 1: Foundation | ✅ done | — |
-| 2.1 | PhotoUpload в админку дизайнеров | ✅ done | d87b16c |
-| 2.2 | PhotoUpload в админку вещей | ✅ done | a156c6a |
-| 2.3 | CRUD рекламных блоков (ads) | ✅ done | 9ba9eb1 |
-| 2.4 | Отображение рекламных блоков | ✅ done | dd8432e |
-| 2.5 | Изображения стран | ✅ done | c29fb72 |
-| 2.6 | SEO-метаданные | ✅ done | c29fb72 |
-| 2.7 | 404-страница | ✅ done | c29fb72 |
-| 3.1 | Security Review | ✅ done | 5831c7b |
-| 3.2 | QA-тестирование | ✅ done | — |
-| 3.3 | Исправление багов | ✅ done | 26b718e |
-| 4.1 | Проверка сборки | ✅ done | — |
-| 4.2 | Финальный ревью | ✅ done | — |
+| # | Задача | Статус |
+|---|--------|--------|
+| 5.1 | Миграция SQLite → Supabase PostgreSQL (схема, connection) | ✅ done |
+| 5.3 | GSD-фазы адаптированы под Zed | ✅ done |
 
-## Результат
-- **28/28 требований** выполнены (REQUIREMENTS.md)
-- **15 маршрутов** в продакшен-билде
-- **0 ошибок** TypeScript/ESLint
-- **3 критические уязвимости** исправлены в загрузке файлов
-- **Безопасность**: magic bytes, size limit, crypto UUID
+## Осталось: 5.2 — Настройка Supabase
 
-## Последние коммиты
-- d87b16c feat: integrate PhotoUpload into designer admin panel
-- a156c6a feat: add item photo management in admin (upload/delete)
-- 9ba9eb1 feat: add ads CRUD admin panel with photo upload
-- dd8432e feat: display ad blocks on country and city pages
-- c29fb72 feat: country images, SEO metadata, 404 page
-- 5831c7b fix: secure file upload (magic bytes, size limit, crypto UUID)
-- 26b718e fix: add home page revalidation on country changes
+### 5.2.1 Подключение к проекту
+- [ ] Получить от пользователя Supabase project ID
+- [ ] Настроить `DATABASE_URL` в `.env.local`
+- [ ] Проверить подключение: `SELECT 1`
+
+### 5.2.2 Миграция схемы
+- [ ] Применить Drizzle-миграции к Supabase:
+  ```bash
+  npx drizzle-kit push
+  ```
+- [ ] Проверить создание таблиц: `countries`, `cities`, `categories`, `designers`, `items`, `item_photos`, `ads`
+
+### 5.2.3 Row Level Security
+- [ ] Включить RLS на всех таблицах
+- [ ] Создать политики:
+  - **Публичное чтение** (SELECT) — для всех таблиц (сайт открытый)
+  - **Запись без аутентификации** (INSERT/UPDATE/DELETE) — для админки (пока без auth)
+- [ ] Проверить политики: анонимный SELECT работает, запись работает
+
+### 5.2.4 Seed-данные
+- [ ] Запустить `npx tsx scripts/seed.ts` против Supabase
+- [ ] Проверить загрузку: 4 дизайнера, 8 вещей, 2 рекламных блока
+
+### 5.2.5 Файловое хранилище
+- [ ] Решить: Supabase Storage или локальный `/public/uploads/`
+- [ ] Если Supabase Storage — создать bucket `uploads`, настроить публичный доступ
+- [ ] Обновить `api/upload` для работы с выбранным хранилищем
+
+### 5.2.6 Деплой
+- [ ] Настроить Vercel → подключить к репозиторию
+- [ ] Пробросить `DATABASE_URL` в Vercel environment variables
+- [ ] Проверить продакшен-билд и работу всех страниц
+
+---
+
+## Осталось: 5.4 — Telegram AI-бот
+
+### 5.4.1 DeepSeek-интеграция
+- [ ] Проверить/обновить `my-agent/bot.py`
+- [ ] Настроить DeepSeek API key в `.env`
+- [ ] Реализовать поиск по каталогу через AI (вопросы о дизайнерах, вещах)
+
+### 5.4.2 Деплой бота
+- [ ] Задеплоить бота (например, на Railway / fly.io)
+- [ ] Настроить webhook или polling
+
+---
+
+## Блокеры
+
+| Блокер | Что нужно |
+|--------|-----------|
+| Supabase project ID | Пользователь должен предоставить ID проекта |
+| Vercel-доступ | Нужен доступ к Vercel-аккаунту для деплоя |
+| DeepSeek API key | Нужен ключ для AI-бота |

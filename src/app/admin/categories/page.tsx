@@ -15,7 +15,7 @@ export default async function CategoriesPage({
   const { edit } = await searchParams;
   const editId = edit ? parseInt(edit) : null;
 
-  const allCategories = await db.select().from(categories).all();
+  const allCategories = await db.select().from(categories);
   const editing = editId
     ? allCategories.find((c) => c.id === editId) ?? null
     : null;

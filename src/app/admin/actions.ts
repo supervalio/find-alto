@@ -322,8 +322,7 @@ export async function addItemPhoto(formData: FormData) {
     .select({ maxSort: itemPhotos.sortOrder })
     .from(itemPhotos)
     .where(eq(itemPhotos.itemId, itemId))
-    .orderBy(itemPhotos.sortOrder)
-    .all();
+    .orderBy(itemPhotos.sortOrder);
 
   const nextSort =
     existing.length > 0 ? (existing[existing.length - 1].maxSort ?? 0) + 1 : 0;

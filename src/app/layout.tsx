@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Shop Locals — локальные дизайнеры СНГ",
-    template: "%s | Shop Locals",
+    default: "Find Alto — локальные дизайнеры СНГ",
+    template: "%s | Find Alto",
   },
   description:
     "Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ. Вещи с биографией.",
@@ -36,13 +36,13 @@ export default function RootLayout({
         <header className="border-b border-zinc-200 bg-white">
           <div className="mx-auto max-w-5xl px-4 h-14 flex items-center justify-between">
             <Link href="/" className="font-semibold text-lg tracking-tight">
-              Shop Locals
+              Find Alto
             </Link>
           </div>
         </header>
         <main className="flex-1">{children}</main>
         <footer className="border-t border-zinc-200 bg-white py-8 text-center text-sm text-zinc-500">
-          Shop Locals — вещи с биографией
+          Find Alto — вещи с биографией
         </footer>
       </body>
     </html>
