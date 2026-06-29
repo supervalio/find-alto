@@ -2,9 +2,10 @@ import { drizzle } from "drizzle-orm/neon-serverless";
 import * as schema from "./schema";
 
 const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not set");
-}
 
-// Neon serverless driver uses WebSocket — perfect for Vercel serverless
-export const db = drizzle(connectionString, { schema });
+// Lazy DB — only used by admin pages.
+// Does NOT throw at import time to avoid breaking Vercel builds
+// when DATABASE_URL is not set for public routes.
+export const db = connectionString
+  ? drizzle(connectionString, { schema })
+  : (null as any);
