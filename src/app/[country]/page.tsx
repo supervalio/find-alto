@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { db } from "@/db";
-import { countries, cities, designers, ads } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { supabase } from "@/lib/supabase";
 
 interface Props {
   params: Promise<{ country: string }>;
@@ -11,11 +9,12 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country: slug } = await params;
-  const [country] = await db
-    .select()
-    .from(countries)
-    .where(eq(countries.slug, slug))
+  const { data } = await supabase
+    .from("countries")
+    .select("*")
+    .eq("slug", slug)
     .limit(1);
+  const [country] = data || [];
 
   if (!country) return { title: "Страна не найдена" };
 
@@ -29,27 +28,46 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CountryPage({ params }: Props) {
   const { country: slug } = await params;
 
-  const [country] = await db
-    .select()
-    .from(countries)
-    .where(eq(countries.slug, slug))
+  const { data: countryData, error: countryError } = await supabase
+    .from("countries")
+    .select("*")
+    .eq("slug", slug)
     .limit(1);
+  if (countryError) throw countryError;
+  const [country] = countryData || [];
 
   if (!country) notFound();
 
-  const allCities = await db
-    .select()
-    .from(cities)
-    .where(eq(cities.countryId, country.id));
-  const allDesigners = await db
-    .select()
-    .from(designers)
-    .innerJoin(cities, eq(designers.cityId, cities.id))
-    .where(eq(cities.countryId, country.id));
-  const countryAds = await db
-    .select()
-    .from(ads)
-    .where(eq(ads.countryId, country.id));
+  const { data: allCities, error: citiesError } = await supabase
+    .from("cities")
+    .select("*")
+    .eq("countryId", country.id);
+  if (citiesError) throw citiesError;
+
+  // Get designer IDs for this country via cities
+  const { data: cityIdsData, error: cityIdsError } = await supabase
+    .from("cities")
+    .select("id")
+    .eq("countryId", country.id);
+  if (cityIdsError) throw cityIdsError;
+  const cityIds = (cityIdsData || []).map((c: { id: number }) => c.id);
+
+  let allDesigners: any[] = [];
+  if (cityIds.length > 0) {
+    const { data: designersData, error: designersError } = await supabase
+      .from("designers")
+      .select("*, cities(*)")
+      .in("cityId", cityIds);
+    if (designersError) throw designersError;
+    allDesigners = designersData || [];
+  }
+
+  const { data: countryAds, error: adsError } = await supabase
+    .from("ads")
+    .select("*")
+    .eq("countryId", country.id);
+  if (adsError) throw adsError;
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       {/* Breadcrumb */}
@@ -83,10 +101,10 @@ export default async function CountryPage({ params }: Props) {
       </div>
 
       {/* Ads */}
-      {countryAds.length > 0 && (
+      {(countryAds || []).length > 0 && (
         <section className="mb-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {countryAds.map((ad) => (
+            {(countryAds || []).map((ad: any) => (
               <a
                 key={ad.id}
                 href={ad.link || "#"}
@@ -118,11 +136,11 @@ export default async function CountryPage({ params }: Props) {
       )}
 
       {/* Cities grid */}
-      {allCities.length > 0 && (
+      {(allCities || []).length > 0 && (
         <section className="mb-12">
           <h2 className="text-xl font-semibold mb-4">Города</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {allCities.map((city) => (
+            {(allCities || []).map((city: any) => (
               <Link
                 key={city.id}
                 href={`/${country.slug}/${city.slug}`}
@@ -147,17 +165,17 @@ export default async function CountryPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold mb-4">Дизайнеры</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {allDesigners.map((d) => (
+            {allDesigners.map((d: any) => (
               <Link
-                key={d.designers.id}
-                href={`/designer/${d.designers.slug}`}
+                key={d.id}
+                href={`/designer/${d.slug}`}
                 className="group flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 hover:border-zinc-400 transition-colors"
               >
                 <div className="w-20 h-20 rounded-lg bg-zinc-100 shrink-0 overflow-hidden">
-                  {d.designers.photo ? (
+                  {d.photo ? (
                     <img
-                      src={d.designers.photo}
-                      alt={d.designers.name}
+                      src={d.photo}
+                      alt={d.name}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -168,11 +186,11 @@ export default async function CountryPage({ params }: Props) {
                 </div>
                 <div className="min-w-0">
                   <h3 className="font-medium group-hover:text-zinc-600 transition-colors truncate">
-                    {d.designers.name}
+                    {d.name}
                   </h3>
                   <p className="text-sm text-zinc-500 mt-1">{d.cities.name}</p>
                   <p className="text-sm text-zinc-400 mt-1 line-clamp-2">
-                    {d.designers.bio}
+                    {d.bio}
                   </p>
                 </div>
               </Link>

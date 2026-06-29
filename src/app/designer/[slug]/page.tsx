@@ -1,16 +1,29 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { db } from "@/db";
-import {
-  designers,
-  cities,
-  countries,
-  items,
-  categories,
-  itemPhotos,
-} from "@/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { supabase } from "@/lib/supabase";
+
+/* ── snake_case → camelCase helper ──────────────────────── */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function snakeToCamel<T>(obj: T): T {
+  if (Array.isArray(obj)) return obj.map(snakeToCamel) as unknown as T;
+  if (obj !== null && typeof obj === "object") {
+    return Object.fromEntries(
+      Object.entries(obj).map(([key, value]) => [
+        key.replace(/_([a-z])/g, (_: string, c: string) => c.toUpperCase()),
+        snakeToCamel(value),
+      ]),
+    ) as unknown as T;
+  }
+  return obj;
+}
+
+/* ── Minimal price shape ────────────────────────────────── */
+interface ItemPrice {
+  priceLocal?: number | null;
+  currency?: string | null;
+  priceUsd?: number | null;
+}
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -18,23 +31,23 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const [row] = await db
-    .select({ designer: designers, city: cities, country: countries })
-    .from(designers)
-    .leftJoin(cities, eq(designers.cityId, cities.id))
-    .leftJoin(countries, eq(cities.countryId, countries.id))
-    .where(eq(designers.slug, slug))
+  const { data } = await supabase
+    .from("designers")
+    .select("*, cities(name,slug, countries(name,slug))")
+    .eq("slug", slug)
     .limit(1);
 
-  if (!row) return { title: "Дизайнер не найден" };
+  const dbRow = data?.[0];
+  if (!dbRow) return { title: "Дизайнер не найден" };
 
-  const location = row.city
-    ? `${row.city.name}${row.country ? `, ${row.country.name}` : ""}`
+  const row = snakeToCamel(dbRow);
+  const location = row.cities
+    ? `${row.cities.name}${row.cities.countries ? `, ${row.cities.countries.name}` : ""}`
     : "";
   return {
-    title: row.designer.name,
+    title: row.name,
     description:
-      row.designer.bio ||
+      row.bio ||
       (location ? `Локальный дизайнер из ${location}` : "Локальный дизайнер"),
   };
 }
@@ -43,40 +56,49 @@ export default async function DesignerPage({ params }: Props) {
   const { slug } = await params;
 
   /* ── Fetch designer with city & country ─────────────── */
-  const [row] = await db
-    .select()
-    .from(designers)
-    .leftJoin(cities, eq(designers.cityId, cities.id))
-    .leftJoin(countries, eq(cities.countryId, countries.id))
-    .where(eq(designers.slug, slug))
+  const { data, error } = await supabase
+    .from("designers")
+    .select("*, cities(name,slug, countries(name,slug))")
+    .eq("slug", slug)
     .limit(1);
 
-  if (!row || !row.designers) notFound();
+  if (error) throw error;
 
-  const designer = row.designers;
-  const city = row.cities ?? null;
-  const country = row.countries ?? null;
+  const dbRow = data?.[0];
+  if (!dbRow) notFound();
+
+  const camelRow = snakeToCamel(dbRow);
+  const designer = camelRow;
+  const city = camelRow.cities ?? null;
+  const country = camelRow.cities?.countries ?? null;
 
   /* ── Fetch designer's items with category & photos ──── */
-  const designerItems = await db
-    .select()
-    .from(items)
-    .leftJoin(categories, eq(items.categoryId, categories.id))
-    .where(eq(items.designerId, designer.id));
+  const { data: itemsData } = await supabase
+    .from("items")
+    .select("*, categories(name, name_ru)")
+    .eq("designer_id", designer.id);
+
+  const camelItems = (itemsData ?? []).map(snakeToCamel);
+
   /* Fetch items with photos */
   const itemsWithPhotos = await Promise.all(
-    designerItems.map(async (row) => {
-      const photos = await db
-        .select()
-        .from(itemPhotos)
-        .where(eq(itemPhotos.itemId, row.items.id))
-        .orderBy(asc(itemPhotos.sortOrder));
-      return { ...row, photos };
+    camelItems.map(async (itemRow) => {
+      const { data: photosData } = await supabase
+        .from("item_photos")
+        .select("*")
+        .eq("item_id", itemRow.id)
+        .order("sort_order");
+      const photos = (photosData ?? []).map(snakeToCamel);
+      return {
+        items: itemRow,
+        categories: itemRow.categories ?? null,
+        photos,
+      };
     }),
   );
 
   /* ── Helpers ─────────────────────────────────────────── */
-  const priceLabel = (item: typeof items.$inferSelect) => {
+  const priceLabel = (item: ItemPrice) => {
     if (item.priceLocal && item.currency) {
       return `${item.priceLocal} ${item.currency}`;
     }

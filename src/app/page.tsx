@@ -1,29 +1,29 @@
 import Link from "next/link";
-import { db } from "@/db";
-import { countries } from "@/db/schema";
+import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
+interface Country {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  image: string | null;
+}
+
 export default async function HomePage() {
-  let allCountries: any[] = [];
+  let allCountries: Country[] = [];
   let dbError: string | null = null;
 
   try {
-    allCountries = await db.select().from(countries);
+    const { data, error } = await supabase
+      .from("countries")
+      .select("*")
+      .order("name");
+    if (error) throw error;
+    allCountries = data || [];
   } catch (err: any) {
-    // Capture the full error chain for debugging
-    const parts: string[] = [];
-    if (err?.message) parts.push(err.message);
-    if (err?.code) parts.push(`code: ${err.code}`);
-    if (err?.cause?.message) parts.push(`cause: ${err.cause.message}`);
-    if (err?.stack && process.env.NODE_ENV !== "production") {
-      parts.push(err.stack.split("\n").slice(0, 3).join("\n"));
-    }
-    dbError = parts.join(" | ") || "Unknown error";
-    console.error(
-      "DB FULL ERROR:",
-      JSON.stringify(err, Object.getOwnPropertyNames(err)),
-    );
+    dbError = err?.message || "Unknown database error";
   }
 
   if (dbError) {
@@ -39,9 +39,7 @@ export default async function HomePage() {
           <p className="text-red-700 text-sm font-medium mb-1">
             ⚠️ Ошибка подключения к базе данных:
           </p>
-          <p className="text-red-600 text-xs font-mono break-all whitespace-pre-wrap">
-            {dbError}
-          </p>
+          <p className="text-red-600 text-xs font-mono break-all">{dbError}</p>
         </div>
       </div>
     );

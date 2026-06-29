@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { db } from "@/db";
-import { countries, cities, designers, items, categories } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { supabase } from "@/lib/supabase";
 
 interface Props {
   params: Promise<{ country: string; city: string; category: string }>;
@@ -15,23 +13,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     city: citySlug,
     category: categorySlug,
   } = await params;
-  const [country] = await db
-    .select()
-    .from(countries)
-    .where(eq(countries.slug, countrySlug))
+  const { data: countryData } = await supabase
+    .from("countries")
+    .select("*")
+    .eq("slug", countrySlug)
     .limit(1);
-  const [city] = country
-    ? await db
-        .select()
-        .from(cities)
-        .where(and(eq(cities.slug, citySlug), eq(cities.countryId, country.id)))
-        .limit(1)
-    : [null];
-  const [category] = await db
-    .select()
-    .from(categories)
-    .where(eq(categories.slug, categorySlug))
+  const country = (countryData || [])[0] || null;
+
+  let city = null;
+  if (country) {
+    const { data: cityData } = await supabase
+      .from("cities")
+      .select("*")
+      .eq("slug", citySlug)
+      .eq("countryId", country.id)
+      .limit(1);
+    city = (cityData || [])[0] || null;
+  }
+
+  const { data: categoryData } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("slug", categorySlug)
     .limit(1);
+  const [category] = categoryData || [];
 
   if (!country || !city || !category) return { title: "Категория не найдена" };
 
@@ -50,53 +55,72 @@ export default async function CategoryPage({ params }: Props) {
   } = await params;
 
   /* ── Validate country ─────────────────────────── */
-  const [country] = await db
-    .select()
-    .from(countries)
-    .where(eq(countries.slug, countrySlug))
+  const { data: countryData, error: countryError } = await supabase
+    .from("countries")
+    .select("*")
+    .eq("slug", countrySlug)
     .limit(1);
+  if (countryError) throw countryError;
+  const [country] = countryData || [];
 
   if (!country) notFound();
 
   /* ── Validate city (must belong to country) ──── */
-  const [city] = await db
-    .select()
-    .from(cities)
-    .where(and(eq(cities.slug, citySlug), eq(cities.countryId, country.id)))
+  const { data: cityData, error: cityError } = await supabase
+    .from("cities")
+    .select("*")
+    .eq("slug", citySlug)
+    .eq("countryId", country.id)
     .limit(1);
+  if (cityError) throw cityError;
+  const [city] = cityData || [];
 
   if (!city) notFound();
 
   /* ── Validate category ────────────────────────── */
-  const [category] = await db
-    .select()
-    .from(categories)
-    .where(eq(categories.slug, categorySlug))
+  const { data: categoryData, error: categoryError } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("slug", categorySlug)
     .limit(1);
+  if (categoryError) throw categoryError;
+  const [category] = categoryData || [];
 
   if (!category) notFound();
 
   /* ── Items in this category + city ────────────── */
-  const categoryItems = await db
-    .select({
-      item: items,
-      designer: designers,
-    })
-    .from(items)
-    .innerJoin(designers, eq(items.designerId, designers.id))
-    .where(
-      and(eq(items.categoryId, category.id), eq(designers.cityId, city.id)),
-    );
-  /* ── Designers who have items here ────────────── */
-  const categoryDesigners = await db
-    .selectDistinct({
-      designer: designers,
-    })
-    .from(designers)
-    .innerJoin(items, eq(items.designerId, designers.id))
-    .where(
-      and(eq(items.categoryId, category.id), eq(designers.cityId, city.id)),
-    );
+  const { data: cityDesigners, error: desErr } = await supabase
+    .from("designers")
+    .select("id")
+    .eq("cityId", city.id);
+  if (desErr) throw desErr;
+  const designerIds = (cityDesigners || []).map((d: { id: number }) => d.id);
+
+  let categoryItems: any[] = [];
+  let categoryDesigners: any[] = [];
+  if (designerIds.length > 0) {
+    const { data: itemsData, error: itemsErr } = await supabase
+      .from("items")
+      .select("*, designers(*)")
+      .eq("categoryId", category.id)
+      .in("designerId", designerIds);
+    if (itemsErr) throw itemsErr;
+
+    categoryItems = (itemsData || []).map((row: any) => ({
+      item: row,
+      designer: row.designers,
+    }));
+
+    // Deduplicate designers
+    const seen = new Set<number>();
+    for (const row of itemsData || []) {
+      if (row.designers && !seen.has(row.designers.id)) {
+        seen.add(row.designers.id);
+        categoryDesigners.push({ designer: row.designers });
+      }
+    }
+  }
+
   /* ── Display name helper ──────────────────────── */
   const categoryLabel = (cat: {
     name: string;

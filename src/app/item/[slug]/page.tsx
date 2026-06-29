@@ -1,16 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { db } from "@/db";
-import {
-  items,
-  itemPhotos,
-  designers,
-  cities,
-  countries,
-  categories,
-} from "@/db/schema";
-import { eq, and, ne } from "drizzle-orm";
+import { supabase } from "@/lib/supabase";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -18,30 +9,29 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const [row] = await db
-    .select({
-      item: items,
-      designer: designers,
-      category: categories,
-      city: cities,
-      country: countries,
-    })
-    .from(items)
-    .innerJoin(designers, eq(items.designerId, designers.id))
-    .innerJoin(categories, eq(items.categoryId, categories.id))
-    .innerJoin(cities, eq(designers.cityId, cities.id))
-    .innerJoin(countries, eq(cities.countryId, countries.id))
-    .where(eq(items.slug, slug))
+  const { data } = await supabase
+    .from("items")
+    .select(
+      "name, description, designers(name, cities(name,slug, countries(name,slug))), categories(name, name_ru)",
+    )
+    .eq("slug", slug)
     .limit(1);
 
-  if (!row) return { title: "Вещь не найдена" };
+  const dbRow = data?.[0];
+  if (!dbRow) return { title: "Вещь не найдена" };
 
-  const categoryLabel = row.category.nameRu || row.category.name;
+  // Supabase returns nested relations as single-element arrays
+  const designer = (dbRow.designers as any[])?.[0] || {};
+  const category = (dbRow.categories as any[])?.[0] || {};
+  const city = designer?.cities?.[0] || {};
+  const country = city?.countries?.[0] || {};
+
+  const categoryLabel = category.name_ru || category.name;
   return {
-    title: row.item.name,
+    title: dbRow.name,
     description:
-      row.item.description ||
-      `${categoryLabel} от ${row.designer.name} — ${row.city.name}, ${row.country.name}`,
+      dbRow.description ||
+      `${categoryLabel} от ${designer.name} — ${city.name}, ${country.name}`,
   };
 }
 
@@ -49,36 +39,43 @@ export default async function ItemPage({ params }: Props) {
   const { slug } = await params;
 
   /* ── Fetch item with all joins ──────────────────────── */
-  const [row] = await db
-    .select()
-    .from(items)
-    .innerJoin(designers, eq(items.designerId, designers.id))
-    .innerJoin(categories, eq(items.categoryId, categories.id))
-    .innerJoin(cities, eq(designers.cityId, cities.id))
-    .innerJoin(countries, eq(cities.countryId, countries.id))
-    .where(eq(items.slug, slug))
+  const { data, error } = await supabase
+    .from("items")
+    .select(
+      "*, designers(*, cities(name,slug, countries(name,slug))), categories(name, name_ru)",
+    )
+    .eq("slug", slug)
     .limit(1);
 
-  if (!row) notFound();
+  if (error) throw error;
 
-  const item = row.items;
-  const designer = row.designers;
-  const category = row.categories;
-  const city = row.cities;
-  const country = row.countries;
+  const dbRow = data?.[0];
+  if (!dbRow) notFound();
+
+  // Supabase nests relations as arrays — pick first element from each
+  const item = dbRow;
+  const designer = ((dbRow.designers as any[]) || [])[0] || {};
+  const category = ((dbRow.categories as any[]) || [])[0] || {};
+  const city = (designer.cities || [])[0] || {};
+  const country = (city.countries || [])[0] || {};
 
   /* ── Fetch photos ───────────────────────────────────── */
-  const photos = await db
-    .select()
-    .from(itemPhotos)
-    .where(eq(itemPhotos.itemId, item.id))
-    .orderBy(itemPhotos.sortOrder);
+  const { data: photosData } = await supabase
+    .from("item_photos")
+    .select("*")
+    .eq("item_id", item.id)
+    .order("sort_order");
+  const photos = photosData ?? [];
+
   /* ── Other items by same designer ───────────────────── */
-  const otherItems = await db
-    .select()
-    .from(items)
-    .where(and(eq(items.designerId, designer.id), ne(items.id, item.id)))
+  const { data: otherItemsData } = await supabase
+    .from("items")
+    .select("*")
+    .neq("id", item.id)
+    .eq("designer_id", designer.id)
     .limit(3);
+  const otherItems = otherItemsData ?? [];
+
   /* ── Helpers ────────────────────────────────────────── */
   const photoCount = photos.length;
 
@@ -160,7 +157,7 @@ export default async function ItemPage({ params }: Props) {
         <div className="flex flex-wrap items-center gap-3 mb-3">
           <h1 className="text-3xl font-semibold tracking-tight">{item.name}</h1>
           <span className="inline-flex items-center rounded-full bg-zinc-100 px-3 py-0.5 text-sm text-zinc-600">
-            {category.nameRu || category.name}
+            {category.name_ru || category.name}
           </span>
         </div>
         <p className="text-zinc-500">
@@ -181,18 +178,18 @@ export default async function ItemPage({ params }: Props) {
           <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-2">
             Цена
           </h2>
-          {item.priceLocal != null && item.priceLocal > 0 ? (
+          {item.price_local != null && item.price_local > 0 ? (
             <div>
               <p className="text-2xl font-semibold tabular-nums">
-                {item.priceLocal.toLocaleString("ru-RU")}{" "}
+                {item.price_local.toLocaleString("ru-RU")}{" "}
                 <span className="text-base font-normal text-zinc-500">
                   {item.currency || "USD"}
                 </span>
               </p>
-              {item.priceUsd != null && item.priceUsd > 0 && (
+              {item.price_usd != null && item.price_usd > 0 && (
                 <p className="text-sm text-zinc-400 mt-1 tabular-nums">
                   ≈{" "}
-                  {item.priceUsd.toLocaleString("en-US", {
+                  {item.price_usd.toLocaleString("en-US", {
                     style: "currency",
                     currency: "USD",
                   })}
@@ -308,9 +305,9 @@ export default async function ItemPage({ params }: Props) {
                 {other.material && (
                   <p className="text-sm text-zinc-500 mt-1">{other.material}</p>
                 )}
-                {other.priceLocal != null && other.priceLocal > 0 && (
+                {other.price_local != null && other.price_local > 0 && (
                   <p className="text-sm text-zinc-500 mt-1 tabular-nums">
-                    {other.priceLocal.toLocaleString("ru-RU")}{" "}
+                    {other.price_local.toLocaleString("ru-RU")}{" "}
                     {other.currency || "USD"}
                   </p>
                 )}

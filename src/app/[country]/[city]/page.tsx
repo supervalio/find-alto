@@ -1,16 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { db } from "@/db";
-import {
-  countries,
-  cities,
-  designers,
-  items,
-  categories,
-  ads,
-} from "@/db/schema";
-import { eq, and, count } from "drizzle-orm";
+import { supabase } from "@/lib/supabase";
 
 interface Props {
   params: Promise<{ country: string; city: string }>;
@@ -18,18 +9,23 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country: countrySlug, city: citySlug } = await params;
-  const [country] = await db
-    .select()
-    .from(countries)
-    .where(eq(countries.slug, countrySlug))
+  const { data: countryData } = await supabase
+    .from("countries")
+    .select("*")
+    .eq("slug", countrySlug)
     .limit(1);
-  const [city] = country
-    ? await db
-        .select()
-        .from(cities)
-        .where(and(eq(cities.slug, citySlug), eq(cities.countryId, country.id)))
-        .limit(1)
-    : [null];
+  const country = (countryData || [])[0] || null;
+
+  let city = null;
+  if (country) {
+    const { data: cityData } = await supabase
+      .from("cities")
+      .select("*")
+      .eq("slug", citySlug)
+      .eq("countryId", country.id)
+      .limit(1);
+    city = (cityData || [])[0] || null;
+  }
 
   if (!country || !city) return { title: "Город не найден" };
 
@@ -44,44 +40,77 @@ export default async function CityPage({ params }: Props) {
   const { country: countrySlug, city: citySlug } = await params;
 
   /* ── Validate country ─────────────────────────── */
-  const [country] = await db
-    .select()
-    .from(countries)
-    .where(eq(countries.slug, countrySlug))
+  const { data: countryData, error: countryError } = await supabase
+    .from("countries")
+    .select("*")
+    .eq("slug", countrySlug)
     .limit(1);
+  if (countryError) throw countryError;
+  const [country] = countryData || [];
 
   if (!country) notFound();
 
   /* ── Validate city (must belong to country) ──── */
-  const [city] = await db
-    .select()
-    .from(cities)
-    .where(and(eq(cities.slug, citySlug), eq(cities.countryId, country.id)))
+  const { data: cityData, error: cityError } = await supabase
+    .from("cities")
+    .select("*")
+    .eq("slug", citySlug)
+    .eq("countryId", country.id)
     .limit(1);
+  if (cityError) throw cityError;
+  const [city] = cityData || [];
 
   if (!city) notFound();
 
   /* ── Categories with items in this city ───────── */
-  const cityCategories = await db
-    .select({
-      id: categories.id,
-      name: categories.name,
-      slug: categories.slug,
-      nameRu: categories.nameRu,
-      nameEn: categories.nameEn,
-      itemCount: count(items.id),
-    })
-    .from(categories)
-    .innerJoin(items, eq(categories.id, items.categoryId))
-    .innerJoin(designers, eq(items.designerId, designers.id))
-    .where(eq(designers.cityId, city.id))
-    .groupBy(categories.id);
-  const cityAds = await db.select().from(ads).where(eq(ads.cityId, city.id));
+  const { data: cityDesigners, error: desErr } = await supabase
+    .from("designers")
+    .select("id")
+    .eq("cityId", city.id);
+  if (desErr) throw desErr;
+  const designerIds = (cityDesigners || []).map((d: { id: number }) => d.id);
+
+  let cityCategories: any[] = [];
+  if (designerIds.length > 0) {
+    const { data: itemsData, error: itemsErr } = await supabase
+      .from("items")
+      .select("categoryId, categories(id, name, slug, name_ru, name_en)")
+      .in("designerId", designerIds);
+    if (itemsErr) throw itemsErr;
+
+    // Group by category and count
+    const catMap = new Map<number, any>();
+    for (const item of itemsData || []) {
+      // Supabase returns nested relations as arrays
+      const catArr = item.categories as any[] | null;
+      if (!catArr || catArr.length === 0) continue;
+      const cat = catArr[0];
+      if (!catMap.has(cat.id)) {
+        catMap.set(cat.id, {
+          id: cat.id,
+          name: cat.name,
+          slug: cat.slug,
+          nameRu: cat.name_ru,
+          nameEn: cat.name_en,
+          itemCount: 0,
+        });
+      }
+      catMap.get(cat.id).itemCount++;
+    }
+    cityCategories = Array.from(catMap.values());
+  }
+
+  const { data: cityAds, error: adsError } = await supabase
+    .from("ads")
+    .select("*")
+    .eq("cityId", city.id);
+  if (adsError) throw adsError;
+
   /* ── Display name helper ─────────────────────── */
   const categoryLabel = (cat: {
     name: string;
-    nameRu: string;
-    nameEn: string;
+    nameRu?: string;
+    nameEn?: string;
   }) => cat.nameRu || cat.nameEn || cat.name;
 
   return (
@@ -113,10 +142,10 @@ export default async function CityPage({ params }: Props) {
       </div>
 
       {/* Ads */}
-      {cityAds.length > 0 && (
+      {(cityAds || []).length > 0 && (
         <section className="mb-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {cityAds.map((ad) => (
+            {(cityAds || []).map((ad: any) => (
               <a
                 key={ad.id}
                 href={ad.link || "#"}
