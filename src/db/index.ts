@@ -9,8 +9,18 @@ let _db: NodePgDatabase<typeof schema> | null = null;
 
 function getDb(): NodePgDatabase<typeof schema> {
   if (!_db) {
+    const connectionString = process.env.DATABASE_URL!;
+    // Supabase requires SSL for all connections
+    const ssl = connectionString.includes("pooler.supabase.co")
+      ? { rejectUnauthorized: false }
+      : undefined;
     const pool = new Pool({
-      connectionString: process.env.DATABASE_URL!,
+      connectionString,
+      ssl,
+      // Vercel serverless: limit connections
+      max: 5,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 10000,
     });
     _db = drizzle(pool, { schema });
   }

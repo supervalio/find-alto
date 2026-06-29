@@ -1,4 +1,4 @@
-# Handoff — Find Alto (2026-06-29, thread #2)
+# Handoff — Find Alto (2026-06-29, thread #3)
 
 > 💡 **Инструкция для нового треда:** этот файл — точка входа. Прочитай его → сразу поймёшь состояние проекта.
 
@@ -7,7 +7,7 @@
 **Find Alto** — гид по локальным дизайнерам одежды из стран СНГ. Next.js 16 + Supabase PostgreSQL + Drizzle ORM + Tailwind 4.
 Гео-навигация: Страна → Город → Категория → Вещь. Плюс профили дизайнеров и админка (без аутентификации, открытая).
 
-Репозиторий: `https://github.com/supervalio/find-alto` (публичный, 13 коммитов)
+Репозиторий: `https://github.com/supervalio/find-alto` (14 коммитов)
 Локальный путь: `/Users/valio/codewhale_projects/find-alto/`
 
 ## Текущее состояние
@@ -15,51 +15,56 @@
 ### Фаза разработки: 5 (Infrastructure)
 - Фазы 1-4 завершены ✅ (28/28 требований, MVP готов)
 - 5.1 Миграция SQLite→Supabase ✅
-- 5.2 Настройка Supabase (RLS, ключи) 🔄 ждёт Supabase project ID
+- 5.2 Настройка Supabase ✅ (таблицы, RLS, seed-данные, Storage, API загрузки)
 - 5.3 GSD-фазы ✅
-- 5.4 Telegram AI-бот 🔄 позже
-- Фаза 6 (Монетизация) — в ROADMAP, без плана
+- 5.4 Telegram AI-бот ⬜ позже
+- **Деплой на Vercel** 🔄 в процессе — переменные окружения добавлены, но билд упал с ошибкой
 
-### Данные: 4 армянских дизайнера в seed
-LOOM Weaving ✅, Ariga Torosian ✅, Kivera Naynomis 🔴, RUZANÉ 🔴 (последние два требуют глубокого research)
+### Что сделано в этой сессии (thread #3)
+1. Подключён Supabase проект «find-alto» (boyvvchzrkaztwuoreeb, eu-west-1)
+2. Настроены RLS-политики: публичное чтение + запись на все 7 таблиц
+3. Seed-данные залиты через SQL API: 1 страна, 1 город, 4 категории, 4 дизайнера, 8 вещей, 16 фото, 2 рекламных блока
+4. Создан Supabase Storage bucket «uploads» с публичным доступом
+5. API загрузки фото переписан с локального диска на Supabase Storage
+6. Установлен `@supabase/supabase-js`, создан `src/lib/supabase.ts`
+7. Исправлены `.get()` → `.limit(1)` во всех страницах (PostgreSQL-совместимость)
+8. Исправлена синтаксическая ошибка в `admin/items/page.tsx`
+9. Добавлен `force-dynamic` в админку (пререндеринг на билде)
+10. Код запушен на GitHub (коммит b762eac)
+11. `.env.local` создан с DATABASE_URL, SUPABASE_URL, SUPABASE_ANON_KEY
+12. Начат деплой на Vercel — переменные добавлены, билд упал
+
+### Текущий блокер: Vercel build error
+- На Vercel добавлены 3 переменные: `DATABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Билд падает с `Command "npm run build" exited with 1`
+- **Нужно:** посмотреть Build Logs в Vercel → найти текст ошибки → исправить
+
+### Данные в Supabase
+| Таблица | Строк |
+|---------|-------|
+| countries | 1 (Армения) |
+| cities | 1 (Ереван) |
+| categories | 4 |
+| designers | 4 |
+| items | 8 |
+| item_photos | 16 |
+| ads | 2 |
+
+### Supabase проект
+- ID: `boyvvchzrkaztwuoreeb`
+- URL: `https://boyvvchzrkaztwuoreeb.supabase.co`
+- Host: `db.boyvvchzrkaztwuoreeb.supabase.co`
+- Anon key: `sb_publishable_B-bocbhbV9QDmFblvKeLbg_ywVJZYgR`
+- Storage bucket: `uploads` (public, 10 MB limit, image types only)
 
 ### Planning-документы (все в `.planning/`):
 - PROJECT.md ✅, REQUIREMENTS.md ✅ (28/28), ROADMAP.md ✅
-- PLAN.md ✅ (детальный план фазы 5)
-- ROI.md ✅ (3 сценария: −$3K / +$35K / +$102K)
-- COMPETITORS.md ✅ (конкуренты + оценка перспективности)
-- architecture.md ✅ (спецификация для разработки)
-- specification.md ✅ (промпт для Lovable)
-
-### Что сделано в этой сессии
-1. Обновлён PROJECT.md (SQLite→Supabase)
-2. Переписан PLAN.md под Фазу 5
-3. Добавлен ROI.md (3 сценария развития)
-4. Добавлен COMPETITORS.md + блок перспективности
-5. Проект запушен на GitHub (13 коммитов)
-6. Обновлён README с описанием проекта
-7. Созданы architecture.md и specification.md для Lovable
-8. Проверено: секретов в репо нет (.env* в gitignore)
-9. Обсуждена монетизация (реклама → featured → партнёрство → премиум)
-10. Обсуждена перспективность ниши (0 конкурентов, 400 дизайнеров, $2.5B рынок)
-
-### Ключевые пробелы
-- Supabase не подключён (ждёт project ID от пользователя)
-- Фото для seed-данных отсутствуют
-- 2 из 4 дизайнеров требуют глубокого research
-- Города Армении не проработаны (cities.md — все «нужен research»)
-- Lovable-дизайн не сгенерирован (промпт готов в specification.md)
-- Слоган не выбран (обсуждались варианты: «Открой локальную моду ...»)
-
-### Решения принятые
-- Только Web + PWA, не нативное приложение
-- Монетизация: рекламные блоки → featured → партнёрство → премиум
-- СНГ-фокус: Армения первая, затем Грузия, Казахстан, Узбекистан, Украина
-- Без аутентификации (открытая админка)
-- Все данные должны быть верифицированы (fdc.am, EVN Report)
+- PLAN.md ✅, ROI.md ✅, COMPETITORS.md ✅
+- architecture.md ✅, specification.md ✅, HANDOFF.md ✅
 
 ### Что дальше (на выбор)
-1. **Supabase** — пользователь даёт project ID → подключаем БД
-2. **Lovable** — пользователь генерирует дизайн по specification.md → переносим стиль в код
-3. **Research** — ищем ещё армянских дизайнеров через @cone.yerevan
-4. **Слоган** — продолжаем обсуждать варианты
+1. **Vercel** — посмотреть build logs, найти ошибку, исправить, задеплоить
+2. **Дизайн** — применить стили из specification.md или дождаться Lovable
+3. **Telegram бот** (5.4) — доработать `my-agent/bot.py`
+4. **Research** — новые армянские дизайнеры
+5. **Фаза 6** — монетизация (featured-дизайнеры, PWA)

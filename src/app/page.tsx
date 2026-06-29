@@ -4,15 +4,16 @@ import { countries } from "@/db/schema";
 
 export default async function HomePage() {
   let allCountries: any[] = [];
-  let dbError = false;
+  let dbError: string | null = null;
 
   try {
     allCountries = await db.select().from(countries);
-  } catch {
-    dbError = true;
+  } catch (err: any) {
+    dbError = err?.message || "Unknown database error";
+    console.error("DB connection error:", dbError);
   }
 
-  if (dbError || allCountries.length === 0) {
+  if (dbError) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-24 text-center">
         <h1 className="text-3xl font-semibold tracking-tight mb-4">
@@ -21,16 +22,28 @@ export default async function HomePage() {
         <p className="text-zinc-500 text-lg max-w-xl mx-auto">
           Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ.
         </p>
-        {dbError ? (
-          <p className="text-amber-600 mt-8 text-sm">
-            ⚠️ База данных пока не подключена — замените DATABASE_URL в
-            .env.local
+        <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded-xl text-left max-w-2xl mx-auto">
+          <p className="text-red-700 text-sm font-medium mb-1">
+            ⚠️ Ошибка подключения к базе данных:
           </p>
-        ) : (
-          <p className="text-zinc-400 mt-8">
-            Контент появится здесь после наполнения базы данных.
-          </p>
-        )}
+          <p className="text-red-600 text-xs font-mono break-all">{dbError}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (allCountries.length === 0) {
+    return (
+      <div className="mx-auto max-w-5xl px-4 py-24 text-center">
+        <h1 className="text-3xl font-semibold tracking-tight mb-4">
+          Find Alto
+        </h1>
+        <p className="text-zinc-500 text-lg max-w-xl mx-auto">
+          Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ.
+        </p>
+        <p className="text-zinc-400 mt-8">
+          Контент появится здесь после наполнения базы данных.
+        </p>
       </div>
     );
   }
