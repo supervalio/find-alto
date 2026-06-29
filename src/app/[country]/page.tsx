@@ -41,14 +41,14 @@ export default async function CountryPage({ params }: Props) {
   const { data: allCities, error: citiesError } = await supabase
     .from("cities")
     .select("*")
-    .eq("countryId", country.id);
+    .eq("country_id", country.id);
   if (citiesError) throw citiesError;
 
   // Get designer IDs for this country via cities
   const { data: cityIdsData, error: cityIdsError } = await supabase
     .from("cities")
     .select("id")
-    .eq("countryId", country.id);
+    .eq("country_id", country.id);
   if (cityIdsError) throw cityIdsError;
   const cityIds = (cityIdsData || []).map((c: { id: number }) => c.id);
 
@@ -57,7 +57,7 @@ export default async function CountryPage({ params }: Props) {
     const { data: designersData, error: designersError } = await supabase
       .from("designers")
       .select("*, cities(*)")
-      .in("cityId", cityIds);
+      .in("city_id", cityIds);
     if (designersError) throw designersError;
     allDesigners = designersData || [];
   }
@@ -65,7 +65,7 @@ export default async function CountryPage({ params }: Props) {
   const { data: countryAds, error: adsError } = await supabase
     .from("ads")
     .select("*")
-    .eq("countryId", country.id);
+    .eq("country_id", country.id);
   if (adsError) throw adsError;
 
   return (

@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       .from("cities")
       .select("*")
       .eq("slug", citySlug)
-      .eq("countryId", country.id)
+      .eq("country_id", country.id)
       .limit(1);
     city = (cityData || [])[0] || null;
   }
@@ -55,7 +55,7 @@ export default async function CityPage({ params }: Props) {
     .from("cities")
     .select("*")
     .eq("slug", citySlug)
-    .eq("countryId", country.id)
+    .eq("country_id", country.id)
     .limit(1);
   if (cityError) throw cityError;
   const [city] = cityData || [];
@@ -66,7 +66,7 @@ export default async function CityPage({ params }: Props) {
   const { data: cityDesigners, error: desErr } = await supabase
     .from("designers")
     .select("id")
-    .eq("cityId", city.id);
+    .eq("city_id", city.id);
   if (desErr) throw desErr;
   const designerIds = (cityDesigners || []).map((d: { id: number }) => d.id);
 
@@ -74,8 +74,8 @@ export default async function CityPage({ params }: Props) {
   if (designerIds.length > 0) {
     const { data: itemsData, error: itemsErr } = await supabase
       .from("items")
-      .select("categoryId, categories(id, name, slug, name_ru, name_en)")
-      .in("designerId", designerIds);
+      .select("category_id, categories(id, name, slug, name_ru, name_en)")
+      .in("designer_id", designerIds);
     if (itemsErr) throw itemsErr;
 
     // Group by category and count
@@ -103,7 +103,7 @@ export default async function CityPage({ params }: Props) {
   const { data: cityAds, error: adsError } = await supabase
     .from("ads")
     .select("*")
-    .eq("cityId", city.id);
+    .eq("city_id", city.id);
   if (adsError) throw adsError;
 
   /* ── Display name helper ─────────────────────── */
