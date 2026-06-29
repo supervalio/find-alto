@@ -69,7 +69,7 @@ export default async function HomePage() {
         </h1>
         <p className="text-zinc-500 text-lg max-w-2xl">
           Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ.
-          Выберите страну, чтобы открыть для себя вещи с биографией.
+          Выберите страну — find local.
         </p>
       </div>
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | Find Alto",
   },
   description:
-    "Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ. Вещи с биографией.",
+    "Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ. Find local.",
 };
 
 export default function RootLayout({
@@ -42,7 +42,7 @@ export default function RootLayout({
         </header>
         <main className="flex-1">{children}</main>
         <footer className="border-t border-zinc-200 bg-white py-8 text-center text-sm text-zinc-500">
-          Find Alto — вещи с биографией
+          find local
         </footer>
       </body>
     </html>
