@@ -26,6 +26,13 @@ function generateFilename(originalName: string): string {
 }
 
 export async function POST(request: Request) {
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "Supabase not configured", success: false },
+      { status: 500 },
+    );
+  }
+
   try {
     const formData = await request.formData();
     const files = formData.getAll("file") as File[];
