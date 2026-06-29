@@ -29,7 +29,6 @@ export default async function ItemsPage({
         .from(itemPhotos)
         .where(eq(itemPhotos.itemId, editId))
         .orderBy(itemPhotos.sortOrder)
-        
     : [];
 
   function designerName(id: number | null) {
@@ -190,9 +189,9 @@ export default async function ItemsPage({
         </form>
       </details>
 
-    dit Form */}
+      {/* Edit Form */}
       {editing && (
-        ск
+        <div className="border border-zinc-200 rounded-xl p-6 bg-white">
           <form action={updateItem} className="space-y-4">
             <input type="hidden" name="id" value={editing.id} />
             <div className="grid grid-cols-2 gap-4">

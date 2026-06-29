@@ -18,7 +18,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const row = await db
+  const [row] = await db
     .select({
       item: items,
       designer: designers,
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .innerJoin(cities, eq(designers.cityId, cities.id))
     .innerJoin(countries, eq(cities.countryId, countries.id))
     .where(eq(items.slug, slug))
-    .get();
+    .limit(1);
 
   if (!row) return { title: "Вещь не найдена" };
 
@@ -49,7 +49,7 @@ export default async function ItemPage({ params }: Props) {
   const { slug } = await params;
 
   /* ── Fetch item with all joins ──────────────────────── */
-  const row = await db
+  const [row] = await db
     .select()
     .from(items)
     .innerJoin(designers, eq(items.designerId, designers.id))
@@ -57,7 +57,7 @@ export default async function ItemPage({ params }: Props) {
     .innerJoin(cities, eq(designers.cityId, cities.id))
     .innerJoin(countries, eq(cities.countryId, countries.id))
     .where(eq(items.slug, slug))
-    .get();
+    .limit(1);
 
   if (!row) notFound();
 
@@ -72,17 +72,13 @@ export default async function ItemPage({ params }: Props) {
     .select()
     .from(itemPhotos)
     .where(eq(itemPhotos.itemId, item.id))
-    .orderBy(itemPhotos.sortOrder)
-    ;
-
+    .orderBy(itemPhotos.sortOrder);
   /* ── Other items by same designer ───────────────────── */
   const otherItems = await db
     .select()
     .from(items)
     .where(and(eq(items.designerId, designer.id), ne(items.id, item.id)))
-    .limit(3)
-    ;
-
+    .limit(3);
   /* ── Helpers ────────────────────────────────────────── */
   const photoCount = photos.length;
 

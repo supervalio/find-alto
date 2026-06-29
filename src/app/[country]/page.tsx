@@ -11,11 +11,11 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country: slug } = await params;
-  const country = await db
+  const [country] = await db
     .select()
     .from(countries)
     .where(eq(countries.slug, slug))
-    .get();
+    .limit(1);
 
   if (!country) return { title: "Страна не найдена" };
 
@@ -29,33 +29,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CountryPage({ params }: Props) {
   const { country: slug } = await params;
 
-  const country = await db
+  const [country] = await db
     .select()
     .from(countries)
     .where(eq(countries.slug, slug))
-    .get();
+    .limit(1);
 
   if (!country) notFound();
 
   const allCities = await db
     .select()
     .from(cities)
-    .where(eq(cities.countryId, country.id))
-    ;
-
+    .where(eq(cities.countryId, country.id));
   const allDesigners = await db
     .select()
     .from(designers)
     .innerJoin(cities, eq(designers.cityId, cities.id))
-    .where(eq(cities.countryId, country.id))
-    ;
-
+    .where(eq(cities.countryId, country.id));
   const countryAds = await db
     .select()
     .from(ads)
-    .where(eq(ads.countryId, country.id))
-    ;
-
+    .where(eq(ads.countryId, country.id));
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       {/* Breadcrumb */}

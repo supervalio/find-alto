@@ -18,18 +18,18 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country: countrySlug, city: citySlug } = await params;
-  const country = await db
+  const [country] = await db
     .select()
     .from(countries)
     .where(eq(countries.slug, countrySlug))
-    .get();
-  const city = country
+    .limit(1);
+  const [city] = country
     ? await db
         .select()
         .from(cities)
         .where(and(eq(cities.slug, citySlug), eq(cities.countryId, country.id)))
-        .get()
-    : null;
+        .limit(1)
+    : [null];
 
   if (!country || !city) return { title: "Город не найден" };
 
@@ -44,20 +44,20 @@ export default async function CityPage({ params }: Props) {
   const { country: countrySlug, city: citySlug } = await params;
 
   /* ── Validate country ─────────────────────────── */
-  const country = await db
+  const [country] = await db
     .select()
     .from(countries)
     .where(eq(countries.slug, countrySlug))
-    .get();
+    .limit(1);
 
   if (!country) notFound();
 
   /* ── Validate city (must belong to country) ──── */
-  const city = await db
+  const [city] = await db
     .select()
     .from(cities)
     .where(and(eq(cities.slug, citySlug), eq(cities.countryId, country.id)))
-    .get();
+    .limit(1);
 
   if (!city) notFound();
 
@@ -75,15 +75,8 @@ export default async function CityPage({ params }: Props) {
     .innerJoin(items, eq(categories.id, items.categoryId))
     .innerJoin(designers, eq(items.designerId, designers.id))
     .where(eq(designers.cityId, city.id))
-    .groupBy(categories.id)
-    ;
-
-  const cityAds = await db
-    .select()
-    .from(ads)
-    .where(eq(ads.cityId, city.id))
-    ;
-
+    .groupBy(categories.id);
+  const cityAds = await db.select().from(ads).where(eq(ads.cityId, city.id));
   /* ── Display name helper ─────────────────────── */
   const categoryLabel = (cat: {
     name: string;

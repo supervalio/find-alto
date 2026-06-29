@@ -1,13 +1,9 @@
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "node:fs/promises";
-import { join } from "node:path";
-import { existsSync } from "node:fs";
+import { supabase } from "@/lib/supabase";
 import { randomUUID } from "node:crypto";
 
-const UPLOAD_DIR = join(process.cwd(), "public", "uploads");
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-/* ── Magic bytes for common image formats ───────────────── */
 const IMAGE_SIGNATURES: Record<string, number[]> = {
   png: [0x89, 0x50, 0x4e, 0x47],
   jpg: [0xff, 0xd8, 0xff],
@@ -31,11 +27,6 @@ function generateFilename(originalName: string): string {
 
 export async function POST(request: Request) {
   try {
-    // Ensure upload directory exists
-    if (!existsSync(UPLOAD_DIR)) {
-      await mkdir(UPLOAD_DIR, { recursive: true });
-    }
-
     const formData = await request.formData();
     const files = formData.getAll("file") as File[];
 
@@ -50,23 +41,31 @@ export async function POST(request: Request) {
 
     for (const file of files) {
       if (!(file instanceof File)) continue;
-
-      // Size limit
       if (file.size > MAX_FILE_SIZE) continue;
-
-      // MIME type check (client hint)
       if (!file.type.startsWith("image/")) continue;
 
       const buffer = Buffer.from(await file.arrayBuffer());
-
-      // Magic-byte validation (defeats MIME spoofing)
       if (!isValidImage(buffer)) continue;
 
       const filename = generateFilename(file.name);
-      const filepath = join(UPLOAD_DIR, filename);
 
-      await writeFile(filepath, buffer);
-      uploaded.push({ url: `/uploads/${filename}` });
+      const { data, error } = await supabase.storage
+        .from("uploads")
+        .upload(filename, buffer, {
+          contentType: file.type,
+          upsert: false,
+        });
+
+      if (error) {
+        console.error("Storage upload error:", error.message);
+        continue;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("uploads")
+        .getPublicUrl(data.path);
+
+      uploaded.push({ url: urlData.publicUrl });
     }
 
     if (uploaded.length === 0) {

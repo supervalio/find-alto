@@ -15,23 +15,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     city: citySlug,
     category: categorySlug,
   } = await params;
-  const country = await db
+  const [country] = await db
     .select()
     .from(countries)
     .where(eq(countries.slug, countrySlug))
-    .get();
-  const city = country
+    .limit(1);
+  const [city] = country
     ? await db
         .select()
         .from(cities)
         .where(and(eq(cities.slug, citySlug), eq(cities.countryId, country.id)))
-        .get()
-    : null;
-  const category = await db
+        .limit(1)
+    : [null];
+  const [category] = await db
     .select()
     .from(categories)
     .where(eq(categories.slug, categorySlug))
-    .get();
+    .limit(1);
 
   if (!country || !city || !category) return { title: "Категория не найдена" };
 
@@ -50,29 +50,29 @@ export default async function CategoryPage({ params }: Props) {
   } = await params;
 
   /* ── Validate country ─────────────────────────── */
-  const country = await db
+  const [country] = await db
     .select()
     .from(countries)
     .where(eq(countries.slug, countrySlug))
-    .get();
+    .limit(1);
 
   if (!country) notFound();
 
   /* ── Validate city (must belong to country) ──── */
-  const city = await db
+  const [city] = await db
     .select()
     .from(cities)
     .where(and(eq(cities.slug, citySlug), eq(cities.countryId, country.id)))
-    .get();
+    .limit(1);
 
   if (!city) notFound();
 
   /* ── Validate category ────────────────────────── */
-  const category = await db
+  const [category] = await db
     .select()
     .from(categories)
     .where(eq(categories.slug, categorySlug))
-    .get();
+    .limit(1);
 
   if (!category) notFound();
 
@@ -86,9 +86,7 @@ export default async function CategoryPage({ params }: Props) {
     .innerJoin(designers, eq(items.designerId, designers.id))
     .where(
       and(eq(items.categoryId, category.id), eq(designers.cityId, city.id)),
-    )
-    ;
-
+    );
   /* ── Designers who have items here ────────────── */
   const categoryDesigners = await db
     .selectDistinct({
@@ -98,9 +96,7 @@ export default async function CategoryPage({ params }: Props) {
     .innerJoin(items, eq(items.designerId, designers.id))
     .where(
       and(eq(items.categoryId, category.id), eq(designers.cityId, city.id)),
-    )
-    ;
-
+    );
   /* ── Display name helper ──────────────────────── */
   const categoryLabel = (cat: {
     name: string;

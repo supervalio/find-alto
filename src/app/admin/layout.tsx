@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 const navItems = [
   { href: "/admin", label: "Дашборд" },
   { href: "/admin/countries", label: "Страны" },

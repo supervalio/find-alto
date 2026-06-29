@@ -18,13 +18,13 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const row = await db
+  const [row] = await db
     .select({ designer: designers, city: cities, country: countries })
     .from(designers)
     .leftJoin(cities, eq(designers.cityId, cities.id))
     .leftJoin(countries, eq(cities.countryId, countries.id))
     .where(eq(designers.slug, slug))
-    .get();
+    .limit(1);
 
   if (!row) return { title: "Дизайнер не найден" };
 
@@ -43,13 +43,13 @@ export default async function DesignerPage({ params }: Props) {
   const { slug } = await params;
 
   /* ── Fetch designer with city & country ─────────────── */
-  const row = await db
+  const [row] = await db
     .select()
     .from(designers)
     .leftJoin(cities, eq(designers.cityId, cities.id))
     .leftJoin(countries, eq(cities.countryId, countries.id))
     .where(eq(designers.slug, slug))
-    .get();
+    .limit(1);
 
   if (!row || !row.designers) notFound();
 
@@ -62,9 +62,7 @@ export default async function DesignerPage({ params }: Props) {
     .select()
     .from(items)
     .leftJoin(categories, eq(items.categoryId, categories.id))
-    .where(eq(items.designerId, designer.id))
-    ;
-
+    .where(eq(items.designerId, designer.id));
   /* Fetch items with photos */
   const itemsWithPhotos = await Promise.all(
     designerItems.map(async (row) => {
@@ -72,8 +70,7 @@ export default async function DesignerPage({ params }: Props) {
         .select()
         .from(itemPhotos)
         .where(eq(itemPhotos.itemId, row.items.id))
-        .orderBy(asc(itemPhotos.sortOrder))
-        ;
+        .orderBy(asc(itemPhotos.sortOrder));
       return { ...row, photos };
     }),
   );
