@@ -1,0 +1,449 @@
+# Find Alto — Спецификация проекта
+
+> Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ.  
+> «Afisha» для независимой моды — editorial, not e-commerce.
+
+---
+
+## 📌 Содержание
+
+1. [Концепция](#-концепция)
+2. [Текущий статус](#-текущий-статус)
+3. [Брендинг](#-брендинг)
+4. [Структура страниц](#-структура-страниц)
+5. [База данных](#-база-данных)
+6. [Технический стек](#-технический-стек)
+7. [Инфраструктура](#-инфраструктура)
+8. [Дизайн-система](#-дизайн-система)
+9. [Наполнение (seed-данные)](#-наполнение-seed-данные)
+10. [Roadmap](#-roadmap)
+11. [Монетизация](#-монетизация)
+12. [Как запустить локально](#-как-запустить-локально)
+
+---
+
+## 🎯 Концепция
+
+**Find Alto** — редакционный гид по локальным дизайнерам из стран СНГ. Платформа помогает путешественникам и ценителям локальной моды открывать уникальные вещи ручной работы с культурным контекстом: кто сделал, из каких материалов, почему местные это носят.
+
+### Принципы
+
+- **Не магазин.** Мы не продаём вещи — мы рассказываем о них и о людях, которые их создают.
+- **Географическая навигация:** Страна → Город → Категория → Вещь.
+- **Каждая вещь — с историей.** Описание, материал, цена в локальной валюте + USD, фото.
+- **Bilingual:** русский + английский (названия, категории, описания).
+- **Photography-led.** Изображения — главный визуальный элемент, текст дополняет.
+
+---
+
+## 📊 Текущий статус
+
+| Компонент | Статус |
+|-----------|--------|
+| 6 публичных страниц | ✅ Готово, подключены к Supabase |
+| Админ-панель (7 CRUD-страниц) | ✅ Готово (на Drizzle ORM) |
+| Загрузка фото (drag & drop) | ✅ Готово |
+| Supabase (хостинг БД) | ✅ Подключён |
+| Vercel (фронтенд-хостинг) | ✅ Задеплоен |
+| SEO (метаданные) | ✅ На всех страницах |
+| Брендинг (лого, слоган) | ✅ Emerald slash + "find local" |
+| Дизайн-система | ✅ Cream + terracotta + emerald |
+| Auth | ⬜ Отсутствует (админка открыта) |
+| Telegram AI-бот | 🔄 В разработке |
+| Монетизация | ⬜ Будущие фазы |
+
+**URL:** [find-alto.vercel.app](https://find-alto.vercel.app)  
+**GitHub:** [github.com/supervalio/find-alto](https://github.com/supervalio/find-alto)
+
+---
+
+## 🎨 Брендинг
+
+### Логотип
+
+Slash-дизайн — крупный символ `/` emerald-цвета, надпись «find» мелким серым шрифтом, «ALTO» — жирным emerald.
+
+```
+         /
+       find
+       ALTO
+```
+
+- **Цвет:** Emerald `#0D5C46`
+- **Шрифт:** DM Sans (sans-serif, геометрический)
+- **Размещение:** Hero-секция на главной; в header — лаконичный текст «FIND ALTO»
+
+### Слоган
+
+**find local** — минималистично, лаконично, на английском. Обыгрывает название: *Find Alto → find local*.
+
+---
+
+## 🗂 Структура страниц
+
+### 1. Homepage `/`
+- **Hero:** Slash-логотип + слоган "find local" + описание проекта
+- **Сетка стран:** Карточки с фото (4:3), названием и описанием
+- **Hover:** Лёгкий zoom фото, terracotta-акцент на названии, тень
+
+### 2. Страна `/[country]` (напр. `/armenia`)
+- **Хлебные крошки:** Главная › Армения
+- **Hero:** Название (serif), фото страны (3:1), описание
+- **Рекламные блоки:** Если есть — карточки с фото, описанием и ссылкой
+- **Сетка городов:** Карточки с названием и описанием
+- **Список дизайнеров:** Карточки с аватаркой 80px, именем, городом, био
+
+### 3. Город `/[country]/[city]` (напр. `/armenia/yerevan`)
+- **Хлебные крошки:** Главная › Армения › Ереван
+- **Hero:** Название + описание города
+- **Рекламные блоки**
+- **Сетка категорий:** Карточки с названием и счётчиком вещей («14 вещей»)
+
+### 4. Категория `/[country]/[city]/[category]` (напр. `/armenia/yerevan/clothing`)
+- **Хлебные крошки:** Главная › Армения › Ереван › Одежда
+- **Список вещей:** Карточки с названием, дизайнером (terracotta-ссылка), ценой
+- **Дизайнеры в этой категории:** Карточки с аватаркой
+
+### 5. Дизайнер `/designer/[slug]` (напр. `/designer/loom-weaving`)
+- **Хлебные крошки**
+- **Профиль:** Фото 3:4 + имя (serif) + город + био
+- **История:** Полный текст (2-3 абзаца)
+- **«Почему местные это носят»:** Pull-quote с terracotta-бордюром слева
+- **Контакты:** Instagram, сайт, адрес — иконки + ссылки
+- **Галерея вещей:** Сетка с фото (4:3), названием, категорией и ценой
+
+### 6. Вещь `/item/[slug]` (напр. `/item/obyomniy-kardigan`)
+- **Хлебные крошки**
+- **Фото-галерея:** 1 фото = full-width; 2+ = сетка с первым крупным
+- **Заголовок:** Название + olive-бейдж категории
+- **Цена:** Локальная (крупно) + USD (~$120 — мельче, muted)
+- **Локация:** Город, страна
+- **Материал:** Отдельный блок
+- **История вещи:** Pull-quote с terracotta-бордюром
+- **Описание**
+- **Блок «О дизайнере»:** Аватарка, имя, био, ссылка «Смотреть все вещи →»
+- **Другие вещи дизайнера:** До 3 карточек
+
+### 7. Админ-панель `/admin/*`
+- **Дашборд:** Статистика
+- **CRUD:** Страны, Города, Категории, Дизайнеры, Вещи, Реклама
+- **Загрузка фото:** Drag & drop → Supabase Storage
+- ⚠️ Админка использует Drizzle ORM (не мигрирована на supabase-js)
+
+---
+
+## 🗄 База данных
+
+### Supabase PostgreSQL — 7 таблиц
+
+```
+countries
+  id            BIGINT PK (auto)
+  name          TEXT NOT NULL
+  slug          TEXT UNIQUE NOT NULL
+  description   TEXT
+  image         TEXT
+  created_at    TIMESTAMPTZ
+
+cities
+  id            BIGINT PK (auto)
+  name          TEXT NOT NULL
+  slug          TEXT UNIQUE NOT NULL
+  description   TEXT
+  country_id    BIGINT FK → countries (CASCADE)
+  created_at    TIMESTAMPTZ
+
+categories
+  id            BIGINT PK (auto)
+  name          TEXT NOT NULL
+  slug          TEXT UNIQUE NOT NULL
+  name_ru       TEXT          -- русское название
+  name_en       TEXT          -- английское название
+  created_at    TIMESTAMPTZ
+
+designers
+  id              BIGINT PK (auto)
+  name            TEXT NOT NULL
+  slug            TEXT UNIQUE NOT NULL
+  photo           TEXT          -- URL фото
+  bio             TEXT          -- краткая биография (1-2 предложения)
+  story           TEXT          -- полная история (2-3 абзаца)
+  why_locals_wear TEXT          -- "почему местные носят"
+  instagram       TEXT          -- @handle
+  website         TEXT          -- URL
+  address         TEXT          -- физический адрес
+  city_id         BIGINT FK → cities (SET NULL)
+  featured        BOOLEAN       -- "выбор редакции"
+  created_at      TIMESTAMPTZ
+
+items
+  id            BIGINT PK (auto)
+  name          TEXT NOT NULL
+  slug          TEXT UNIQUE NOT NULL
+  description   TEXT
+  story         TEXT          -- история вещи
+  material      TEXT          -- материал (напр. "100% итальянская шерсть")
+  price_local   DOUBLE        -- цена в локальной валюте
+  price_usd     DOUBLE        -- эквивалент в USD
+  currency      TEXT          -- код валюты (напр. "AMD")
+  designer_id   BIGINT FK → designers (CASCADE)
+  category_id   BIGINT FK → categories (SET NULL)
+  created_at    TIMESTAMPTZ
+
+item_photos
+  id            BIGINT PK (auto)
+  item_id       BIGINT FK → items (CASCADE)
+  url           TEXT NOT NULL
+  alt           TEXT
+  sort_order    INT           -- порядок сортировки
+
+ads
+  id            BIGINT PK (auto)
+  name          TEXT NOT NULL
+  description   TEXT
+  photo         TEXT
+  link          TEXT          -- ссылка (Instagram, сайт, etc.)
+  link_type     TEXT          -- "instagram" | "website" | "map"
+  country_id    BIGINT FK → countries (CASCADE)
+  city_id       BIGINT FK → cities (CASCADE)
+  created_at    TIMESTAMPTZ
+```
+
+### Правила Supabase
+
+- **RLS:** Публичный доступ на чтение и запись (временно, до внедрения auth)
+- **Публичные страницы** используют `@supabase/supabase-js` (HTTPS-клиент)
+- **Админ-панель** использует Drizzle ORM (прямое подключение)
+
+---
+
+## 🛠 Технический стек
+
+| Слой | Технология |
+|------|-----------|
+| **Framework** | Next.js 16 (App Router) + React 19 |
+| **Language** | TypeScript 5 |
+| **Styling** | Tailwind CSS 4 |
+| **Database** | Supabase PostgreSQL |
+| **Client (public)** | `@supabase/supabase-js` |
+| **Client (admin)** | Drizzle ORM + `@neondatabase/serverless` |
+| **Storage** | Supabase Storage (фото) |
+| **Hosting** | Vercel |
+| **Fonts** | Playfair Display (serif, headings) + Geist (sans-serif, body) |
+| **CI/CD** | Vercel auto-deploy с GitHub (ветка main) |
+
+---
+
+## ☁️ Инфраструктура
+
+### Vercel
+
+- **Проект:** `find-alto`
+- **Домен:** `find-alto.vercel.app`
+- **Деплой:** Автоматически при пуше в `main`
+- **Переменные окружения:**
+  - `NEXT_PUBLIC_SUPABASE_URL` — `https://boyvvchzrkaztwuoreeb.supabase.co`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — anon key из Supabase Dashboard
+
+### Supabase
+
+- **Проект:** `find-alto`
+- **URL:** `https://boyvvchzrkaztwuoreeb.supabase.co`
+- **Database password:** задан в Supabase Dashboard → Project Settings → Database
+- **Connection string (прямое подключение):**
+  ```
+  postgresql://postgres:[YOUR-PASSWORD]@db.boyvvchzrkaztwuoreeb.supabase.co:5432/postgres
+  ```
+
+### GitHub
+
+- **Repo:** [github.com/supervalio/find-alto](https://github.com/supervalio/find-alto)
+- **Ветка:** `main`
+
+---
+
+## 🎨 Дизайн-система
+
+### Цветовая палитра
+
+| Назначение | Hex | Tailwind |
+|-----------|-----|----------|
+| Фон страницы | `#FAF8F5` | `cream` |
+| Фон карточек | `#FFFDF9` | `warm-white` |
+| Логотип, emerald-акцент | `#0D5C46` | `emerald` |
+| Ссылки, CTA, pull-quote | `#C4735A` | `terracotta` |
+| Терракота hover | `#A85D47` | `terracotta-hover` |
+| Основной текст | `#2D2A26` | `charcoal` |
+| Вторичный текст | `#6B6560` | `warm-grey` |
+| Бейджи категорий | `#7C8C5E` | `olive` |
+| Границы | `#E8E0D5` | `sand` |
+| Границы hover | `#D4C9BC` | `sand-hover` |
+
+### Типографика
+
+- **Заголовки:** Playfair Display, weight 700 (serif)
+- **Тело:** Geist, weight 400–500 (sans-serif)
+- **Логотип:** DM Sans, weight 200 (light) + 600 (semibold)
+
+### Тон
+
+- Редакционный, не коммерческий — Kinfolk × тревел-гид
+- Тёплый и человечный — каждый текст curated, а не сгенерирован
+- Photography-led — фото главное, текст дополняет
+- Mobile-first — телефон первичен, десктоп — улучшенная версия
+
+---
+
+## 📦 Наполнение (seed-данные)
+
+Сейчас в базе: **1 страна, 1 город, 4 категории, 4 дизайнера, 8 вещей, 2 рекламных блока.**
+
+### Армения / Armenia
+
+**Yerevan** — the creative heart. Concept stores on Abovyan and Tumanyan streets. Home of Yerevan Fashion Week.
+
+#### Категории
+- Одежда (Clothing)
+- Обувь (Shoes)
+- Сумки (Bags)
+- Аксессуары (Accessories)
+
+#### Дизайнеры
+
+| Дизайнер | Основатель | Instagram |
+|----------|-----------|-----------|
+| **LOOM Weaving** | Inga Manukyan (est. 2014) | @loom_weaving |
+| **Ariga Torosian** | Ariga Torosian (est. 2013) | @ariga_to_ |
+| **Kivera Naynomis** | Arevik Simonyan | @kiveranaynomis |
+| **RUZANÉ** | Ruzanna Vardanyan | — |
+
+#### LOOM Weaving — вещи
+- «Объёмный кардиган» — 48,000 AMD (~$120), Italian merino wool
+- «Платье-свитер с бахромой» — 62,000 AMD (~$155), wool blend
+
+#### Ariga Torosian — вещи
+- «Структурный жакет» — 85,000 AMD (~$210), deadstock Italian wool
+- «Асимметричное платье» — 72,000 AMD (~$180), deadstock viscose
+
+#### Kivera Naynomis — вещи
+- «Деконструированная рубашка» — 35,000 AMD (~$88), cotton
+- «Платье-трансформер» — 55,000 AMD (~$138), technical fabric
+
+#### RUZANÉ — вещи
+- «Колье 'Арарат'» — 18,000 AMD (~$45), brass
+- «Серьги 'Гранат'» — 12,000 AMD (~$30), silver-plated, enamel
+
+#### Реклама
+- **5Concept Store** — первый multi-brand concept store Еревана, Абовяна 12
+- **Yerevan Fashion Week** — ежегодное событие армянских дизайнеров
+
+### Планируемые страны
+- 🇬🇪 Грузия (Тбилиси, Батуми)
+- 🇰🇿 Казахстан (Алматы, Астана)
+- 🇺🇿 Узбекистан (Ташкент)
+- 🇺🇦 Украина (Киев, Львов, Одесса)
+
+---
+
+## 🗺 Roadmap
+
+### ✅ Фаза 1–4 — Завершены
+MVP: все страницы, админка, загрузка фото, SEO, QA, launch prep.
+
+### 🔄 Фаза 5 — Инфраструктура (текущая)
+- [x] Миграция на Supabase PostgreSQL
+- [x] Настройка RLS и ключей
+- [ ] Telegram AI-бот (DeepSeek) — помощник для наполнения каталога
+
+### ⬜ Фаза 6 — Монетизация
+- [ ] Featured-дизайнеры: сортировка + бейдж «Выбор редакции»
+- [ ] Платёжная система для рекламодателей
+- [ ] PWA: офлайн-доступ, установка на телефон
+- [ ] Партнёрские ссылки: трекинг переходов
+- [ ] Премиум-гайды: fashion-карты городов
+- [ ] Статистика для рекламодателей
+
+### ⬜ Будущее
+- [ ] Auth (защита админки)
+- [ ] Миграция админки на supabase-js
+- [ ] Удаление неиспользуемых зависимостей (pg, drizzle-orm)
+- [ ] Полноценный дизайн-аудит и улучшение UI
+
+---
+
+## 💰 Монетизация
+
+1. **Этап 1** (сразу) — рекламные блоки от локальных бизнесов
+2. **Этап 2** (20+ дизайнеров) — featured-профили дизайнеров
+3. **Этап 3** (есть трафик) — партнёрские ссылки с магазинами (ревшер)
+4. **Этап 4** (есть аудитория) — премиум-гайды и fashion-карты городов
+
+---
+
+## 🚀 Как запустить локально
+
+```bash
+git clone https://github.com/supervalio/find-alto.git
+cd find-alto
+
+npm install
+
+# Создать .env.local:
+#   NEXT_PUBLIC_SUPABASE_URL=https://boyvvchzrkaztwuoreeb.supabase.co
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
+
+npm run dev        # http://localhost:3000
+npm run seed       # наполнить тестовыми данными
+npm run build      # production-сборка
+```
+
+### Структура проекта
+
+```
+find-alto/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx                    # Homepage
+│   │   ├── layout.tsx                  # Root layout
+│   │   ├── globals.css                 # Tailwind + design tokens
+│   │   ├── [country]/
+│   │   │   ├── page.tsx                # Страна
+│   │   │   └── [city]/
+│   │   │       ├── page.tsx            # Город
+│   │   │       └── [category]/
+│   │   │           └── page.tsx        # Категория
+│   │   ├── designer/[slug]/page.tsx    # Профиль дизайнера
+│   │   ├── item/[slug]/page.tsx        # Детальная вещь
+│   │   ├── admin/                      # Админ-панель (CRUD)
+│   │   └── api/upload/                 # API загрузки фото
+│   ├── lib/supabase.ts                 # Supabase client
+│   └── db/                             # Drizzle ORM schema
+├── public/
+│   └── logo.svg                        # Emerald slash logo
+├── scripts/seed.ts                     # Наполнение тестовыми данными
+└── .planning/                          # Документация
+    ├── specification.md
+    ├── ROADMAP.md
+    ├── PROJECT.md
+    └── ...
+```
+
+---
+
+## 👥 Как помочь / что нужно
+
+### Контент
+- Информация о дизайнерах из других стран СНГ (Грузия, Казахстан, Узбекистан, Украина)
+- Фотографии вещей и дизайнеров
+- Тексты: био, истории, «почему носят»
+- Рекламные партнёры: локальные concept stores, fashion events
+
+### Дизайн
+- Рецензия на текущий дизайн и предложения по улучшению
+- Иконки для категорий
+- Фирменный стиль для соцсетей
+
+### Разработка
+- Auth для админки
+- Telegram-бот для быстрого добавления контента
+- Улучшение мобильной вёрстки
