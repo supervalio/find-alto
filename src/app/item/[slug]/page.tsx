@@ -20,7 +20,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dbRow = data?.[0];
   if (!dbRow) return { title: "Вещь не найдена" };
 
-  // Supabase returns nested relations as single-element arrays
   const designer = (dbRow.designers as any[])?.[0] || {};
   const category = (dbRow.categories as any[])?.[0] || {};
   const city = designer?.cities?.[0] || {};
@@ -38,7 +37,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ItemPage({ params }: Props) {
   const { slug } = await params;
 
-  /* ── Fetch item with all joins ──────────────────────── */
   const { data, error } = await supabase
     .from("items")
     .select(
@@ -52,14 +50,12 @@ export default async function ItemPage({ params }: Props) {
   const dbRow = data?.[0];
   if (!dbRow) notFound();
 
-  // Supabase nests relations as arrays — pick first element from each
   const item = dbRow;
   const designer = ((dbRow.designers as any[]) || [])[0] || {};
   const category = ((dbRow.categories as any[]) || [])[0] || {};
   const city = (designer.cities || [])[0] || {};
   const country = (city.countries || [])[0] || {};
 
-  /* ── Fetch photos ───────────────────────────────────── */
   const { data: photosData } = await supabase
     .from("item_photos")
     .select("*")
@@ -67,7 +63,6 @@ export default async function ItemPage({ params }: Props) {
     .order("sort_order");
   const photos = photosData ?? [];
 
-  /* ── Other items by same designer ───────────────────── */
   const { data: otherItemsData } = await supabase
     .from("items")
     .select("*")
@@ -76,47 +71,45 @@ export default async function ItemPage({ params }: Props) {
     .limit(3);
   const otherItems = otherItemsData ?? [];
 
-  /* ── Helpers ────────────────────────────────────────── */
   const photoCount = photos.length;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       {/* ═══ Breadcrumb ═══════════════════════════════════ */}
-      <nav className="text-sm text-zinc-500 mb-8 flex flex-wrap items-center gap-x-1.5">
-        <Link href="/" className="hover:text-zinc-900 transition-colors">
+      <nav className="text-sm text-warm-grey mb-8 flex flex-wrap items-center gap-x-1.5">
+        <Link href="/" className="hover:text-terracotta transition-colors">
           Главная
         </Link>
         <span>/</span>
         <Link
           href={`/${country.slug}`}
-          className="hover:text-zinc-900 transition-colors"
+          className="hover:text-terracotta transition-colors"
         >
           {country.name}
         </Link>
         <span>/</span>
         <Link
           href={`/${country.slug}/${city.slug}`}
-          className="hover:text-zinc-900 transition-colors"
+          className="hover:text-terracotta transition-colors"
         >
           {city.name}
         </Link>
         <span>/</span>
         <Link
           href={`/designer/${designer.slug}`}
-          className="hover:text-zinc-900 transition-colors"
+          className="hover:text-terracotta transition-colors"
         >
           {designer.name}
         </Link>
         <span>/</span>
-        <span className="text-zinc-900">{item.name}</span>
+        <span className="text-charcoal">{item.name}</span>
       </nav>
 
-      {/* ═══ Photo Gallery (ITEM-01) ══════════════════════ */}
+      {/* ═══ Photo Gallery ════════════════════════════════ */}
       {photoCount > 0 && (
         <div className="mb-10">
           {photoCount === 1 ? (
-            /* Single photo: full-width */
-            <div className="rounded-xl overflow-hidden border border-zinc-200">
+            <div className="rounded-xl overflow-hidden border border-sand">
               <img
                 src={photos[0].url}
                 alt={photos[0].alt || item.name}
@@ -124,21 +117,18 @@ export default async function ItemPage({ params }: Props) {
               />
             </div>
           ) : (
-            /* Multiple photos: first prominent, rest in grid */
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {/* First photo — spans full height on md+ */}
-              <div className="rounded-xl overflow-hidden border border-zinc-200 md:row-span-2">
+              <div className="rounded-xl overflow-hidden border border-sand md:row-span-2">
                 <img
                   src={photos[0].url}
                   alt={photos[0].alt || item.name}
                   className="w-full h-full object-cover min-h-[20rem]"
                 />
               </div>
-              {/* Remaining photos */}
               {photos.slice(1).map((photo) => (
                 <div
                   key={photo.id}
-                  className="rounded-xl overflow-hidden border border-zinc-200"
+                  className="rounded-xl overflow-hidden border border-sand"
                 >
                   <img
                     src={photo.url}
@@ -152,19 +142,21 @@ export default async function ItemPage({ params }: Props) {
         </div>
       )}
 
-      {/* ═══ Item header (ITEM-01) ════════════════════════ */}
+      {/* ═══ Item header ══════════════════════════════════ */}
       <div className="mb-8">
         <div className="flex flex-wrap items-center gap-3 mb-3">
-          <h1 className="text-3xl font-semibold tracking-tight">{item.name}</h1>
-          <span className="inline-flex items-center rounded-full bg-zinc-100 px-3 py-0.5 text-sm text-zinc-600">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold tracking-tight">
+            {item.name}
+          </h1>
+          <span className="inline-flex items-center rounded-full bg-olive/10 px-3 py-0.5 text-sm text-olive">
             {category.name_ru || category.name}
           </span>
         </div>
-        <p className="text-zinc-500">
+        <p className="text-warm-grey">
           Дизайнер:{" "}
           <Link
             href={`/designer/${designer.slug}`}
-            className="font-medium text-zinc-900 hover:text-zinc-600 transition-colors underline underline-offset-2"
+            className="font-medium text-terracotta hover:text-terracotta-hover transition-colors underline underline-offset-2"
           >
             {designer.name}
           </Link>
@@ -173,21 +165,21 @@ export default async function ItemPage({ params }: Props) {
 
       {/* ═══ Two-column detail section ════════════════════ */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* ── Price (ITEM-02) ──────────────────────────── */}
-        <div className="rounded-xl border border-zinc-200 bg-white p-5">
-          <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-2">
+        {/* ── Price ────────────────────────────────────── */}
+        <div className="rounded-xl border border-sand bg-warm-white p-5">
+          <h2 className="text-sm font-medium text-warm-grey uppercase tracking-wide mb-2">
             Цена
           </h2>
           {item.price_local != null && item.price_local > 0 ? (
             <div>
-              <p className="text-2xl font-semibold tabular-nums">
+              <p className="text-2xl font-semibold text-charcoal tabular-nums">
                 {item.price_local.toLocaleString("ru-RU")}{" "}
-                <span className="text-base font-normal text-zinc-500">
+                <span className="text-base font-normal text-warm-grey">
                   {item.currency || "USD"}
                 </span>
               </p>
               {item.price_usd != null && item.price_usd > 0 && (
-                <p className="text-sm text-zinc-400 mt-1 tabular-nums">
+                <p className="text-sm text-warm-grey mt-1 tabular-nums">
                   ≈{" "}
                   {item.price_usd.toLocaleString("en-US", {
                     style: "currency",
@@ -197,20 +189,20 @@ export default async function ItemPage({ params }: Props) {
               )}
             </div>
           ) : (
-            <p className="text-zinc-400 italic">Цена по запросу</p>
+            <p className="text-warm-grey italic">Цена по запросу</p>
           )}
         </div>
 
-        {/* ── Location (ITEM-02) ───────────────────────── */}
-        <div className="rounded-xl border border-zinc-200 bg-white p-5">
-          <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-2">
+        {/* ── Location ─────────────────────────────────── */}
+        <div className="rounded-xl border border-sand bg-warm-white p-5">
+          <h2 className="text-sm font-medium text-warm-grey uppercase tracking-wide mb-2">
             Локация
           </h2>
-          <p className="text-lg font-medium">
+          <p className="text-lg font-medium text-charcoal">
             {city.name},{" "}
             <Link
               href={`/${country.slug}`}
-              className="hover:text-zinc-600 transition-colors underline underline-offset-2"
+              className="text-terracotta hover:text-terracotta-hover transition-colors underline underline-offset-2"
             >
               {country.name}
             </Link>
@@ -218,42 +210,42 @@ export default async function ItemPage({ params }: Props) {
         </div>
       </div>
 
-      {/* ═══ Material (ITEM-02) ═══════════════════════════ */}
+      {/* ═══ Material ═════════════════════════════════════ */}
       {item.material && (
-        <div className="rounded-xl border border-zinc-200 bg-white p-5 mb-8">
-          <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-2">
+        <div className="rounded-xl border border-sand bg-warm-white p-5 mb-8">
+          <h2 className="text-sm font-medium text-warm-grey uppercase tracking-wide mb-2">
             Материал
           </h2>
-          <p className="text-zinc-700">{item.material}</p>
+          <p className="text-charcoal">{item.material}</p>
         </div>
       )}
 
-      {/* ═══ Story (ITEM-03) ══════════════════════════════ */}
+      {/* ═══ Story ════════════════════════════════════════ */}
       {item.story && (
-        <div className="rounded-xl border-l-4 border-zinc-900 bg-white p-5 mb-8">
-          <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-3">
+        <div className="rounded-xl border-l-4 border-terracotta bg-warm-white p-5 mb-8">
+          <h2 className="text-sm font-medium text-warm-grey uppercase tracking-wide mb-3">
             История вещи
           </h2>
-          <p className="text-zinc-700 italic leading-relaxed">{item.story}</p>
+          <p className="text-warm-grey italic leading-relaxed">{item.story}</p>
         </div>
       )}
 
       {/* ═══ Description ══════════════════════════════════ */}
       {item.description && (
         <div className="mb-8">
-          <p className="text-zinc-600 leading-relaxed">{item.description}</p>
+          <p className="text-warm-grey leading-relaxed">{item.description}</p>
         </div>
       )}
 
-      {/* ═══ Designer link block (ITEM-04) ════════════════ */}
+      {/* ═══ Designer link block ══════════════════════════ */}
       <div className="mb-10">
         <Link
           href={`/designer/${designer.slug}`}
-          className="group block rounded-xl border border-zinc-200 bg-white p-5 hover:border-zinc-400 transition-colors"
+          className="group block rounded-xl border border-sand bg-warm-white p-5 hover:border-sand-hover hover:shadow-md transition-all duration-200"
         >
-          <h2 className="text-lg font-semibold mb-2">О дизайнере</h2>
+          <h2 className="font-serif text-lg font-semibold mb-2">О дизайнере</h2>
           <div className="flex gap-4 items-start">
-            <div className="w-16 h-16 rounded-lg bg-zinc-100 shrink-0 overflow-hidden">
+            <div className="w-16 h-16 rounded-lg bg-sand shrink-0 overflow-hidden">
               {designer.photo ? (
                 <img
                   src={designer.photo}
@@ -261,26 +253,26 @@ export default async function ItemPage({ params }: Props) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-zinc-300 text-xs">
+                <div className="w-full h-full flex items-center justify-center text-sand-hover text-xs">
                   фото
                 </div>
               )}
             </div>
             <div className="min-w-0">
-              <p className="font-medium group-hover:text-zinc-600 transition-colors">
+              <p className="font-medium text-charcoal group-hover:text-terracotta transition-colors">
                 {designer.name}
               </p>
               {designer.bio && (
-                <p className="text-sm text-zinc-500 mt-1 line-clamp-2">
+                <p className="text-sm text-warm-grey mt-1 line-clamp-2">
                   {designer.bio}
                 </p>
               )}
-              <p className="text-sm text-zinc-400 mt-1">
+              <p className="text-sm text-warm-grey mt-1">
                 {city.name}, {country.name}
               </p>
             </div>
           </div>
-          <div className="mt-3 text-sm font-medium text-zinc-900 group-hover:text-zinc-600 transition-colors">
+          <div className="mt-3 text-sm font-medium text-terracotta group-hover:text-terracotta-hover transition-colors">
             Смотреть все вещи дизайнера →
           </div>
         </Link>
@@ -289,7 +281,7 @@ export default async function ItemPage({ params }: Props) {
       {/* ═══ Other items by this designer ═════════════════ */}
       {otherItems.length > 0 && (
         <section>
-          <h2 className="text-xl font-semibold mb-4">
+          <h2 className="font-serif text-xl font-semibold mb-4">
             Другие вещи {designer.name}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -297,16 +289,18 @@ export default async function ItemPage({ params }: Props) {
               <Link
                 key={other.id}
                 href={`/item/${other.slug}`}
-                className="group block rounded-xl border border-zinc-200 bg-white p-4 hover:border-zinc-400 transition-colors"
+                className="group block rounded-xl border border-sand bg-warm-white p-4 hover:border-sand-hover hover:shadow-md transition-all duration-200"
               >
-                <h3 className="font-medium group-hover:text-zinc-600 transition-colors">
+                <h3 className="font-medium text-charcoal group-hover:text-terracotta transition-colors">
                   {other.name}
                 </h3>
                 {other.material && (
-                  <p className="text-sm text-zinc-500 mt-1">{other.material}</p>
+                  <p className="text-sm text-warm-grey mt-1">
+                    {other.material}
+                  </p>
                 )}
                 {other.price_local != null && other.price_local > 0 && (
-                  <p className="text-sm text-zinc-500 mt-1 tabular-nums">
+                  <p className="text-sm text-warm-grey mt-1 tabular-nums">
                     {other.price_local.toLocaleString("ru-RU")}{" "}
                     {other.currency || "USD"}
                   </p>

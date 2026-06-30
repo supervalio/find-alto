@@ -44,7 +44,6 @@ export default async function CountryPage({ params }: Props) {
     .eq("country_id", country.id);
   if (citiesError) throw citiesError;
 
-  // Get designer IDs for this country via cities
   const { data: cityIdsData, error: cityIdsError } = await supabase
     .from("cities")
     .select("id")
@@ -71,21 +70,21 @@ export default async function CountryPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       {/* Breadcrumb */}
-      <nav className="text-sm text-zinc-500 mb-8">
-        <Link href="/" className="hover:text-zinc-900 transition-colors">
+      <nav className="text-sm text-warm-grey mb-8">
+        <Link href="/" className="hover:text-terracotta transition-colors">
           Главная
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-zinc-900">{country.name}</span>
+        <span className="text-charcoal">{country.name}</span>
       </nav>
 
       {/* Country header */}
       <div className="mb-12">
-        <h1 className="text-3xl font-semibold tracking-tight mb-3">
+        <h1 className="font-serif text-3xl md:text-4xl font-bold tracking-tight mb-4">
           {country.name}
         </h1>
         {country.image && (
-          <div className="w-full aspect-[3/1] rounded-xl bg-zinc-100 overflow-hidden mb-4">
+          <div className="w-full aspect-[3/1] rounded-xl bg-sand overflow-hidden mb-4">
             <img
               src={country.image}
               alt={country.name}
@@ -94,7 +93,7 @@ export default async function CountryPage({ params }: Props) {
           </div>
         )}
         {country.description && (
-          <p className="text-zinc-500 text-lg max-w-2xl">
+          <p className="text-warm-grey text-lg max-w-2xl leading-relaxed">
             {country.description}
           </p>
         )}
@@ -110,10 +109,10 @@ export default async function CountryPage({ params }: Props) {
                 href={ad.link || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block rounded-xl border border-zinc-200 bg-white overflow-hidden hover:border-zinc-400 transition-colors"
+                className="group block rounded-xl border border-sand bg-warm-white overflow-hidden hover:border-sand-hover transition-colors"
               >
                 {ad.photo && (
-                  <div className="aspect-[3/1] bg-zinc-100 overflow-hidden">
+                  <div className="aspect-[3/1] bg-sand overflow-hidden">
                     <img
                       src={ad.photo}
                       alt={ad.name}
@@ -124,7 +123,7 @@ export default async function CountryPage({ params }: Props) {
                 <div className="p-4">
                   <h3 className="font-medium text-sm">{ad.name}</h3>
                   {ad.description && (
-                    <p className="text-xs text-zinc-500 mt-1 line-clamp-2">
+                    <p className="text-xs text-warm-grey mt-1 line-clamp-2">
                       {ad.description}
                     </p>
                   )}
@@ -138,19 +137,19 @@ export default async function CountryPage({ params }: Props) {
       {/* Cities grid */}
       {(allCities || []).length > 0 && (
         <section className="mb-12">
-          <h2 className="text-xl font-semibold mb-4">Города</h2>
+          <h2 className="font-serif text-xl font-semibold mb-4">Города</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {(allCities || []).map((city: any) => (
               <Link
                 key={city.id}
                 href={`/${country.slug}/${city.slug}`}
-                className="group block rounded-xl border border-zinc-200 bg-white p-5 hover:border-zinc-400 transition-colors"
+                className="group block rounded-xl border border-sand bg-warm-white p-5 hover:border-sand-hover transition-colors"
               >
-                <h3 className="text-lg font-medium group-hover:text-zinc-600 transition-colors">
+                <h3 className="text-lg font-medium text-charcoal group-hover:text-terracotta transition-colors">
                   {city.name}
                 </h3>
                 {city.description && (
-                  <p className="text-zinc-500 text-sm mt-1 line-clamp-2">
+                  <p className="text-warm-grey text-sm mt-1 line-clamp-2">
                     {city.description}
                   </p>
                 )}
@@ -163,15 +162,15 @@ export default async function CountryPage({ params }: Props) {
       {/* All designers in country */}
       {allDesigners.length > 0 && (
         <section>
-          <h2 className="text-xl font-semibold mb-4">Дизайнеры</h2>
+          <h2 className="font-serif text-xl font-semibold mb-4">Дизайнеры</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {allDesigners.map((d: any) => (
               <Link
                 key={d.id}
                 href={`/designer/${d.slug}`}
-                className="group flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 hover:border-zinc-400 transition-colors"
+                className="group flex gap-4 rounded-xl border border-sand bg-warm-white p-4 hover:border-sand-hover transition-colors"
               >
-                <div className="w-20 h-20 rounded-lg bg-zinc-100 shrink-0 overflow-hidden">
+                <div className="w-20 h-20 rounded-lg bg-sand shrink-0 overflow-hidden">
                   {d.photo ? (
                     <img
                       src={d.photo}
@@ -179,17 +178,17 @@ export default async function CountryPage({ params }: Props) {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-zinc-300 text-xs">
+                    <div className="w-full h-full flex items-center justify-center text-sand-hover text-xs">
                       фото
                     </div>
                   )}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-medium group-hover:text-zinc-600 transition-colors truncate">
+                  <h3 className="font-medium text-charcoal group-hover:text-terracotta transition-colors truncate">
                     {d.name}
                   </h3>
-                  <p className="text-sm text-zinc-500 mt-1">{d.cities.name}</p>
-                  <p className="text-sm text-zinc-400 mt-1 line-clamp-2">
+                  <p className="text-sm text-warm-grey mt-1">{d.cities.name}</p>
+                  <p className="text-sm text-warm-grey/70 mt-1 line-clamp-2">
                     {d.bio}
                   </p>
                 </div>

@@ -22,12 +22,12 @@ export default async function DesignersPage({
   ]);
 
   const editing = editId
-    ? (allDesigners.find((d) => d.id === editId) ?? null)
+    ? (allDesigners.find((d: any) => d.id === editId) ?? null)
     : null;
 
   function cityName(cityId: number | null) {
     if (!cityId) return "—";
-    const c = allCities.find((x) => x.id === cityId);
+    const c = allCities.find((x: any) => x.id === cityId);
     return c ? c.name : "—";
   }
 
@@ -76,7 +76,7 @@ export default async function DesignersPage({
               className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
             >
               <option value="">Выберите город…</option>
-              {allCities.map((c) => (
+              {allCities.map((c: any) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
                 </option>
@@ -203,7 +203,7 @@ export default async function DesignersPage({
                 className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
               >
                 <option value="">Выберите город…</option>
-                {allCities.map((c) => (
+                {allCities.map((c: any) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
                   </option>
@@ -316,7 +316,7 @@ export default async function DesignersPage({
                 </td>
               </tr>
             ) : (
-              allDesigners.map((d) => (
+              allDesigners.map((d: any) => (
                 <tr
                   key={d.id}
                   className="border-b border-zinc-100 hover:bg-zinc-50 transition-colors"

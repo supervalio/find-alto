@@ -55,7 +55,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function DesignerPage({ params }: Props) {
   const { slug } = await params;
 
-  /* ── Fetch designer with city & country ─────────────── */
   const { data, error } = await supabase
     .from("designers")
     .select("*, cities(name,slug, countries(name,slug))")
@@ -72,7 +71,6 @@ export default async function DesignerPage({ params }: Props) {
   const city = camelRow.cities ?? null;
   const country = camelRow.cities?.countries ?? null;
 
-  /* ── Fetch designer's items with category & photos ──── */
   const { data: itemsData } = await supabase
     .from("items")
     .select("*, categories(name, name_ru)")
@@ -80,7 +78,6 @@ export default async function DesignerPage({ params }: Props) {
 
   const camelItems = (itemsData ?? []).map(snakeToCamel);
 
-  /* Fetch items with photos */
   const itemsWithPhotos = await Promise.all(
     camelItems.map(async (itemRow) => {
       const { data: photosData } = await supabase
@@ -97,7 +94,6 @@ export default async function DesignerPage({ params }: Props) {
     }),
   );
 
-  /* ── Helpers ─────────────────────────────────────────── */
   const priceLabel = (item: ItemPrice) => {
     if (item.priceLocal && item.currency) {
       return `${item.priceLocal} ${item.currency}`;
@@ -109,8 +105,8 @@ export default async function DesignerPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       {/* ── Breadcrumb ─────────────────────────────────── */}
-      <nav className="text-sm text-zinc-500 mb-8">
-        <Link href="/" className="hover:text-zinc-900 transition-colors">
+      <nav className="text-sm text-warm-grey mb-8">
+        <Link href="/" className="hover:text-terracotta transition-colors">
           Главная
         </Link>
         {country && (
@@ -118,7 +114,7 @@ export default async function DesignerPage({ params }: Props) {
             <span className="mx-2">/</span>
             <Link
               href={`/${country.slug}`}
-              className="hover:text-zinc-900 transition-colors"
+              className="hover:text-terracotta transition-colors"
             >
               {country.name}
             </Link>
@@ -129,18 +125,17 @@ export default async function DesignerPage({ params }: Props) {
             <span className="mx-2">/</span>
             <Link
               href={`/${country?.slug ?? ""}/${city.slug}`}
-              className="hover:text-zinc-900 transition-colors"
+              className="hover:text-terracotta transition-colors"
             >
               {city.name}
             </Link>
           </>
         )}
         <span className="mx-2">/</span>
-        <span className="text-zinc-900">{designer.name}</span>
+        <span className="text-charcoal">{designer.name}</span>
       </nav>
 
       {/* ── Hero Section ────────────────────────────────── */}
-      {/* DSGN-01: name, photo, city, bio */}
       <div className="flex flex-col md:flex-row gap-8 mb-16">
         {/* Photo */}
         <div className="w-full md:w-80 shrink-0">
@@ -148,10 +143,10 @@ export default async function DesignerPage({ params }: Props) {
             <img
               src={designer.photo}
               alt={designer.name}
-              className="w-full aspect-[3/4] object-cover rounded-xl border border-zinc-200"
+              className="w-full aspect-[3/4] object-cover rounded-xl border border-sand"
             />
           ) : (
-            <div className="w-full aspect-[3/4] rounded-xl border border-zinc-200 bg-zinc-100 flex items-center justify-center text-zinc-300">
+            <div className="w-full aspect-[3/4] rounded-xl border border-sand bg-sand flex items-center justify-center text-sand-hover">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-16 h-16"
@@ -172,17 +167,17 @@ export default async function DesignerPage({ params }: Props) {
 
         {/* Info */}
         <div className="flex flex-col justify-center min-w-0">
-          <h1 className="text-3xl font-semibold tracking-tight mb-2">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold tracking-tight mb-2">
             {designer.name}
           </h1>
           {city && (
-            <p className="text-zinc-500 text-lg mb-4">
+            <p className="text-warm-grey text-lg mb-4">
               {city.name}
               {country && `, ${country.name}`}
             </p>
           )}
           {designer.bio && (
-            <p className="text-zinc-600 leading-relaxed max-w-xl">
+            <p className="text-warm-grey leading-relaxed max-w-xl">
               {designer.bio}
             </p>
           )}
@@ -192,22 +187,21 @@ export default async function DesignerPage({ params }: Props) {
       {/* ── Story Section ───────────────────────────────── */}
       {designer.story && (
         <section className="mb-16">
-          <h2 className="text-xl font-semibold mb-4">История</h2>
-          <div className="prose prose-zinc max-w-none text-zinc-600 leading-relaxed whitespace-pre-line">
+          <h2 className="font-serif text-xl font-semibold mb-4">История</h2>
+          <div className="prose max-w-none text-warm-grey leading-relaxed whitespace-pre-line">
             {designer.story}
           </div>
         </section>
       )}
 
       {/* ── Why Locals Wear This ─────────────────────────── */}
-      {/* DSGN-04 */}
       {designer.whyLocalsWear && (
         <section className="mb-16">
-          <div className="rounded-xl border border-zinc-200 bg-white p-6">
-            <h2 className="text-xl font-semibold mb-3">
+          <div className="rounded-xl border-l-4 border-terracotta bg-warm-white p-6">
+            <h2 className="font-serif text-xl font-semibold mb-3">
               Почему местные это носят
             </h2>
-            <p className="text-zinc-600 leading-relaxed">
+            <p className="text-warm-grey leading-relaxed italic">
               {designer.whyLocalsWear}
             </p>
           </div>
@@ -215,21 +209,20 @@ export default async function DesignerPage({ params }: Props) {
       )}
 
       {/* ── Contacts Section ─────────────────────────────── */}
-      {/* DSGN-03: Instagram, website, address */}
       {(designer.instagram || designer.website || designer.address) && (
         <section className="mb-16">
-          <h2 className="text-xl font-semibold mb-4">Контакты</h2>
+          <h2 className="font-serif text-xl font-semibold mb-4">Контакты</h2>
           <div className="flex flex-wrap gap-4">
             {designer.instagram && (
               <a
                 href={`https://instagram.com/${designer.instagram.replace(/^@/, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium hover:border-zinc-400 transition-colors"
+                className="inline-flex items-center gap-2 rounded-xl border border-sand bg-warm-white px-4 py-3 text-sm font-medium hover:border-terracotta hover:text-terracotta transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4 text-zinc-500"
+                  className="w-4 h-4"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -241,9 +234,7 @@ export default async function DesignerPage({ params }: Props) {
                     d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
                   />
                 </svg>
-                <span className="text-zinc-700">
-                  @{designer.instagram.replace(/^@/, "")}
-                </span>
+                <span>@{designer.instagram.replace(/^@/, "")}</span>
               </a>
             )}
 
@@ -256,11 +247,11 @@ export default async function DesignerPage({ params }: Props) {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium hover:border-zinc-400 transition-colors"
+                className="inline-flex items-center gap-2 rounded-xl border border-sand bg-warm-white px-4 py-3 text-sm font-medium hover:border-terracotta hover:text-terracotta transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4 text-zinc-500"
+                  className="w-4 h-4"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -272,7 +263,7 @@ export default async function DesignerPage({ params }: Props) {
                     d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
                   />
                 </svg>
-                <span className="text-zinc-700">
+                <span>
                   {designer.website
                     .replace(/^https?:\/\//, "")
                     .replace(/\/$/, "")}
@@ -281,10 +272,10 @@ export default async function DesignerPage({ params }: Props) {
             )}
 
             {designer.address && (
-              <div className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium">
+              <div className="inline-flex items-center gap-2 rounded-xl border border-sand bg-warm-white px-4 py-3 text-sm font-medium">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4 text-zinc-500 shrink-0"
+                  className="w-4 h-4 text-warm-grey shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -301,7 +292,7 @@ export default async function DesignerPage({ params }: Props) {
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                 </svg>
-                <span className="text-zinc-700">{designer.address}</span>
+                <span className="text-warm-grey">{designer.address}</span>
               </div>
             )}
           </div>
@@ -309,10 +300,11 @@ export default async function DesignerPage({ params }: Props) {
       )}
 
       {/* ── Items Gallery ────────────────────────────────── */}
-      {/* DSGN-02: gallery of items, min 3 photos */}
       {itemsWithPhotos.length > 0 && (
         <section>
-          <h2 className="text-xl font-semibold mb-6">Вещи дизайнера</h2>
+          <h2 className="font-serif text-xl font-semibold mb-6">
+            Вещи дизайнера
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {itemsWithPhotos.map((row) => {
               const item = row.items;
@@ -323,18 +315,17 @@ export default async function DesignerPage({ params }: Props) {
                 <Link
                   key={item.id}
                   href={`/item/${item.slug}`}
-                  className="group block rounded-xl border border-zinc-200 bg-white overflow-hidden hover:border-zinc-400 transition-colors"
+                  className="group block rounded-xl border border-sand bg-warm-white overflow-hidden hover:border-sand-hover hover:shadow-md transition-all duration-200"
                 >
-                  {/* Item photo */}
-                  <div className="aspect-[4/3] bg-zinc-100 overflow-hidden">
+                  <div className="aspect-[4/3] bg-sand overflow-hidden">
                     {firstPhoto ? (
                       <img
                         src={firstPhoto.url}
                         alt={firstPhoto.alt || item.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-zinc-300">
+                      <div className="w-full h-full flex items-center justify-center text-sand-hover">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="w-12 h-12"
@@ -353,30 +344,29 @@ export default async function DesignerPage({ params }: Props) {
                     )}
                   </div>
 
-                  {/* Item info */}
                   <div className="p-4">
-                    <h3 className="font-medium group-hover:text-zinc-600 transition-colors truncate">
+                    <h3 className="font-medium text-charcoal group-hover:text-terracotta transition-colors truncate">
                       {item.name}
                     </h3>
                     <div className="flex items-center gap-2 mt-1.5">
                       {item.material && (
-                        <span className="text-xs text-zinc-400 truncate">
+                        <span className="text-xs text-warm-grey truncate">
                           {item.material}
                         </span>
                       )}
                       {category && (
                         <>
                           {item.material && (
-                            <span className="text-zinc-300">·</span>
+                            <span className="text-sand-hover">·</span>
                           )}
-                          <span className="text-xs text-zinc-400 truncate">
+                          <span className="text-xs text-warm-grey truncate">
                             {category.nameRu || category.name}
                           </span>
                         </>
                       )}
                     </div>
                     {priceLabel(item) && (
-                      <p className="text-sm font-medium text-zinc-900 mt-2">
+                      <p className="text-sm font-semibold text-charcoal mt-2">
                         {priceLabel(item)}
                       </p>
                     )}
@@ -388,12 +378,13 @@ export default async function DesignerPage({ params }: Props) {
         </section>
       )}
 
-      {/* Empty state when no items */}
       {itemsWithPhotos.length === 0 && (
         <section>
-          <h2 className="text-xl font-semibold mb-4">Вещи дизайнера</h2>
-          <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center">
-            <p className="text-zinc-400">У этого дизайнера пока нет вещей.</p>
+          <h2 className="font-serif text-xl font-semibold mb-4">
+            Вещи дизайнера
+          </h2>
+          <div className="rounded-xl border border-sand bg-warm-white p-8 text-center">
+            <p className="text-warm-grey">У этого дизайнера пока нет вещей.</p>
           </div>
         </section>
       )}

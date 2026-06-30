@@ -39,7 +39,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CityPage({ params }: Props) {
   const { country: countrySlug, city: citySlug } = await params;
 
-  /* ── Validate country ─────────────────────────── */
   const { data: countryData, error: countryError } = await supabase
     .from("countries")
     .select("*")
@@ -50,7 +49,6 @@ export default async function CityPage({ params }: Props) {
 
   if (!country) notFound();
 
-  /* ── Validate city (must belong to country) ──── */
   const { data: cityData, error: cityError } = await supabase
     .from("cities")
     .select("*")
@@ -62,7 +60,6 @@ export default async function CityPage({ params }: Props) {
 
   if (!city) notFound();
 
-  /* ── Categories with items in this city ───────── */
   const { data: cityDesigners, error: desErr } = await supabase
     .from("designers")
     .select("id")
@@ -78,10 +75,8 @@ export default async function CityPage({ params }: Props) {
       .in("designer_id", designerIds);
     if (itemsErr) throw itemsErr;
 
-    // Group by category and count
     const catMap = new Map<number, any>();
     for (const item of itemsData || []) {
-      // Supabase returns nested relations as arrays
       const catArr = item.categories as any[] | null;
       if (!catArr || catArr.length === 0) continue;
       const cat = catArr[0];
@@ -106,7 +101,6 @@ export default async function CityPage({ params }: Props) {
     .eq("city_id", city.id);
   if (adsError) throw adsError;
 
-  /* ── Display name helper ─────────────────────── */
   const categoryLabel = (cat: {
     name: string;
     nameRu?: string;
@@ -116,28 +110,30 @@ export default async function CityPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       {/* Breadcrumb */}
-      <nav className="text-sm text-zinc-500 mb-8">
-        <Link href="/" className="hover:text-zinc-900 transition-colors">
+      <nav className="text-sm text-warm-grey mb-8">
+        <Link href="/" className="hover:text-terracotta transition-colors">
           Главная
         </Link>
         <span className="mx-2">/</span>
         <Link
           href={`/${country.slug}`}
-          className="hover:text-zinc-900 transition-colors"
+          className="hover:text-terracotta transition-colors"
         >
           {country.name}
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-zinc-900">{city.name}</span>
+        <span className="text-charcoal">{city.name}</span>
       </nav>
 
       {/* City header */}
       <div className="mb-12">
-        <h1 className="text-3xl font-semibold tracking-tight mb-3">
+        <h1 className="font-serif text-3xl md:text-4xl font-bold tracking-tight mb-3">
           {city.name}
         </h1>
         {city.description && (
-          <p className="text-zinc-500 text-lg max-w-2xl">{city.description}</p>
+          <p className="text-warm-grey text-lg max-w-2xl leading-relaxed">
+            {city.description}
+          </p>
         )}
       </div>
 
@@ -151,10 +147,10 @@ export default async function CityPage({ params }: Props) {
                 href={ad.link || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block rounded-xl border border-zinc-200 bg-white overflow-hidden hover:border-zinc-400 transition-colors"
+                className="group block rounded-xl border border-sand bg-warm-white overflow-hidden hover:border-sand-hover transition-colors"
               >
                 {ad.photo && (
-                  <div className="aspect-[3/1] bg-zinc-100 overflow-hidden">
+                  <div className="aspect-[3/1] bg-sand overflow-hidden">
                     <img
                       src={ad.photo}
                       alt={ad.name}
@@ -165,7 +161,7 @@ export default async function CityPage({ params }: Props) {
                 <div className="p-4">
                   <h3 className="font-medium text-sm">{ad.name}</h3>
                   {ad.description && (
-                    <p className="text-xs text-zinc-500 mt-1 line-clamp-2">
+                    <p className="text-xs text-warm-grey mt-1 line-clamp-2">
                       {ad.description}
                     </p>
                   )}
@@ -179,18 +175,18 @@ export default async function CityPage({ params }: Props) {
       {/* Categories grid */}
       {cityCategories.length > 0 && (
         <section>
-          <h2 className="text-xl font-semibold mb-4">Категории</h2>
+          <h2 className="font-serif text-xl font-semibold mb-4">Категории</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {cityCategories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/${country.slug}/${city.slug}/${cat.slug}`}
-                className="group block rounded-xl border border-zinc-200 bg-white p-5 hover:border-zinc-400 transition-colors"
+                className="group block rounded-xl border border-sand bg-warm-white p-5 hover:border-sand-hover transition-colors"
               >
-                <h3 className="text-lg font-medium group-hover:text-zinc-600 transition-colors">
+                <h3 className="text-lg font-medium text-charcoal group-hover:text-terracotta transition-colors">
                   {categoryLabel(cat)}
                 </h3>
-                <p className="text-zinc-500 text-sm mt-1">
+                <p className="text-warm-grey text-sm mt-1">
                   {cat.itemCount} {cat.itemCount === 1 ? "вещь" : "вещей"}
                 </p>
               </Link>
@@ -201,7 +197,7 @@ export default async function CityPage({ params }: Props) {
 
       {/* Empty state */}
       {cityCategories.length === 0 && (
-        <p className="text-zinc-500 text-center py-12">
+        <p className="text-warm-grey text-center py-12">
           В этом городе пока нет вещей. Загляните позже — мы постоянно добавляем
           новых дизайнеров.
         </p>

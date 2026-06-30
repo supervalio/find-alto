@@ -17,7 +17,7 @@ export default async function CategoriesPage({
 
   const allCategories = await db.select().from(categories);
   const editing = editId
-    ? allCategories.find((c) => c.id === editId) ?? null
+    ? allCategories.find((c: any) => c.id === editId) ?? null
     : null;
 
   return (
@@ -148,7 +148,7 @@ export default async function CategoriesPage({
                 </td>
               </tr>
             ) : (
-              allCategories.map((c) => (
+              allCategories.map((c: any) => (
                 <tr key={c.id} className="border-b border-zinc-100 hover:bg-zinc-50 transition-colors">
                   <td className="px-4 py-3 text-zinc-500">{c.id}</td>
                   <td className="px-4 py-3 font-medium">{c.name}</td>

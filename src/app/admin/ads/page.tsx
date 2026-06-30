@@ -1,10 +1,6 @@
 import { db } from "@/db";
 import { ads, countries, cities } from "@/db/schema";
-import {
-  createAd,
-  updateAd,
-  deleteAd,
-} from "@/app/admin/actions";
+import { createAd, updateAd, deleteAd } from "@/app/admin/actions";
 import { DeleteButton } from "@/app/admin/delete-button";
 import { AdPhotoField } from "./photo-field";
 
@@ -23,18 +19,18 @@ export default async function AdsPage({
   ]);
 
   const editing = editId
-    ? (allAds.find((a) => a.id === editId) ?? null)
+    ? (allAds.find((a: any) => a.id === editId) ?? null)
     : null;
 
   function countryName(countryId: number | null) {
     if (!countryId) return "—";
-    const c = allCountries.find((x) => x.id === countryId);
+    const c = allCountries.find((x: any) => x.id === countryId);
     return c ? c.name : "—";
   }
 
   function cityName(cityId: number | null) {
     if (!cityId) return "—";
-    const c = allCities.find((x) => x.id === cityId);
+    const c = allCities.find((x: any) => x.id === cityId);
     return c ? c.name : "—";
   }
 
@@ -103,7 +99,7 @@ export default async function AdsPage({
               className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
             >
               <option value="">Выберите страну…</option>
-              {allCountries.map((c) => (
+              {allCountries.map((c: any) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
                 </option>
@@ -119,7 +115,7 @@ export default async function AdsPage({
               className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
             >
               <option value="">Выберите город…</option>
-              {allCities.map((c) => (
+              {allCities.map((c: any) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
                 </option>
@@ -208,7 +204,7 @@ export default async function AdsPage({
                 className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
               >
                 <option value="">Выберите страну…</option>
-                {allCountries.map((c) => (
+                {allCountries.map((c: any) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
                   </option>
@@ -225,7 +221,7 @@ export default async function AdsPage({
                 className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
               >
                 <option value="">Выберите город…</option>
-                {allCities.map((c) => (
+                {allCities.map((c: any) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
                   </option>
@@ -279,7 +275,7 @@ export default async function AdsPage({
                 </td>
               </tr>
             ) : (
-              allAds.map((a) => (
+              allAds.map((a: any) => (
                 <tr
                   key={a.id}
                   className="border-b border-zinc-100 hover:bg-zinc-50 transition-colors"

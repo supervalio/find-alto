@@ -18,7 +18,7 @@ export default async function CountriesPage({
 
   const allCountries = await db.select().from(countries);
   const editing = editId
-    ? (allCountries.find((c) => c.id === editId) ?? null)
+    ? (allCountries.find((c: any) => c.id === editId) ?? null)
     : null;
 
   return (
@@ -164,7 +164,7 @@ export default async function CountriesPage({
                 </td>
               </tr>
             ) : (
-              allCountries.map((c) => (
+              allCountries.map((c: any) => (
                 <tr
                   key={c.id}
                   className="border-b border-zinc-100 hover:bg-zinc-50 transition-colors"

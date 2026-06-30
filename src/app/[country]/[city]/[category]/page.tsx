@@ -54,7 +54,6 @@ export default async function CategoryPage({ params }: Props) {
     category: categorySlug,
   } = await params;
 
-  /* ── Validate country ─────────────────────────── */
   const { data: countryData, error: countryError } = await supabase
     .from("countries")
     .select("*")
@@ -65,7 +64,6 @@ export default async function CategoryPage({ params }: Props) {
 
   if (!country) notFound();
 
-  /* ── Validate city (must belong to country) ──── */
   const { data: cityData, error: cityError } = await supabase
     .from("cities")
     .select("*")
@@ -77,7 +75,6 @@ export default async function CategoryPage({ params }: Props) {
 
   if (!city) notFound();
 
-  /* ── Validate category ────────────────────────── */
   const { data: categoryData, error: categoryError } = await supabase
     .from("categories")
     .select("*")
@@ -88,7 +85,6 @@ export default async function CategoryPage({ params }: Props) {
 
   if (!category) notFound();
 
-  /* ── Items in this category + city ────────────── */
   const { data: cityDesigners, error: desErr } = await supabase
     .from("designers")
     .select("id")
@@ -111,7 +107,6 @@ export default async function CategoryPage({ params }: Props) {
       designer: row.designers,
     }));
 
-    // Deduplicate designers
     const seen = new Set<number>();
     for (const row of itemsData || []) {
       if (row.designers && !seen.has(row.designers.id)) {
@@ -121,7 +116,6 @@ export default async function CategoryPage({ params }: Props) {
     }
   }
 
-  /* ── Display name helper ──────────────────────── */
   const categoryLabel = (cat: {
     name: string;
     nameRu: string;
@@ -131,31 +125,31 @@ export default async function CategoryPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       {/* Breadcrumb */}
-      <nav className="text-sm text-zinc-500 mb-8">
-        <Link href="/" className="hover:text-zinc-900 transition-colors">
+      <nav className="text-sm text-warm-grey mb-8">
+        <Link href="/" className="hover:text-terracotta transition-colors">
           Главная
         </Link>
         <span className="mx-2">/</span>
         <Link
           href={`/${country.slug}`}
-          className="hover:text-zinc-900 transition-colors"
+          className="hover:text-terracotta transition-colors"
         >
           {country.name}
         </Link>
         <span className="mx-2">/</span>
         <Link
           href={`/${country.slug}/${city.slug}`}
-          className="hover:text-zinc-900 transition-colors"
+          className="hover:text-terracotta transition-colors"
         >
           {city.name}
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-zinc-900">{categoryLabel(category)}</span>
+        <span className="text-charcoal">{categoryLabel(category)}</span>
       </nav>
 
       {/* Category header */}
       <div className="mb-12">
-        <h1 className="text-3xl font-semibold tracking-tight mb-3">
+        <h1 className="font-serif text-3xl font-bold tracking-tight mb-3">
           {categoryLabel(category)} — {city.name}
         </h1>
       </div>
@@ -163,36 +157,34 @@ export default async function CategoryPage({ params }: Props) {
       {/* Items list */}
       {categoryItems.length > 0 && (
         <section className="mb-12">
-          <h2 className="text-xl font-semibold mb-4">
+          <h2 className="font-serif text-xl font-semibold mb-4">
             Вещи ({categoryItems.length})
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {categoryItems.map(({ item, designer }) => (
-              <div
+              <Link
                 key={item.id}
-                className="rounded-xl border border-zinc-200 bg-white p-5"
+                href={`/item/${item.slug}`}
+                className="block rounded-xl border border-sand bg-warm-white p-5 hover:border-sand-hover transition-colors"
               >
-                <h3 className="font-medium">{item.name}</h3>
+                <h3 className="font-medium text-charcoal">{item.name}</h3>
                 {item.description && (
-                  <p className="text-sm text-zinc-500 mt-1 line-clamp-2">
+                  <p className="text-sm text-warm-grey mt-1 line-clamp-2 leading-relaxed">
                     {item.description}
                   </p>
                 )}
                 <div className="mt-3 flex items-center justify-between">
-                  <Link
-                    href={`/designer/${designer.slug}`}
-                    className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
-                  >
+                  <span className="text-sm text-terracotta">
                     {designer.name}
-                  </Link>
+                  </span>
                   {item.priceLocal != null && item.priceLocal > 0 && (
-                    <span className="text-sm font-medium">
+                    <span className="text-sm font-medium tabular-nums">
                       {item.priceLocal.toLocaleString()}{" "}
                       {item.currency || "USD"}
                     </span>
                   )}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </section>
@@ -201,7 +193,7 @@ export default async function CategoryPage({ params }: Props) {
       {/* Designers in this category */}
       {categoryDesigners.length > 0 && (
         <section>
-          <h2 className="text-xl font-semibold mb-4">
+          <h2 className="font-serif text-xl font-semibold mb-4">
             Дизайнеры в этой категории
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -209,9 +201,9 @@ export default async function CategoryPage({ params }: Props) {
               <Link
                 key={designer.id}
                 href={`/designer/${designer.slug}`}
-                className="group flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 hover:border-zinc-400 transition-colors"
+                className="group flex gap-4 rounded-xl border border-sand bg-warm-white p-4 hover:border-sand-hover transition-colors"
               >
-                <div className="w-20 h-20 rounded-lg bg-zinc-100 shrink-0 overflow-hidden">
+                <div className="w-20 h-20 rounded-lg bg-sand shrink-0 overflow-hidden">
                   {designer.photo ? (
                     <img
                       src={designer.photo}
@@ -219,17 +211,17 @@ export default async function CategoryPage({ params }: Props) {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-zinc-300 text-xs">
+                    <div className="w-full h-full flex items-center justify-center text-sand-hover text-xs">
                       фото
                     </div>
                   )}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-medium group-hover:text-zinc-600 transition-colors truncate">
+                  <h3 className="font-medium text-charcoal group-hover:text-terracotta transition-colors truncate">
                     {designer.name}
                   </h3>
-                  <p className="text-sm text-zinc-500 mt-1">{city.name}</p>
-                  <p className="text-sm text-zinc-400 mt-1 line-clamp-2">
+                  <p className="text-sm text-warm-grey mt-1">{city.name}</p>
+                  <p className="text-sm text-warm-grey/70 mt-1 line-clamp-2">
                     {designer.bio}
                   </p>
                 </div>
@@ -241,7 +233,7 @@ export default async function CategoryPage({ params }: Props) {
 
       {/* Empty state */}
       {categoryItems.length === 0 && (
-        <p className="text-zinc-500 text-center py-12">
+        <p className="text-warm-grey text-center py-12">
           В этой категории пока нет вещей для {city.name}. Загляните позже.
         </p>
       )}

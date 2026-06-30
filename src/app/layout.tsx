@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Find Alto — локальные дизайнеры СНГ",
+    default: "Find Alto — гид по локальным дизайнерам",
     template: "%s | Find Alto",
   },
   description:
-    "Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ. Find local.",
+    "Откройте локальных дизайнеров одежды, обуви и аксессуаров из стран СНГ. Find local.",
 };
 
 export default function RootLayout({
@@ -32,17 +32,18 @@ export default function RootLayout({
       lang="ru"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900">
-        <header className="border-b border-zinc-200 bg-white">
-          <div className="mx-auto max-w-5xl px-4 h-14 flex items-center justify-between">
-            <Link href="/" className="font-semibold text-lg tracking-tight">
-              Find Alto
+      <body className="min-h-full flex flex-col bg-cream text-charcoal">
+        <header className="border-b border-sand bg-warm-white">
+          <div className="mx-auto max-w-5xl px-4 h-16 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-3">
+              <img src="/logo.svg" alt="Find Alto" className="h-10 w-auto" />
             </Link>
           </div>
         </header>
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-zinc-200 bg-white py-8 text-center text-sm text-zinc-500">
-          find local
+        <footer className="border-t border-sand bg-warm-white py-10 text-center text-sm text-warm-grey">
+          <p className="font-serif text-lg text-charcoal mb-1">Find Alto</p>
+          <p className="tracking-widest uppercase text-xs">find local</p>
         </footer>
       </body>
     </html>

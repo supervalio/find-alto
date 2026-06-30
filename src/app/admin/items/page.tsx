@@ -20,7 +20,7 @@ export default async function ItemsPage({
   ]);
 
   const editing = editId
-    ? (allItems.find((i) => i.id === editId) ?? null)
+    ? (allItems.find((i: any) => i.id === editId) ?? null)
     : null;
 
   const editingPhotos = editId
@@ -33,13 +33,13 @@ export default async function ItemsPage({
 
   function designerName(id: number | null) {
     if (!id) return "—";
-    const d = allDesigners.find((x) => x.id === id);
+    const d = allDesigners.find((x: any) => x.id === id);
     return d ? d.name : "—";
   }
 
   function categoryName(id: number | null) {
     if (!id) return "—";
-    const c = allCategories.find((x) => x.id === id);
+    const c = allCategories.find((x: any) => x.id === id);
     return c ? c.name : "—";
   }
 
@@ -89,7 +89,7 @@ export default async function ItemsPage({
                 className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
               >
                 <option value="">Выберите дизайнера…</option>
-                {allDesigners.map((d) => (
+                {allDesigners.map((d: any) => (
                   <option key={d.id} value={d.id}>
                     {d.name}
                   </option>
@@ -106,7 +106,7 @@ export default async function ItemsPage({
                 className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
               >
                 <option value="">Выберите категорию…</option>
-                {allCategories.map((c) => (
+                {allCategories.map((c: any) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
                   </option>
@@ -230,7 +230,7 @@ export default async function ItemsPage({
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
                 >
                   <option value="">Выберите дизайнера…</option>
-                  {allDesigners.map((d) => (
+                  {allDesigners.map((d: any) => (
                     <option key={d.id} value={d.id}>
                       {d.name}
                     </option>
@@ -248,7 +248,7 @@ export default async function ItemsPage({
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent bg-white"
                 >
                   <option value="">Выберите категорию…</option>
-                  {allCategories.map((c) => (
+                  {allCategories.map((c: any) => (
                     <option key={c.id} value={c.id}>
                       {c.name}
                     </option>
@@ -370,7 +370,7 @@ export default async function ItemsPage({
                 </td>
               </tr>
             ) : (
-              allItems.map((item) => (
+              allItems.map((item: any) => (
                 <tr
                   key={item.id}
                   className="border-b border-zinc-100 hover:bg-zinc-50 transition-colors"
