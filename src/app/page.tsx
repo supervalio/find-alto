@@ -29,13 +29,13 @@ export default async function HomePage() {
   if (dbError) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-24 text-center">
-        <div className="font-sans text-4xl font-extralight text-terracotta mb-1">
+        <div className="font-sans text-4xl font-extralight text-emerald mb-1">
           /
         </div>
         <p className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-2">
           find
         </p>
-        <h1 className="font-sans text-2xl font-semibold tracking-[6px] text-terracotta mb-3">
+        <h1 className="font-sans text-2xl font-semibold tracking-[6px] text-emerald mb-3">
           ALTO
         </h1>
         <p className="tracking-widest uppercase text-xs text-olive mb-8">
@@ -60,13 +60,13 @@ export default async function HomePage() {
       {/* ── Hero: Slash Logo ───────────────────────────── */}
       <section className="bg-warm-white border-b border-sand">
         <div className="mx-auto max-w-5xl px-4 py-28 md:py-36 text-center">
-          <div className="font-sans text-6xl md:text-7xl font-extralight text-terracotta leading-none mb-1">
+          <div className="font-sans text-6xl md:text-7xl font-extralight text-emerald leading-none mb-1">
             /
           </div>
           <p className="text-xs md:text-sm tracking-[5px] uppercase text-warm-grey/50 mb-2">
             find
           </p>
-          <h1 className="font-sans text-3xl md:text-4xl font-semibold tracking-[6px] text-terracotta mb-3">
+          <h1 className="font-sans text-3xl md:text-4xl font-semibold tracking-[6px] text-emerald mb-3">
             ALTO
           </h1>
           <p className="tracking-widest uppercase text-xs text-olive mb-10">
