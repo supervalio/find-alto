@@ -1,10 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" fill="none">
-  <!-- Emerald stick / vertical bar -->
-  <rect x="0" y="4" width="3" height="40" rx="1.5" fill="#047857"/>
-  <!-- "FIND" text -->
-  <text x="14" y="35" font-family="'Playfair Display', 'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="30" fill="#1C1917" letter-spacing="2">FIND</text>
-  <!-- "ALTO" with emerald accent -->
-  <text x="107" y="35" font-family="'Playfair Display', 'Cormorant Garamond', Georgia, serif" font-weight="700" font-size="30" fill="#047857" letter-spacing="4">ALTO</text>
-  <!-- Tagline -->
-  <text x="14" y="46" font-family="'Inter', 'Geist', system-ui, sans-serif" font-weight="400" font-size="9" fill="#78716C" letter-spacing="6" text-transform="uppercase">FIND LOCAL</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" fill="none">
+  <!-- Slash -->
+  <text x="100" y="38" font-family="'DM Sans', 'Inter', 'Geist', system-ui, sans-serif" font-weight="200" font-size="46" fill="#0D5C46" text-anchor="middle">/</text>
+  <!-- find -->
+  <text x="100" y="58" font-family="'DM Sans', 'Inter', 'Geist', system-ui, sans-serif" font-weight="200" font-size="12" fill="#999999" text-anchor="middle" letter-spacing="3">find</text>
+  <!-- ALTO -->
+  <text x="100" y="78" font-family="'DM Sans', 'Inter', 'Geist', system-ui, sans-serif" font-weight="600" font-size="26" fill="#0D5C46" text-anchor="middle" letter-spacing="5">ALTO</text>
 </svg>
