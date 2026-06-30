@@ -34,9 +34,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-cream text-charcoal">
         <header className="border-b border-sand bg-warm-white">
-          <div className="mx-auto max-w-5xl px-4 h-16 flex items-center justify-center">
-            <Link href="/" className="flex items-center">
-              <img src="/logo.svg" alt="Find Alto" className="h-12 w-auto" />
+          <div className="mx-auto max-w-5xl px-4 h-13 flex items-center justify-center">
+            <Link
+              href="/"
+              className="text-sm font-medium tracking-widest uppercase text-charcoal hover:text-terracotta transition-colors"
+            >
+              Find Alto
             </Link>
           </div>
         </header>

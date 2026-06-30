@@ -29,9 +29,18 @@ export default async function HomePage() {
   if (dbError) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-24 text-center">
-        <h1 className="font-serif text-4xl font-bold tracking-tight mb-4">
-          Find Alto
+        <div className="font-sans text-4xl font-extralight text-terracotta mb-1">
+          /
+        </div>
+        <p className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-2">
+          find
+        </p>
+        <h1 className="font-sans text-2xl font-semibold tracking-[6px] text-terracotta mb-3">
+          ALTO
         </h1>
+        <p className="tracking-widest uppercase text-xs text-olive mb-8">
+          find local
+        </p>
         <p className="text-warm-grey text-lg max-w-xl mx-auto">
           Откройте локальных дизайнеров одежды, обуви и аксессуаров из стран
           СНГ.
@@ -48,17 +57,23 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* ── Hero Section ─────────────────────────────────── */}
+      {/* ── Hero: Slash Logo ───────────────────────────── */}
       <section className="bg-warm-white border-b border-sand">
-        <div className="mx-auto max-w-5xl px-4 py-24 md:py-32 text-center">
-          <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight text-charcoal mb-4">
-            Find Alto
-          </h1>
-          <p className="text-warm-grey text-lg md:text-xl max-w-xl mx-auto mb-2 leading-relaxed">
-            Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ
+        <div className="mx-auto max-w-5xl px-4 py-28 md:py-36 text-center">
+          <div className="font-sans text-6xl md:text-7xl font-extralight text-terracotta leading-none mb-1">
+            /
+          </div>
+          <p className="text-xs md:text-sm tracking-[5px] uppercase text-warm-grey/50 mb-2">
+            find
           </p>
-          <p className="text-olive text-sm tracking-widest uppercase">
+          <h1 className="font-sans text-3xl md:text-4xl font-semibold tracking-[6px] text-terracotta mb-3">
+            ALTO
+          </h1>
+          <p className="tracking-widest uppercase text-xs text-olive mb-10">
             find local
+          </p>
+          <p className="text-warm-grey text-base md:text-lg max-w-md mx-auto leading-relaxed">
+            Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ
           </p>
         </div>
       </section>
