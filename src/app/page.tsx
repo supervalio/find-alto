@@ -39,7 +39,7 @@ export default async function HomePage() {
           ALTO
         </h1>
         <p className="tracking-widest uppercase text-xs text-olive mb-8">
-          find local
+          discover local fashion
         </p>
         <p className="text-warm-grey text-lg max-w-xl mx-auto">
           Редакционный гид по локальной независимой моде из стран СНГ.
@@ -69,7 +69,7 @@ export default async function HomePage() {
             ALTO
           </h1>
           <p className="tracking-widest uppercase text-xs text-olive mb-10">
-            find local
+            discover local fashion
           </p>
           <p className="text-warm-grey text-base md:text-lg max-w-md mx-auto leading-relaxed">
             Редакционный гид по локальной независимой моде из стран СНГ
