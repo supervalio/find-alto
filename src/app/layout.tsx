@@ -148,7 +148,7 @@ export default function RootLayout({
               <p>
                 © {new Date().getFullYear()} Find Alto. Independent, ad-free.
               </p>
-              <p>Volume 01 — Winter Edition</p>
+              <p>Independent, ad-free.</p>
             </div>
           </div>
         </footer>

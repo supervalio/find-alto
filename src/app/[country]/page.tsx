@@ -128,7 +128,7 @@ export default async function CountryPage({ params }: Props) {
 
       {/* What to buy */}
       {whatToBuy.length > 0 && (
-        <CountrySection eyebrow="I" title="What to buy">
+        <CountrySection title="What to buy">
           <ul className="grid gap-6 sm:grid-cols-2">
             {whatToBuy.map((item, i) => (
               <li
@@ -146,7 +146,7 @@ export default async function CountryPage({ params }: Props) {
       )}
 
       {/* Designers */}
-      <CountrySection eyebrow="II" title="Designers">
+      <CountrySection title="Designers">
         {designers.length === 0 ? (
           <p className="text-[15px] text-muted">
             Profiles for {name} are being written this season.
@@ -191,7 +191,7 @@ export default async function CountryPage({ params }: Props) {
 
       {/* Concept stores */}
       {stores.length > 0 && (
-        <CountrySection eyebrow="III" title="Concept stores">
+        <CountrySection title="Concept stores">
           <ul className="divide-y divide-hairline-hover border-t border-hairline-hover">
             {stores.map((s) => (
               <li
@@ -209,7 +209,7 @@ export default async function CountryPage({ params }: Props) {
 
       {/* Events */}
       {events.length > 0 && (
-        <CountrySection eyebrow="IV" title="Fashion events">
+        <CountrySection title="Fashion events">
           <ul className="divide-y divide-hairline-hover border-t border-hairline-hover">
             {events.map((e) => (
               <li
@@ -229,11 +229,9 @@ export default async function CountryPage({ params }: Props) {
 }
 
 function CountrySection({
-  eyebrow,
   title,
   children,
 }: {
-  eyebrow: string;
   title: string;
   children: React.ReactNode;
 }) {
@@ -241,8 +239,7 @@ function CountrySection({
     <section className="mx-auto max-w-7xl border-t border-hairline-hover px-6 py-16 sm:px-10 md:py-24">
       <div className="grid gap-10 md:grid-cols-[1fr_2.4fr] md:gap-16">
         <header>
-          <p className="eyebrow">Section {eyebrow}</p>
-          <h2 className="mt-3 font-serif text-3xl md:text-4xl">{title}</h2>
+          <h2 className="font-serif text-3xl md:text-4xl">{title}</h2>
         </header>
         <div>{children}</div>
       </div>

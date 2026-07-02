@@ -37,8 +37,7 @@ export default async function HomePage() {
       {/* ── Opener ────────────────────────────────────── */}
       <section className="grid gap-10 pt-16 pb-24 md:grid-cols-[1.4fr_1fr] md:gap-20 md:pt-28 md:pb-32">
         <div className="max-w-2xl">
-          <p className="eyebrow">Volume 01 — Winter Edition</p>
-          <h1 className="mt-6 font-serif text-5xl leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
+          <h1 className="font-serif text-5xl leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
             Discover local fashion.
           </h1>
           <p className="mt-8 max-w-lg text-lg leading-relaxed text-muted">
@@ -91,7 +90,7 @@ export default async function HomePage() {
       )}
 
       {/* ── Choose your destination ───────────────────── */}
-      <Section eyebrow="Chapter One" title="Choose your destination">
+      <Section title="Choose your destination">
         <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
           {allCountries.map((c) => (
             <Link key={c.slug} href={`/${c.slug}`} className="group block">
@@ -130,7 +129,6 @@ export default async function HomePage() {
 
       {/* ── Concept stores ─────────────────────────────── */}
       <Section
-        eyebrow="Chapter Two"
         title="Concept stores"
         note="A short selection of spaces worth the detour."
       >
@@ -151,7 +149,7 @@ export default async function HomePage() {
       </Section>
 
       {/* ── Fashion events ─────────────────────────────── */}
-      <Section eyebrow="Chapter Three" title="Fashion events">
+      <Section title="Fashion events">
         <ul className="divide-y divide-hairline-hover border-t border-hairline-hover">
           {allCountries.flatMap((c) =>
             c.events.map((e) => (
@@ -176,12 +174,10 @@ export default async function HomePage() {
 
 /* ── Section wrapper ─────────────────────────────────── */
 function Section({
-  eyebrow,
   title,
   note,
   children,
 }: {
-  eyebrow: string;
   title: string;
   note?: string;
   children: React.ReactNode;
@@ -190,8 +186,7 @@ function Section({
     <section className="border-t border-hairline-hover py-20 md:py-28">
       <div className="grid gap-10 md:grid-cols-[1fr_2.2fr] md:gap-16">
         <header>
-          <p className="eyebrow">{eyebrow}</p>
-          <h2 className="mt-4 font-serif text-3xl leading-tight md:text-4xl">
+          <h2 className="font-serif text-3xl leading-tight md:text-4xl">
             {title}
           </h2>
           {note ? <p className="mt-4 text-sm text-muted">{note}</p> : null}
