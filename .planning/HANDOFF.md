@@ -1,4 +1,4 @@
-# Handoff — Find Alto (2026-06-29, thread #3)
+# Handoff — Find Alto (2026-07-02, thread #4)
 
 > 💡 **Инструкция для нового треда:** этот файл — точка входа. Прочитай его → сразу поймёшь состояние проекта.
 
@@ -7,7 +7,7 @@
 **Find Alto** — гид по локальным дизайнерам одежды из стран СНГ. Next.js 16 + Supabase PostgreSQL + Drizzle ORM + Tailwind 4.
 Гео-навигация: Страна → Город → Категория → Вещь. Плюс профили дизайнеров и админка (без аутентификации, открытая).
 
-Репозиторий: `https://github.com/supervalio/find-alto` (14 коммитов)
+Репозиторий: `https://github.com/supervalio/find-alto`
 Локальный путь: `/Users/valio/codewhale_projects/find-alto/`
 
 ## Текущее состояние
@@ -18,9 +18,13 @@
 - 5.2 Настройка Supabase ✅ (таблицы, RLS, seed-данные, Storage, API загрузки)
 - 5.3 GSD-фазы ✅
 - 5.4 Telegram AI-бот ⬜ позже
-- **Деплой на Vercel** 🔄 в процессе — переменные окружения добавлены, но билд упал с ошибкой
+- **Деплой на Vercel** 🔄 в процессе — билд локально проходит, ждём результата на Vercel
 
-### Что сделано в этой сессии (thread #3)
+### Что сделано в thread #4
+1. **Исправлен Vercel build:** `src/db/index.ts` — ленивая инициализация `@neondatabase/serverless` через `Proxy` + динамический `import()`, чтобы Vercel не пытался загрузить нативные драйверы на этапе сборки
+2. Билд проверен локально: проходит с `.env.local` и без него
+
+### История thread #3
 1. Подключён Supabase проект «find-alto» (boyvvchzrkaztwuoreeb, eu-west-1)
 2. Настроены RLS-политики: публичное чтение + запись на все 7 таблиц
 3. Seed-данные залиты через SQL API: 1 страна, 1 город, 4 категории, 4 дизайнера, 8 вещей, 16 фото, 2 рекламных блока
@@ -30,14 +34,9 @@
 7. Исправлены `.get()` → `.limit(1)` во всех страницах (PostgreSQL-совместимость)
 8. Исправлена синтаксическая ошибка в `admin/items/page.tsx`
 9. Добавлен `force-dynamic` в админку (пререндеринг на билде)
-10. Код запушен на GitHub (коммит b762eac)
+10. Код запушен на GitHub
 11. `.env.local` создан с DATABASE_URL, SUPABASE_URL, SUPABASE_ANON_KEY
 12. Начат деплой на Vercel — переменные добавлены, билд упал
-
-### Текущий блокер: Vercel build error
-- На Vercel добавлены 3 переменные: `DATABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- Билд падает с `Command "npm run build" exited with 1`
-- **Нужно:** посмотреть Build Logs в Vercel → найти текст ошибки → исправить
 
 ### Данные в Supabase
 | Таблица | Строк |
@@ -54,16 +53,15 @@
 - ID: `boyvvchzrkaztwuoreeb`
 - URL: `https://boyvvchzrkaztwuoreeb.supabase.co`
 - Host: `db.boyvvchzrkaztwuoreeb.supabase.co`
-- Anon key: `sb_publishable_B-bocbhbV9QDmFblvKeLbg_ywVJZYgR`
 - Storage bucket: `uploads` (public, 10 MB limit, image types only)
 
-### Planning-документы (все в `.planning/`):
-- PROJECT.md ✅, REQUIREMENTS.md ✅ (28/28), ROADMAP.md ✅
-- PLAN.md ✅, ROI.md ✅, COMPETITORS.md ✅
-- architecture.md ✅, specification.md ✅, HANDOFF.md ✅
+### Переменные окружения на Vercel
+- `DATABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 ### Что дальше (на выбор)
-1. **Vercel** — посмотреть build logs, найти ошибку, исправить, задеплоить
+1. **Vercel** — запушить фикс и проверить деплой
 2. **Дизайн** — применить стили из specification.md или дождаться Lovable
 3. **Telegram бот** (5.4) — доработать `my-agent/bot.py`
 4. **Research** — новые армянские дизайнеры

@@ -1,27 +1,56 @@
-import { drizzle } from "drizzle-orm/neon-serverless";
+import type { NeonDatabase } from "drizzle-orm/neon-serverless";
 import * as schema from "./schema";
 
-const connectionString = process.env.DATABASE_URL;
+type Db = NeonDatabase<typeof schema>;
 
-// Lazy DB — only used by admin pages.
-// Returns a no-op mock when DATABASE_URL is not set,
-// so admin pages don't crash but show "not configured" state.
-function createDb() {
-  if (!connectionString) {
-    console.warn(
-      "⚠ DATABASE_URL not set — admin pages will show 'not configured' state.",
-    );
-    // Return a proxy that throws descriptive errors for admin callers
-    return new Proxy({} as any, {
-      get(_target, prop) {
-        if (prop === "then") return undefined;
-        throw new Error(
-          `Database not configured (missing DATABASE_URL). Tried to access .${String(prop)}`,
+let _db: Db | null = null;
+let _dbPromise: Promise<Db> | null = null;
+
+/**
+ * Lazy DB connection.
+ * Delays require("drizzle-orm/neon-serverless") (and thus
+ * @neondatabase/serverless) until the first actual DB query —
+ * so Vercel's build step never loads native serverless drivers.
+ */
+function getDb(): Promise<Db> | Db {
+  if (_db) return _db;
+  if (!_dbPromise) {
+    _dbPromise = (async () => {
+      const connectionString = process.env.DATABASE_URL;
+      if (!connectionString) {
+        console.warn(
+          "⚠ DATABASE_URL not set — admin pages will show 'not configured' state.",
         );
-      },
-    }) as any;
+        return new Proxy({} as any, {
+          get(_target, prop) {
+            if (prop === "then") return undefined;
+            throw new Error(
+              `Database not configured (missing DATABASE_URL). Tried to access .${String(prop)}`,
+            );
+          },
+        }) as any;
+      }
+      const { drizzle } = await import("drizzle-orm/neon-serverless");
+      _db = drizzle(connectionString, { schema }) as Db;
+      return _db;
+    })();
   }
-  return drizzle(connectionString, { schema });
+  return _dbPromise;
 }
 
-export const db = createDb();
+// Proxy that makes `db.select()...` work transparently
+export const db = new Proxy({} as Db, {
+  get(_target, prop, receiver) {
+    if (prop === "then") return undefined;
+    const resolved = getDb();
+    if (resolved instanceof Promise) {
+      // When used with .then() — resolve first
+      return (...args: unknown[]) =>
+        resolved.then((db) => {
+          const val = (db as any)[prop];
+          return typeof val === "function" ? val.apply(db, args) : val;
+        });
+    }
+    return Reflect.get(resolved, prop, resolved);
+  },
+}) as Db;
