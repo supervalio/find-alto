@@ -93,7 +93,7 @@ export default async function CategoryPage({ params }: Props) {
   const designerIds = (cityDesigners || []).map((d: { id: number }) => d.id);
 
   let categoryItems: any[] = [];
-  let categoryDesigners: any[] = [];
+  const categoryDesigners: any[] = [];
   if (designerIds.length > 0) {
     const { data: itemsData, error: itemsErr } = await supabase
       .from("items")
@@ -179,9 +179,7 @@ export default async function CategoryPage({ params }: Props) {
                   </p>
                 )}
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-accent">
-                    {designer.name}
-                  </span>
+                  <span className="text-xs text-accent">{designer.name}</span>
                   {item.priceLocal != null && item.priceLocal > 0 && (
                     <span className="text-sm tabular-nums text-ink/70">
                       {item.priceLocal.toLocaleString()}{" "}

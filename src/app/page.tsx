@@ -162,13 +162,9 @@ export default async function HomePage() {
                 <p className="tabular-nums text-sm text-muted">{e.when}</p>
                 <div className="min-w-0">
                   <p className="font-serif text-xl">{e.name}</p>
-                  <p className="mt-1 text-sm text-muted truncate">
-                    {e.where}
-                  </p>
+                  <p className="mt-1 text-sm text-muted truncate">{e.where}</p>
                 </div>
-                <p className="hidden text-sm text-accent sm:block">
-                  {c.name}
-                </p>
+                <p className="hidden text-sm text-accent sm:block">{c.name}</p>
               </li>
             )),
           )}

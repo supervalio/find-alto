@@ -1,6 +1,9 @@
-import Link from "next/link";
 import type { Metadata } from "next";
-import { seedCountries, seedDesigners, type DesignerSeed } from "@/lib/guide-data";
+import {
+  seedCountries,
+  seedDesigners,
+  type DesignerSeed,
+} from "@/lib/guide-data";
 import { supabase } from "@/lib/supabase";
 
 export const metadata: Metadata = {
@@ -9,11 +12,9 @@ export const metadata: Metadata = {
     "Search independent designers, cities and concept stores across the Find Alto guide.",
 };
 
-const categories = ["All", "Clothing", "Shoes", "Bags", "Accessories"];
-
 export default async function SearchPage() {
   // Try Supabase first, merge with seed data
-  let allDesigners: DesignerSeed[] = [...seedDesigners];
+  const allDesigners: DesignerSeed[] = [...seedDesigners];
   try {
     const designerDisciplines: Record<string, string> = {
       armenia: "Womenswear · Craft",
@@ -21,7 +22,9 @@ export default async function SearchPage() {
       kazakhstan: "Womenswear · Nomadic",
       uzbekistan: "Textiles · Silk",
     };
-    const { data } = await supabase.from("designers").select("*, cities(name, countries(name, slug))");
+    const { data } = await supabase
+      .from("designers")
+      .select("*, cities(name, countries(name, slug))");
     if (data && data.length > 0) {
       for (const d of data) {
         const country = (d as any).cities?.countries?.slug || "";
@@ -52,7 +55,9 @@ export default async function SearchPage() {
       if (!allDesigners.find((d) => d.slug === slug)) {
         allDesigners.push({
           slug,
-          name: slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+          name: slug
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase()),
           country: c.name,
           city: c.cityLabel.split(" · ")[0],
           discipline: "Designer",

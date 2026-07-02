@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -17,10 +16,10 @@ export default function AboutPage() {
 
       <div className="mt-14 space-y-8 text-[17px] leading-relaxed text-ink/85">
         <p>
-          Find Alto exists for the traveller who would rather spend an hour in
-          a small workshop than in a department store. We write about
-          independent designers — the ones who cut patterns themselves, work
-          in short runs, and answer their own emails.
+          Find Alto exists for the traveller who would rather spend an hour in a
+          small workshop than in a department store. We write about independent
+          designers — the ones who cut patterns themselves, work in short runs,
+          and answer their own emails.
         </p>
         <p>
           We are not a shop and not a magazine. We take no advertising, no
@@ -29,8 +28,8 @@ export default function AboutPage() {
           changed.
         </p>
         <p>
-          The guide grows slowly. One country enters at a time, and stays
-          only as long as it remains true.
+          The guide grows slowly. One country enters at a time, and stays only
+          as long as it remains true.
         </p>
       </div>
 

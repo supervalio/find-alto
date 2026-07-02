@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
 
 /* ── snake_case → camelCase helper ──────────────────────── */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function snakeToCamel<T>(obj: T): T {
   if (Array.isArray(obj)) return obj.map(snakeToCamel) as unknown as T;
   if (obj !== null && typeof obj === "object") {

@@ -202,8 +202,8 @@ export default async function CityPage({ params }: Props) {
 
       {cityCategories.length === 0 && (
         <p className="text-muted/50 text-sm text-center py-16">
-          No items yet in this city. Check back soon — we're constantly adding
-          new designers.
+          No items yet in this city. Check back soon — we&apos;re constantly
+          adding new designers.
         </p>
       )}
     </div>
