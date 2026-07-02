@@ -27,12 +27,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     city = (cityData || [])[0] || null;
   }
 
-  if (!country || !city) return { title: "Город не найден" };
+  if (!country || !city) return { title: "City not found" };
 
   return {
     title: `${city.name} — ${country.name}`,
     description:
-      city.description || `Локальные дизайнеры в ${city.name}, ${country.name}`,
+      city.description || `Local designers in ${city.name}, ${country.name}`,
   };
 }
 
@@ -105,7 +105,7 @@ export default async function CityPage({ params }: Props) {
     name: string;
     nameRu?: string;
     nameEn?: string;
-  }) => cat.nameRu || cat.nameEn || cat.name;
+  }) => cat.nameEn || cat.name;
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">

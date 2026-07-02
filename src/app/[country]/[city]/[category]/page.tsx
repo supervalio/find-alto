@@ -38,12 +38,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .limit(1);
   const [category] = categoryData || [];
 
-  if (!country || !city || !category) return { title: "Категория не найдена" };
+  if (!country || !city || !category) return { title: "Category not found" };
 
-  const label = category.nameRu || category.nameEn || category.name;
+  const label = category.nameEn || category.name;
   return {
     title: `${label} — ${city.name}`,
-    description: `${label} от локальных дизайнеров в ${city.name}, ${country.name}`,
+    description: `${label} by local designers in ${city.name}, ${country.name}`,
   };
 }
 
@@ -120,7 +120,7 @@ export default async function CategoryPage({ params }: Props) {
     name: string;
     nameRu: string;
     nameEn: string;
-  }) => cat.nameRu || cat.nameEn || cat.name;
+  }) => cat.nameEn || cat.name;
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = designer?.cities?.[0] || {};
   const country = city?.countries?.[0] || {};
 
-  const categoryLabel = category.name_ru || category.name;
+  const categoryLabel = category.name_en || category.name;
   return {
     title: dbRow.name,
     description:
@@ -146,7 +146,7 @@ export default async function ItemPage({ params }: Props) {
             {item.name}
           </h1>
           <span className="text-xs tracking-[4px] uppercase text-muted/50">
-            {category.name_ru || category.name}
+            {category.name_en || category.name}
           </span>
         </div>
         <p className="text-muted/70">
@@ -170,7 +170,7 @@ export default async function ItemPage({ params }: Props) {
           {item.price_local != null && item.price_local > 0 ? (
             <div>
               <p className="text-2xl font-semibold tabular-nums">
-                {item.price_local.toLocaleString("ru-RU")}{" "}
+                {item.price_local.toLocaleString("en-US")}{" "}
                 <span className="text-base font-normal text-muted/50">
                   {item.currency || "USD"}
                 </span>
@@ -300,9 +300,7 @@ export default async function ItemPage({ params }: Props) {
                   {other.name}
                 </h3>
                 {other.material && (
-                  <p className="text-sm text-muted/50 mt-1">
-                    {other.material}
-                  </p>
+                  <p className="text-sm text-muted/50 mt-1">{other.material}</p>
                 )}
                 {other.price_local != null && other.price_local > 0 && (
                   <p className="text-sm text-muted/50 mt-1 tabular-nums">

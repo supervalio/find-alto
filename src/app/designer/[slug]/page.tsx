@@ -365,7 +365,7 @@ export default async function DesignerPage({ params }: Props) {
                             <span className="text-muted/30">·</span>
                           )}
                           <span className="text-xs text-muted/50 truncate">
-                            {category.nameRu || category.name}
+                            {category.nameEn || category.name}
                           </span>
                         </>
                       )}
