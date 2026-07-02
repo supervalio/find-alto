@@ -36,23 +36,20 @@ export default function RootLayout({
           <div className="mx-auto max-w-7xl flex items-center justify-between gap-4 px-6 py-5 sm:px-10">
             <Link
               href="/"
-              className="inline-flex items-baseline gap-2 leading-none"
+              className="inline-flex flex-col items-center leading-none"
               aria-label="Find Alto — home"
             >
-              <span className="flex flex-col items-end leading-none">
-                <span className="text-[0.6rem] tracking-[0.2em] uppercase text-charcoal/70 font-medium">
-                  find
-                </span>
-                <span className="font-serif text-lg font-semibold tracking-tight text-charcoal">
-                  ALTO
-                </span>
-              </span>
               <span
                 aria-hidden
-                className="font-serif text-[2.4rem] font-medium leading-none text-emerald"
-                style={{ transform: "translateY(2px)" }}
+                className="font-serif text-[2rem] font-light leading-none text-emerald"
               >
                 /
+              </span>
+              <span className="text-[0.6rem] tracking-[0.2em] uppercase text-warm-grey/60 font-medium mt-0.5">
+                find
+              </span>
+              <span className="font-serif text-lg font-semibold tracking-tight text-emerald -mt-0.5">
+                ALTO
               </span>
             </Link>
             <nav className="flex items-center gap-6 sm:gap-8">
@@ -93,23 +90,20 @@ export default function RootLayout({
               <div>
                 <Link
                   href="/"
-                  className="inline-flex items-baseline gap-2 leading-none"
+                  className="inline-flex flex-col items-center leading-none"
                   aria-label="Find Alto — home"
                 >
-                  <span className="flex flex-col items-end leading-none">
-                    <span className="text-[0.6rem] tracking-[0.2em] uppercase text-warm-grey/70 font-medium">
-                      find
-                    </span>
-                    <span className="font-serif text-lg font-semibold tracking-tight text-charcoal">
-                      ALTO
-                    </span>
-                  </span>
                   <span
                     aria-hidden
-                    className="font-serif text-[2.4rem] font-medium leading-none text-emerald"
-                    style={{ transform: "translateY(2px)" }}
+                    className="font-serif text-[2rem] font-light leading-none text-emerald"
                   >
                     /
+                  </span>
+                  <span className="text-[0.6rem] tracking-[0.2em] uppercase text-warm-grey/60 font-medium mt-0.5">
+                    find
+                  </span>
+                  <span className="font-serif text-lg font-semibold tracking-tight text-emerald -mt-0.5">
+                    ALTO
                   </span>
                 </Link>
                 <p className="mt-6 max-w-sm text-sm text-warm-grey/70">
