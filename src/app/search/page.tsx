@@ -76,7 +76,7 @@ export default async function SearchPage() {
         <h1 className="mt-4 font-serif text-5xl leading-[1.05] tracking-tight md:text-6xl">
           Search the guide.
         </h1>
-        <p className="mt-12 text-warm-grey text-lg">
+        <p className="mt-12 text-muted text-lg">
           No designers in the guide yet. Check back soon.
         </p>
       </div>

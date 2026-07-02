@@ -107,8 +107,8 @@ export default async function DesignerPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
       {/* ── Breadcrumb ─────────────────────────────────── */}
-      <nav className="text-xs tracking-wider text-warm-grey/50 mb-12">
-        <Link href="/" className="hover:text-terracotta transition-colors">
+      <nav className="text-xs tracking-wider text-muted/50 mb-12">
+        <Link href="/" className="hover:text-accent transition-colors">
           Home
         </Link>
         {country && (
@@ -116,7 +116,7 @@ export default async function DesignerPage({ params }: Props) {
             <span className="mx-2">/</span>
             <Link
               href={`/${country.slug}`}
-              className="hover:text-terracotta transition-colors"
+              className="hover:text-accent transition-colors"
             >
               {country.name}
             </Link>
@@ -127,14 +127,14 @@ export default async function DesignerPage({ params }: Props) {
             <span className="mx-2">/</span>
             <Link
               href={`/${country?.slug ?? ""}/${city.slug}`}
-              className="hover:text-terracotta transition-colors"
+              className="hover:text-accent transition-colors"
             >
               {city.name}
             </Link>
           </>
         )}
         <span className="mx-2">/</span>
-        <span className="text-warm-grey">{designer.name}</span>
+        <span className="text-muted">{designer.name}</span>
       </nav>
 
       {/* ── Hero Section ────────────────────────────────── */}
@@ -148,7 +148,7 @@ export default async function DesignerPage({ params }: Props) {
               className="w-full aspect-[3/4] object-cover"
             />
           ) : (
-            <div className="w-full aspect-[3/4] bg-warm-white flex items-center justify-center text-warm-grey/30">
+            <div className="w-full aspect-[3/4] bg-surface flex items-center justify-center text-muted/30">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-16 h-16"
@@ -173,13 +173,13 @@ export default async function DesignerPage({ params }: Props) {
             {designer.name}
           </h1>
           {city && (
-            <p className="text-warm-grey/70 text-lg mb-6">
+            <p className="text-muted/70 text-lg mb-6">
               {city.name}
               {country && `, ${country.name}`}
             </p>
           )}
           {designer.bio && (
-            <p className="text-warm-grey/70 leading-relaxed max-w-xl">
+            <p className="text-muted/70 leading-relaxed max-w-xl">
               {designer.bio}
             </p>
           )}
@@ -189,10 +189,10 @@ export default async function DesignerPage({ params }: Props) {
       {/* ── Story Section ───────────────────────────────── */}
       {designer.story && (
         <section className="mb-20">
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-6">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-6">
             Story
           </h2>
-          <div className="text-warm-grey/70 leading-relaxed whitespace-pre-line max-w-2xl">
+          <div className="text-muted/70 leading-relaxed whitespace-pre-line max-w-2xl">
             {designer.story}
           </div>
         </section>
@@ -201,11 +201,11 @@ export default async function DesignerPage({ params }: Props) {
       {/* ── Why Locals Wear This ─────────────────────────── */}
       {designer.whyLocalsWear && (
         <section className="mb-20">
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-6">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-6">
             Why Locals Wear This
           </h2>
-          <div className="border-l-4 border-terracotta pl-6">
-            <p className="text-warm-grey/70 leading-relaxed italic max-w-2xl">
+          <div className="border-l-4 border-accent pl-6">
+            <p className="text-muted/70 leading-relaxed italic max-w-2xl">
               {designer.whyLocalsWear}
             </p>
           </div>
@@ -215,7 +215,7 @@ export default async function DesignerPage({ params }: Props) {
       {/* ── Contacts Section ─────────────────────────────── */}
       {(designer.instagram || designer.website || designer.address) && (
         <section className="mb-20">
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-6">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-6">
             Contacts
           </h2>
           <div className="flex flex-wrap gap-6">
@@ -224,7 +224,7 @@ export default async function DesignerPage({ params }: Props) {
                 href={`https://instagram.com/${designer.instagram.replace(/^@/, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium hover:text-terracotta transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-medium hover:text-accent transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -253,7 +253,7 @@ export default async function DesignerPage({ params }: Props) {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium hover:text-terracotta transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-medium hover:text-accent transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -278,7 +278,7 @@ export default async function DesignerPage({ params }: Props) {
             )}
 
             {designer.address && (
-              <div className="inline-flex items-center gap-2 text-sm font-medium text-warm-grey/70">
+              <div className="inline-flex items-center gap-2 text-sm font-medium text-muted/70">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-4 h-4 shrink-0"
@@ -308,7 +308,7 @@ export default async function DesignerPage({ params }: Props) {
       {/* ── Items Gallery ────────────────────────────────── */}
       {itemsWithPhotos.length > 0 && (
         <section>
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-6">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-6">
             Items
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -321,9 +321,9 @@ export default async function DesignerPage({ params }: Props) {
                 <Link
                   key={item.id}
                   href={`/item/${item.slug}`}
-                  className="group block hover:bg-warm-white transition-colors duration-300"
+                  className="group block hover:bg-neutral-100 transition-colors duration-300"
                 >
-                  <div className="aspect-[4/3] bg-warm-white overflow-hidden">
+                  <div className="aspect-[4/3] bg-surface overflow-hidden">
                     {firstPhoto ? (
                       <img
                         src={firstPhoto.url}
@@ -331,7 +331,7 @@ export default async function DesignerPage({ params }: Props) {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-warm-grey/20">
+                      <div className="w-full h-full flex items-center justify-center text-muted/20">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="w-12 h-12"
@@ -351,21 +351,21 @@ export default async function DesignerPage({ params }: Props) {
                   </div>
 
                   <div className="p-4">
-                    <h3 className="font-medium group-hover:text-terracotta transition-colors truncate">
+                    <h3 className="font-medium group-hover:text-accent transition-colors truncate">
                       {item.name}
                     </h3>
                     <div className="flex items-center gap-2 mt-1.5">
                       {item.material && (
-                        <span className="text-xs text-warm-grey/50 truncate">
+                        <span className="text-xs text-muted/50 truncate">
                           {item.material}
                         </span>
                       )}
                       {category && (
                         <>
                           {item.material && (
-                            <span className="text-warm-grey/30">·</span>
+                            <span className="text-muted/30">·</span>
                           )}
-                          <span className="text-xs text-warm-grey/50 truncate">
+                          <span className="text-xs text-muted/50 truncate">
                             {category.nameRu || category.name}
                           </span>
                         </>
@@ -386,11 +386,11 @@ export default async function DesignerPage({ params }: Props) {
 
       {itemsWithPhotos.length === 0 && (
         <section>
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-6">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-6">
             Items
           </h2>
           <div className="py-12 text-center">
-            <p className="text-warm-grey/50">No items yet.</p>
+            <p className="text-muted/50">No items yet.</p>
           </div>
         </section>
       )}

@@ -107,9 +107,9 @@ export default async function CountryPage({ params }: Props) {
             <h1 className="font-serif text-6xl leading-[1.02] tracking-tight md:text-8xl">
               {name}
             </h1>
-            <p className="mt-6 text-sm text-warm-grey">{cityLabel}</p>
+            <p className="mt-6 text-sm text-muted">{cityLabel}</p>
           </div>
-          <p className="max-w-md text-[17px] leading-relaxed text-charcoal/85 md:pt-6">
+          <p className="max-w-md text-[17px] leading-relaxed text-ink/85 md:pt-6">
             {description}
           </p>
         </div>
@@ -133,9 +133,9 @@ export default async function CountryPage({ params }: Props) {
             {whatToBuy.map((item, i) => (
               <li
                 key={item}
-                className="flex items-baseline gap-4 border-b border-sand-hover pb-5"
+                className="flex items-baseline gap-4 border-b border-hairline-hover pb-5"
               >
-                <span className="tabular-nums text-xs text-warm-grey">
+                <span className="tabular-nums text-xs text-muted">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="text-[15px]">{item}</span>
@@ -148,7 +148,7 @@ export default async function CountryPage({ params }: Props) {
       {/* Designers */}
       <CountrySection eyebrow="II" title="Designers">
         {designers.length === 0 ? (
-          <p className="text-[15px] text-warm-grey">
+          <p className="text-[15px] text-muted">
             Profiles for {name} are being written this season.
           </p>
         ) : (
@@ -159,7 +159,7 @@ export default async function CountryPage({ params }: Props) {
                 href={`/designer/${d.slug}`}
                 className="group block"
               >
-                <div className="overflow-hidden bg-sand">
+                <div className="overflow-hidden bg-hairline">
                   {d.image ? (
                     <img
                       src={d.image}
@@ -169,7 +169,7 @@ export default async function CountryPage({ params }: Props) {
                     />
                   ) : (
                     <div className="aspect-[4/5] w-full flex items-center justify-center">
-                      <span className="text-sand-hover/40 text-4xl font-serif">
+                      <span className="text-hairline-hover/40 text-4xl font-serif">
                         {d.name.charAt(0)}
                       </span>
                     </div>
@@ -177,9 +177,9 @@ export default async function CountryPage({ params }: Props) {
                 </div>
                 <p className="eyebrow mt-5">{d.discipline}</p>
                 <h3 className="mt-2 font-serif text-2xl">{d.name}</h3>
-                <p className="mt-2 text-sm text-warm-grey">{d.city}</p>
+                <p className="mt-2 text-sm text-muted">{d.city}</p>
                 {d.philosophy && (
-                  <p className="mt-3 max-w-md text-[15px] leading-relaxed text-charcoal/80">
+                  <p className="mt-3 max-w-md text-[15px] leading-relaxed text-ink/80">
                     {d.philosophy.split(".")[0]}.
                   </p>
                 )}
@@ -192,15 +192,15 @@ export default async function CountryPage({ params }: Props) {
       {/* Concept stores */}
       {stores.length > 0 && (
         <CountrySection eyebrow="III" title="Concept stores">
-          <ul className="divide-y divide-sand-hover border-t border-sand-hover">
+          <ul className="divide-y divide-hairline-hover border-t border-hairline-hover">
             {stores.map((s) => (
               <li
                 key={s.name}
                 className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-6 py-7 sm:grid-cols-[1fr_2fr_auto] sm:gap-10"
               >
                 <p className="font-serif text-xl">{s.name}</p>
-                <p className="text-[15px] text-warm-grey">{s.note}</p>
-                <p className="text-sm text-terracotta">{s.city}</p>
+                <p className="text-[15px] text-muted">{s.note}</p>
+                <p className="text-sm text-accent">{s.city}</p>
               </li>
             ))}
           </ul>
@@ -210,15 +210,15 @@ export default async function CountryPage({ params }: Props) {
       {/* Events */}
       {events.length > 0 && (
         <CountrySection eyebrow="IV" title="Fashion events">
-          <ul className="divide-y divide-sand-hover border-t border-sand-hover">
+          <ul className="divide-y divide-hairline-hover border-t border-hairline-hover">
             {events.map((e) => (
               <li
                 key={e.name}
                 className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-6 py-7 sm:grid-cols-[8rem_1fr_auto] sm:gap-10"
               >
-                <p className="tabular-nums text-sm text-warm-grey">{e.when}</p>
+                <p className="tabular-nums text-sm text-muted">{e.when}</p>
                 <p className="font-serif text-xl">{e.name}</p>
-                <p className="text-sm text-warm-grey">{e.where}</p>
+                <p className="text-sm text-muted">{e.where}</p>
               </li>
             ))}
           </ul>
@@ -238,7 +238,7 @@ function CountrySection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="mx-auto max-w-7xl border-t border-sand-hover px-6 py-16 sm:px-10 md:py-24">
+    <section className="mx-auto max-w-7xl border-t border-hairline-hover px-6 py-16 sm:px-10 md:py-24">
       <div className="grid gap-10 md:grid-cols-[1fr_2.4fr] md:gap-16">
         <header>
           <p className="eyebrow">Section {eyebrow}</p>

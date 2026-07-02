@@ -18,27 +18,27 @@ export default function CountriesPage() {
             Countries.
           </h1>
         </div>
-        <p className="max-w-md text-[15px] leading-relaxed text-warm-grey md:pt-6">
+        <p className="max-w-md text-[15px] leading-relaxed text-muted md:pt-6">
           A slow-growing atlas. We add one country at a time — only after spending
           enough hours on the ground to write about it honestly.
         </p>
       </header>
 
-      <ul className="divide-y divide-sand-hover border-y border-sand-hover">
+      <ul className="divide-y divide-hairline-hover border-y border-hairline-hover">
         {seedCountries.map((c, i) => (
           <li key={c.slug}>
             <Link
               href={`/${c.slug}`}
               className="group grid grid-cols-[auto_minmax(0,1fr)] items-center gap-6 py-8 sm:grid-cols-[3rem_10rem_1fr_auto] sm:gap-10"
             >
-              <span className="tabular-nums text-sm text-warm-grey">
+              <span className="tabular-nums text-sm text-muted">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h2 className="font-serif text-3xl md:text-4xl">{c.name}</h2>
-              <p className="hidden text-[15px] leading-relaxed text-warm-grey sm:block">
-                {c.intro} <span className="text-charcoal/60">— {c.cityLabel}</span>
+              <p className="hidden text-[15px] leading-relaxed text-muted sm:block">
+                {c.intro} <span className="text-ink/60">— {c.cityLabel}</span>
               </p>
-              <span className="text-sm text-emerald link-underline">
+              <span className="text-sm text-accent link-underline">
                 {c.designerCount} designers →
               </span>
             </Link>

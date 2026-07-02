@@ -125,26 +125,26 @@ export default async function CategoryPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
       {/* Breadcrumb */}
-      <nav className="text-xs tracking-wider text-warm-grey/50 mb-12">
-        <Link href="/" className="hover:text-terracotta transition-colors">
+      <nav className="text-xs tracking-wider text-muted/50 mb-12">
+        <Link href="/" className="hover:text-accent transition-colors">
           Home
         </Link>
-        <span className="mx-2 text-sand-hover">/</span>
+        <span className="mx-2 text-hairline-hover">/</span>
         <Link
           href={`/${country.slug}`}
-          className="hover:text-terracotta transition-colors"
+          className="hover:text-accent transition-colors"
         >
           {country.name}
         </Link>
-        <span className="mx-2 text-sand-hover">/</span>
+        <span className="mx-2 text-hairline-hover">/</span>
         <Link
           href={`/${country.slug}/${city.slug}`}
-          className="hover:text-terracotta transition-colors"
+          className="hover:text-accent transition-colors"
         >
           {city.name}
         </Link>
-        <span className="mx-2 text-sand-hover">/</span>
-        <span className="text-charcoal/70">{categoryLabel(category)}</span>
+        <span className="mx-2 text-hairline-hover">/</span>
+        <span className="text-ink/70">{categoryLabel(category)}</span>
       </nav>
 
       {/* Category header */}
@@ -152,7 +152,7 @@ export default async function CategoryPage({ params }: Props) {
         <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight mb-4">
           {categoryLabel(category)}
         </h1>
-        <p className="text-warm-grey/50 text-sm">
+        <p className="text-muted/50 text-sm">
           {city.name}, {country.name}
         </p>
       </header>
@@ -160,7 +160,7 @@ export default async function CategoryPage({ params }: Props) {
       {/* Items */}
       {categoryItems.length > 0 && (
         <section className="mb-20">
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-10">
             Items ({categoryItems.length})
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -168,22 +168,22 @@ export default async function CategoryPage({ params }: Props) {
               <Link
                 key={item.id}
                 href={`/item/${item.slug}`}
-                className="group block p-5 hover:bg-warm-white transition-colors duration-300"
+                className="group block p-5 hover:bg-neutral-100 transition-colors duration-300"
               >
-                <h3 className="font-serif text-lg font-semibold mb-2 group-hover:text-terracotta transition-colors">
+                <h3 className="font-serif text-lg font-semibold mb-2 group-hover:text-accent transition-colors">
                   {item.name}
                 </h3>
                 {item.description && (
-                  <p className="text-warm-grey/70 text-sm leading-relaxed line-clamp-2 mb-3">
+                  <p className="text-muted/70 text-sm leading-relaxed line-clamp-2 mb-3">
                     {item.description}
                   </p>
                 )}
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-terracotta">
+                  <span className="text-xs text-accent">
                     {designer.name}
                   </span>
                   {item.priceLocal != null && item.priceLocal > 0 && (
-                    <span className="text-sm tabular-nums text-charcoal/70">
+                    <span className="text-sm tabular-nums text-ink/70">
                       {item.priceLocal.toLocaleString()}{" "}
                       {item.currency || "USD"}
                     </span>
@@ -198,7 +198,7 @@ export default async function CategoryPage({ params }: Props) {
       {/* Designers in this category */}
       {categoryDesigners.length > 0 && (
         <section>
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-10">
             Designers in this category
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -206,9 +206,9 @@ export default async function CategoryPage({ params }: Props) {
               <Link
                 key={designer.id}
                 href={`/designer/${designer.slug}`}
-                className="group flex gap-5 p-5 hover:bg-warm-white transition-colors duration-300"
+                className="group flex gap-5 p-5 hover:bg-neutral-100 transition-colors duration-300"
               >
-                <div className="w-20 h-20 bg-sand shrink-0 overflow-hidden flex-shrink-0">
+                <div className="w-20 h-20 bg-hairline shrink-0 overflow-hidden flex-shrink-0">
                   {designer.photo ? (
                     <img
                       src={designer.photo}
@@ -217,21 +217,21 @@ export default async function CategoryPage({ params }: Props) {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-sand-hover/40 text-xl font-serif">
+                      <span className="text-hairline-hover/40 text-xl font-serif">
                         {designer.name.charAt(0)}
                       </span>
                     </div>
                   )}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-serif text-base font-semibold mb-1 group-hover:text-terracotta transition-colors">
+                  <h3 className="font-serif text-base font-semibold mb-1 group-hover:text-accent transition-colors">
                     {designer.name}
                   </h3>
-                  <p className="text-warm-grey/50 text-[11px] tracking-wide uppercase mb-1">
+                  <p className="text-muted/50 text-[11px] tracking-wide uppercase mb-1">
                     {city.name}
                   </p>
                   {designer.bio && (
-                    <p className="text-warm-grey/60 text-sm leading-relaxed line-clamp-2">
+                    <p className="text-muted/60 text-sm leading-relaxed line-clamp-2">
                       {designer.bio}
                     </p>
                   )}
@@ -243,7 +243,7 @@ export default async function CategoryPage({ params }: Props) {
       )}
 
       {categoryItems.length === 0 && (
-        <p className="text-warm-grey/50 text-sm text-center py-16">
+        <p className="text-muted/50 text-sm text-center py-16">
           No items in this category for {city.name} yet. Check back soon.
         </p>
       )}

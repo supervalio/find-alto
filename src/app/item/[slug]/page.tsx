@@ -76,33 +76,33 @@ export default async function ItemPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
       {/* ═══ Breadcrumb ═══════════════════════════════════ */}
-      <nav className="text-xs tracking-wider text-warm-grey/50 mb-12 flex flex-wrap items-center gap-x-1.5">
-        <Link href="/" className="hover:text-terracotta transition-colors">
+      <nav className="text-xs tracking-wider text-muted/50 mb-12 flex flex-wrap items-center gap-x-1.5">
+        <Link href="/" className="hover:text-accent transition-colors">
           Home
         </Link>
         <span>/</span>
         <Link
           href={`/${country.slug}`}
-          className="hover:text-terracotta transition-colors"
+          className="hover:text-accent transition-colors"
         >
           {country.name}
         </Link>
         <span>/</span>
         <Link
           href={`/${country.slug}/${city.slug}`}
-          className="hover:text-terracotta transition-colors"
+          className="hover:text-accent transition-colors"
         >
           {city.name}
         </Link>
         <span>/</span>
         <Link
           href={`/designer/${designer.slug}`}
-          className="hover:text-terracotta transition-colors"
+          className="hover:text-accent transition-colors"
         >
           {designer.name}
         </Link>
         <span>/</span>
-        <span className="text-warm-grey">{item.name}</span>
+        <span className="text-muted">{item.name}</span>
       </nav>
 
       {/* ═══ Photo Gallery ════════════════════════════════ */}
@@ -145,15 +145,15 @@ export default async function ItemPage({ params }: Props) {
           <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight">
             {item.name}
           </h1>
-          <span className="text-xs tracking-[4px] uppercase text-warm-grey/50">
+          <span className="text-xs tracking-[4px] uppercase text-muted/50">
             {category.name_ru || category.name}
           </span>
         </div>
-        <p className="text-warm-grey/70">
+        <p className="text-muted/70">
           by{" "}
           <Link
             href={`/designer/${designer.slug}`}
-            className="font-medium text-terracotta hover:text-terracotta-hover transition-colors underline underline-offset-2"
+            className="font-medium text-accent hover:text-accent-hover transition-colors underline underline-offset-2"
           >
             {designer.name}
           </Link>
@@ -164,19 +164,19 @@ export default async function ItemPage({ params }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
         {/* ── Price ────────────────────────────────────── */}
         <div>
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-3">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-3">
             Price
           </h2>
           {item.price_local != null && item.price_local > 0 ? (
             <div>
               <p className="text-2xl font-semibold tabular-nums">
                 {item.price_local.toLocaleString("ru-RU")}{" "}
-                <span className="text-base font-normal text-warm-grey/50">
+                <span className="text-base font-normal text-muted/50">
                   {item.currency || "USD"}
                 </span>
               </p>
               {item.price_usd != null && item.price_usd > 0 && (
-                <p className="text-sm text-warm-grey/50 mt-1 tabular-nums">
+                <p className="text-sm text-muted/50 mt-1 tabular-nums">
                   ≈{" "}
                   {item.price_usd.toLocaleString("en-US", {
                     style: "currency",
@@ -186,20 +186,20 @@ export default async function ItemPage({ params }: Props) {
               )}
             </div>
           ) : (
-            <p className="text-warm-grey/50 italic">Price upon request</p>
+            <p className="text-muted/50 italic">Price upon request</p>
           )}
         </div>
 
         {/* ── Location ─────────────────────────────────── */}
         <div>
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-3">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-3">
             Location
           </h2>
           <p className="text-lg font-medium">
             {city.name},{" "}
             <Link
               href={`/${country.slug}`}
-              className="text-terracotta hover:text-terracotta-hover transition-colors underline underline-offset-2"
+              className="text-accent hover:text-accent-hover transition-colors underline underline-offset-2"
             >
               {country.name}
             </Link>
@@ -210,21 +210,21 @@ export default async function ItemPage({ params }: Props) {
       {/* ═══ Material ═════════════════════════════════════ */}
       {item.material && (
         <div className="mb-10">
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-3">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-3">
             Material
           </h2>
-          <p className="text-warm-grey/70">{item.material}</p>
+          <p className="text-muted/70">{item.material}</p>
         </div>
       )}
 
       {/* ═══ Story ════════════════════════════════════════ */}
       {item.story && (
         <div className="mb-10">
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-3">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-3">
             Story
           </h2>
-          <div className="border-l-4 border-terracotta pl-6">
-            <p className="text-warm-grey/70 italic leading-relaxed max-w-2xl">
+          <div className="border-l-4 border-accent pl-6">
+            <p className="text-muted/70 italic leading-relaxed max-w-2xl">
               {item.story}
             </p>
           </div>
@@ -234,7 +234,7 @@ export default async function ItemPage({ params }: Props) {
       {/* ═══ Description ══════════════════════════════════ */}
       {item.description && (
         <div className="mb-10">
-          <p className="text-warm-grey/70 leading-relaxed max-w-2xl">
+          <p className="text-muted/70 leading-relaxed max-w-2xl">
             {item.description}
           </p>
         </div>
@@ -244,13 +244,13 @@ export default async function ItemPage({ params }: Props) {
       <div className="mb-12">
         <Link
           href={`/designer/${designer.slug}`}
-          className="group block hover:bg-warm-white transition-colors duration-300 py-6"
+          className="group block hover:bg-neutral-100 transition-colors duration-300 py-6"
         >
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-4">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-4">
             Designer
           </h2>
           <div className="flex gap-4 items-start">
-            <div className="w-16 h-16 bg-warm-white shrink-0 overflow-hidden">
+            <div className="w-16 h-16 bg-surface shrink-0 overflow-hidden">
               {designer.photo ? (
                 <img
                   src={designer.photo}
@@ -258,26 +258,26 @@ export default async function ItemPage({ params }: Props) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-warm-grey/20 text-xs">
+                <div className="w-full h-full flex items-center justify-center text-muted/20 text-xs">
                   photo
                 </div>
               )}
             </div>
             <div className="min-w-0">
-              <p className="font-medium group-hover:text-terracotta transition-colors">
+              <p className="font-medium group-hover:text-accent transition-colors">
                 {designer.name}
               </p>
               {designer.bio && (
-                <p className="text-sm text-warm-grey/50 mt-1 line-clamp-2">
+                <p className="text-sm text-muted/50 mt-1 line-clamp-2">
                   {designer.bio}
                 </p>
               )}
-              <p className="text-sm text-warm-grey/50 mt-1">
+              <p className="text-sm text-muted/50 mt-1">
                 {city.name}, {country.name}
               </p>
             </div>
           </div>
-          <div className="mt-3 text-sm font-medium text-terracotta group-hover:text-terracotta-hover transition-colors">
+          <div className="mt-3 text-sm font-medium text-accent group-hover:text-accent-hover transition-colors">
             View all items →
           </div>
         </Link>
@@ -286,7 +286,7 @@ export default async function ItemPage({ params }: Props) {
       {/* ═══ Other items by this designer ═════════════════ */}
       {otherItems.length > 0 && (
         <section>
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-4">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-4">
             More from {designer.name}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -294,18 +294,18 @@ export default async function ItemPage({ params }: Props) {
               <Link
                 key={other.id}
                 href={`/item/${other.slug}`}
-                className="group block p-4 hover:bg-warm-white transition-colors duration-300"
+                className="group block p-4 hover:bg-neutral-100 transition-colors duration-300"
               >
-                <h3 className="font-medium group-hover:text-terracotta transition-colors">
+                <h3 className="font-medium group-hover:text-accent transition-colors">
                   {other.name}
                 </h3>
                 {other.material && (
-                  <p className="text-sm text-warm-grey/50 mt-1">
+                  <p className="text-sm text-muted/50 mt-1">
                     {other.material}
                   </p>
                 )}
                 {other.price_local != null && other.price_local > 0 && (
-                  <p className="text-sm text-warm-grey/50 mt-1 tabular-nums">
+                  <p className="text-sm text-muted/50 mt-1 tabular-nums">
                     {other.price_local.toLocaleString("ru-RU")}{" "}
                     {other.currency || "USD"}
                   </p>

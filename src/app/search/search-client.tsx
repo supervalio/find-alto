@@ -48,12 +48,12 @@ export default function SearchClient({
         Search the guide.
       </h1>
 
-      <div className="mt-12 border-y border-sand-hover py-6">
+      <div className="mt-12 border-y border-hairline-hover py-6">
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Designer, city, or material…"
-          className="w-full bg-transparent font-serif text-3xl outline-none placeholder:text-warm-grey/60 md:text-4xl"
+          className="w-full bg-transparent font-serif text-3xl outline-none placeholder:text-muted/60 md:text-4xl"
           autoFocus
         />
       </div>
@@ -68,12 +68,12 @@ export default function SearchClient({
         <Filter label="Category" value={category} onChange={setCategory} options={categories} />
       </div>
 
-      <div className="mt-16 flex items-baseline justify-between border-b border-sand-hover pb-3">
+      <div className="mt-16 flex items-baseline justify-between border-b border-hairline-hover pb-3">
         <p className="eyebrow">Results</p>
-        <p className="text-sm tabular-nums text-warm-grey">{results.length}</p>
+        <p className="text-sm tabular-nums text-muted">{results.length}</p>
       </div>
 
-      <ul className="divide-y divide-sand-hover">
+      <ul className="divide-y divide-hairline-hover">
         {results.map((d) => (
           <li key={d.slug}>
             <Link
@@ -81,16 +81,16 @@ export default function SearchClient({
               className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-6 py-6 sm:grid-cols-[2fr_2fr_1fr_auto]"
             >
               <p className="font-serif text-2xl">{d.name}</p>
-              <p className="hidden text-sm text-warm-grey sm:block">{d.discipline}</p>
-              <p className="hidden text-sm text-warm-grey sm:block">
+              <p className="hidden text-sm text-muted sm:block">{d.discipline}</p>
+              <p className="hidden text-sm text-muted sm:block">
                 {d.city}, {d.country}
               </p>
-              <span className="text-sm text-emerald link-underline">Read →</span>
+              <span className="text-sm text-accent link-underline">Read →</span>
             </Link>
           </li>
         ))}
         {results.length === 0 && (
-          <li className="py-10 text-center text-[15px] text-warm-grey">
+          <li className="py-10 text-center text-[15px] text-muted">
             Nothing yet — try a broader term.
           </li>
         )}
@@ -122,7 +122,7 @@ function Filter({
               onClick={() => onChange(o)}
               className={
                 "text-sm transition-colors " +
-                (active ? "text-emerald link-underline" : "text-warm-grey hover:text-charcoal")
+                (active ? "text-accent link-underline" : "text-muted hover:text-ink")
               }
             >
               {o}

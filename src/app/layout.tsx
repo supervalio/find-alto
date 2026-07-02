@@ -32,7 +32,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col font-sans">
         {/* ── Header ───────────────────────────────────── */}
-        <header className="border-b border-sand-hover">
+        <header className="border-b border-hairline-hover">
           <div className="mx-auto max-w-7xl flex items-center justify-between gap-4 px-6 py-5 sm:px-10">
             <Link
               href="/"
@@ -41,39 +41,39 @@ export default function RootLayout({
             >
               <span
                 aria-hidden
-                className="font-serif text-[2rem] font-light leading-none text-emerald"
+                className="font-serif text-[2rem] font-light leading-none text-accent"
               >
                 /
               </span>
-              <span className="text-[0.6rem] tracking-[0.2em] uppercase text-warm-grey/60 font-medium mt-0.5">
+              <span className="text-[0.6rem] tracking-[0.2em] uppercase text-muted/60 font-medium mt-0.5">
                 find
               </span>
-              <span className="font-serif text-lg font-semibold tracking-tight text-emerald -mt-0.5">
+              <span className="font-serif text-lg font-semibold tracking-tight text-accent -mt-0.5">
                 ALTO
               </span>
             </Link>
             <nav className="flex items-center gap-6 sm:gap-8">
               <Link
                 href="/"
-                className="text-sm text-charcoal/70 hover:text-charcoal transition-colors"
+                className="text-sm text-ink/70 hover:text-ink transition-colors"
               >
                 Home
               </Link>
               <Link
                 href="/countries"
-                className="text-sm text-charcoal/70 hover:text-charcoal transition-colors"
+                className="text-sm text-ink/70 hover:text-ink transition-colors"
               >
                 Countries
               </Link>
               <Link
                 href="/about"
-                className="text-sm text-charcoal/70 hover:text-charcoal transition-colors"
+                className="text-sm text-ink/70 hover:text-ink transition-colors"
               >
                 About
               </Link>
               <Link
                 href="/search"
-                className="text-sm text-charcoal/70 hover:text-charcoal transition-colors"
+                className="text-sm text-ink/70 hover:text-ink transition-colors"
               >
                 Search
               </Link>
@@ -84,7 +84,7 @@ export default function RootLayout({
         <main className="flex-1 fade-in">{children}</main>
 
         {/* ── Footer ───────────────────────────────────── */}
-        <footer className="mt-32 border-t border-sand-hover">
+        <footer className="mt-32 border-t border-hairline-hover">
           <div className="mx-auto max-w-7xl px-6 py-16 sm:px-10">
             <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
               <div>
@@ -95,18 +95,18 @@ export default function RootLayout({
                 >
                   <span
                     aria-hidden
-                    className="font-serif text-[2rem] font-light leading-none text-emerald"
+                    className="font-serif text-[2rem] font-light leading-none text-accent"
                   >
                     /
                   </span>
-                  <span className="text-[0.6rem] tracking-[0.2em] uppercase text-warm-grey/60 font-medium mt-0.5">
+                  <span className="text-[0.6rem] tracking-[0.2em] uppercase text-muted/60 font-medium mt-0.5">
                     find
                   </span>
-                  <span className="font-serif text-lg font-semibold tracking-tight text-emerald -mt-0.5">
+                  <span className="font-serif text-lg font-semibold tracking-tight text-accent -mt-0.5">
                     ALTO
                   </span>
                 </Link>
-                <p className="mt-6 max-w-sm text-sm text-warm-grey/70">
+                <p className="mt-6 max-w-sm text-sm text-muted/70">
                   An independent, editorial guide to fashion designers,
                   showrooms and concept stores around the world. Read slowly.
                 </p>
@@ -138,13 +138,13 @@ export default function RootLayout({
               </div>
               <div>
                 <p className="eyebrow">Contact</p>
-                <ul className="mt-4 space-y-2 text-sm text-warm-grey/70">
+                <ul className="mt-4 space-y-2 text-sm text-muted/70">
                   <li>editors@findalto.com</li>
                   <li>Submissions welcome</li>
                 </ul>
               </div>
             </div>
-            <div className="mt-16 flex flex-col justify-between gap-4 text-xs text-warm-grey/50 sm:flex-row">
+            <div className="mt-16 flex flex-col justify-between gap-4 text-xs text-muted/50 sm:flex-row">
               <p>
                 © {new Date().getFullYear()} Find Alto. Independent, ad-free.
               </p>

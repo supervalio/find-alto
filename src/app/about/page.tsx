@@ -15,7 +15,7 @@ export default function AboutPage() {
         A quiet atlas of independent fashion.
       </h1>
 
-      <div className="mt-14 space-y-8 text-[17px] leading-relaxed text-charcoal/85">
+      <div className="mt-14 space-y-8 text-[17px] leading-relaxed text-ink/85">
         <p>
           Find Alto exists for the traveller who would rather spend an hour in
           a small workshop than in a department store. We write about
@@ -34,7 +34,7 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <div className="mt-20 grid gap-10 border-t border-sand-hover pt-10 sm:grid-cols-3">
+      <div className="mt-20 grid gap-10 border-t border-hairline-hover pt-10 sm:grid-cols-3">
         <Fact label="Founded" value="Lisbon, 2024" />
         <Fact label="Written by" value="A team of four" />
         <Fact label="Funded by" value="Readers" />

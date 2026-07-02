@@ -110,19 +110,19 @@ export default async function CityPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
       {/* Breadcrumb */}
-      <nav className="text-xs tracking-wider text-warm-grey/50 mb-12">
-        <Link href="/" className="hover:text-terracotta transition-colors">
+      <nav className="text-xs tracking-wider text-muted/50 mb-12">
+        <Link href="/" className="hover:text-accent transition-colors">
           Home
         </Link>
-        <span className="mx-2 text-sand-hover">/</span>
+        <span className="mx-2 text-hairline-hover">/</span>
         <Link
           href={`/${country.slug}`}
-          className="hover:text-terracotta transition-colors"
+          className="hover:text-accent transition-colors"
         >
           {country.name}
         </Link>
-        <span className="mx-2 text-sand-hover">/</span>
-        <span className="text-charcoal/70">{city.name}</span>
+        <span className="mx-2 text-hairline-hover">/</span>
+        <span className="text-ink/70">{city.name}</span>
       </nav>
 
       {/* City header */}
@@ -131,7 +131,7 @@ export default async function CityPage({ params }: Props) {
           {city.name}
         </h1>
         {city.description && (
-          <p className="text-warm-grey/70 text-lg md:text-xl max-w-2xl leading-relaxed">
+          <p className="text-muted/70 text-lg md:text-xl max-w-2xl leading-relaxed">
             {city.description}
           </p>
         )}
@@ -140,7 +140,7 @@ export default async function CityPage({ params }: Props) {
       {/* Sponsored */}
       {(cityAds || []).length > 0 && (
         <section className="mb-20">
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-10">
             Sponsored
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -150,10 +150,10 @@ export default async function CityPage({ params }: Props) {
                 href={ad.link || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block p-5 hover:bg-warm-white transition-colors duration-300"
+                className="group block p-5 hover:bg-neutral-100 transition-colors duration-300"
               >
                 {ad.photo && (
-                  <div className="aspect-[3/1] bg-sand overflow-hidden mb-4">
+                  <div className="aspect-[3/1] bg-hairline overflow-hidden mb-4">
                     <img
                       src={ad.photo}
                       alt={ad.name}
@@ -165,7 +165,7 @@ export default async function CityPage({ params }: Props) {
                   {ad.name}
                 </h3>
                 {ad.description && (
-                  <p className="text-warm-grey/70 text-sm leading-relaxed line-clamp-2">
+                  <p className="text-muted/70 text-sm leading-relaxed line-clamp-2">
                     {ad.description}
                   </p>
                 )}
@@ -178,7 +178,7 @@ export default async function CityPage({ params }: Props) {
       {/* Categories */}
       {cityCategories.length > 0 && (
         <section>
-          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+          <h2 className="text-xs tracking-[4px] uppercase text-muted/50 mb-10">
             What to buy
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -186,12 +186,12 @@ export default async function CityPage({ params }: Props) {
               <Link
                 key={cat.id}
                 href={`/${country.slug}/${city.slug}/${cat.slug}`}
-                className="group block p-6 hover:bg-warm-white transition-colors duration-300"
+                className="group block p-6 hover:bg-neutral-100 transition-colors duration-300"
               >
-                <h3 className="font-serif text-xl font-semibold mb-2 group-hover:text-terracotta transition-colors">
+                <h3 className="font-serif text-xl font-semibold mb-2 group-hover:text-accent transition-colors">
                   {categoryLabel(cat)}
                 </h3>
-                <p className="text-warm-grey/50 text-sm">
+                <p className="text-muted/50 text-sm">
                   {cat.itemCount} {cat.itemCount === 1 ? "item" : "items"}
                 </p>
               </Link>
@@ -201,7 +201,7 @@ export default async function CityPage({ params }: Props) {
       )}
 
       {cityCategories.length === 0 && (
-        <p className="text-warm-grey/50 text-sm text-center py-16">
+        <p className="text-muted/50 text-sm text-center py-16">
           No items yet in this city. Check back soon — we're constantly adding
           new designers.
         </p>
