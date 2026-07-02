@@ -11,44 +11,74 @@ interface Country {
   image: string | null;
 }
 
+interface Designer {
+  id: number;
+  name: string;
+  slug: string;
+  photo: string | null;
+  bio: string | null;
+  featured: boolean;
+  created_at: string;
+  city_id: number;
+  cities?: {
+    name: string;
+    slug: string;
+    countries?: { name: string; slug: string };
+  } | null;
+}
+
 export default async function HomePage() {
   let allCountries: Country[] = [];
+  let featuredDesigners: Designer[] = [];
+  let recentDesigners: Designer[] = [];
   let dbError: string | null = null;
 
   try {
-    const { data, error } = await supabase
-      .from("countries")
-      .select("*")
-      .order("name");
-    if (error) throw error;
-    allCountries = data || [];
+    const [countriesRes, featuredRes, recentRes] = await Promise.all([
+      supabase.from("countries").select("*").order("name"),
+      supabase
+        .from("designers")
+        .select("*, cities(name, slug, countries(name, slug))")
+        .eq("featured", true)
+        .order("name")
+        .limit(3),
+      supabase
+        .from("designers")
+        .select("*, cities(name, slug, countries(name, slug))")
+        .order("created_at", { ascending: false })
+        .limit(3),
+    ]);
+
+    if (countriesRes.error) throw countriesRes.error;
+    if (featuredRes.error) throw featuredRes.error;
+    if (recentRes.error) throw recentRes.error;
+
+    allCountries = countriesRes.data || [];
+    featuredDesigners = featuredRes.data || [];
+    recentDesigners = recentRes.data || [];
   } catch (err: any) {
     dbError = err?.message || "Unknown database error";
   }
 
   if (dbError) {
     return (
-      <div className="mx-auto max-w-5xl px-4 py-24 text-center">
-        <div className="font-sans text-4xl font-extralight text-emerald mb-1">
-          /
-        </div>
-        <p className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-2">
+      <div className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <p className="text-sm tracking-[4px] uppercase text-warm-grey/40 mb-6">
           find
         </p>
-        <h1 className="font-sans text-2xl font-semibold tracking-[6px] text-emerald mb-3">
+        <h1 className="font-serif text-2xl font-bold tracking-[4px] text-emerald mb-3">
           ALTO
         </h1>
-        <p className="tracking-widest uppercase text-xs text-olive mb-8">
+        <p className="text-xs tracking-[3px] uppercase text-warm-grey/50 mb-10">
           discover local fashion
         </p>
-        <p className="text-warm-grey text-lg max-w-xl mx-auto">
-          Редакционный гид по локальной независимой моде из стран СНГ.
-        </p>
-        <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded-xl text-left max-w-2xl mx-auto">
-          <p className="text-red-700 text-sm font-medium mb-1">
-            Ошибка подключения к базе данных:
+        <div className="p-6 bg-red-50/50 border border-red-100 rounded-sm text-left max-w-lg mx-auto">
+          <p className="text-red-700 text-xs font-medium mb-1 uppercase tracking-wider">
+            Database Error
           </p>
-          <p className="text-red-600 text-xs font-mono break-all">{dbError}</p>
+          <p className="text-red-600/70 text-sm font-mono break-all">
+            {dbError}
+          </p>
         </div>
       </div>
     );
@@ -56,72 +86,197 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* ── Hero: Slash Logo ───────────────────────────── */}
-      <section className="bg-warm-white border-b border-sand">
-        <div className="mx-auto max-w-5xl px-4 py-28 md:py-36 text-center">
-          <div className="font-sans text-6xl md:text-7xl font-extralight text-emerald leading-none mb-1">
-            /
-          </div>
-          <p className="text-xs md:text-sm tracking-[5px] uppercase text-warm-grey/50 mb-2">
+      {/* ── Logo + tagline ─────────────────────────────── */}
+      <section className="pt-20 pb-8 md:pt-28 md:pb-10 text-center">
+        <div className="mx-auto max-w-3xl px-6">
+          <p className="text-[10px] md:text-xs tracking-[5px] uppercase text-warm-grey/40 mb-4">
             find
           </p>
-          <h1 className="font-sans text-3xl md:text-4xl font-semibold tracking-[6px] text-emerald mb-3">
+          <h1 className="font-serif text-2xl md:text-3xl font-bold tracking-[5px] text-emerald mb-3">
             ALTO
           </h1>
-          <p className="tracking-widest uppercase text-xs text-olive mb-10">
+          <p className="text-[10px] md:text-xs tracking-[3px] uppercase text-warm-grey/50 mb-8">
             discover local fashion
           </p>
-          <p className="text-warm-grey text-base md:text-lg max-w-md mx-auto leading-relaxed">
-            Редакционный гид по локальной независимой моде из стран СНГ
+          <div className="w-8 h-px bg-sand mx-auto mb-6" />
+          <p className="text-warm-grey/70 text-sm md:text-base max-w-md mx-auto leading-relaxed">
+            Editorial guide to independent designers around the world
           </p>
         </div>
       </section>
 
-      {/* ── Countries Grid ───────────────────────────────── */}
-      <div className="mx-auto max-w-5xl px-4 py-16">
-        {allCountries.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-warm-grey text-lg">
-              Контент появится здесь после наполнения базы данных.
-            </p>
-          </div>
-        ) : (
-          <>
-            <h2 className="font-serif text-2xl font-semibold text-charcoal mb-8">
-              Страны
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* ── Choose your destination ────────────────────── */}
+      <section className="pb-16 md:pb-20">
+        <div className="mx-auto max-w-5xl px-6">
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10 text-center">
+            Choose your destination
+          </h2>
+
+          {allCountries.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-warm-grey/50 text-sm">
+                Destinations coming soon
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {allCountries.map((country) => (
                 <Link
                   key={country.id}
                   href={`/${country.slug}`}
-                  className="group block rounded-xl border border-sand bg-warm-white overflow-hidden hover:border-sand-hover hover:shadow-md transition-all duration-200"
+                  className="group block"
                 >
-                  {country.image && (
-                    <div className="w-full aspect-[4/3] bg-sand overflow-hidden">
+                  <div className="aspect-[4/5] bg-sand overflow-hidden mb-4">
+                    {country.image ? (
                       <img
                         src={country.image}
                         alt={country.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
                       />
-                    </div>
-                  )}
-                  <div className="p-5">
-                    <h3 className="font-serif text-xl font-semibold text-charcoal group-hover:text-terracotta transition-colors">
-                      {country.name}
-                    </h3>
-                    {country.description && (
-                      <p className="text-warm-grey text-sm mt-2 line-clamp-2 leading-relaxed">
-                        {country.description}
-                      </p>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-sand-hover/50 text-6xl font-serif">
+                          {country.name.charAt(0)}
+                        </span>
+                      </div>
                     )}
                   </div>
+                  <h3 className="font-serif text-xl md:text-2xl font-semibold mb-1 group-hover:text-terracotta transition-colors">
+                    {country.name}
+                  </h3>
+                  {country.description && (
+                    <p className="text-warm-grey/70 text-sm leading-relaxed line-clamp-2 max-w-xs">
+                      {country.description}
+                    </p>
+                  )}
                 </Link>
               ))}
             </div>
-          </>
-        )}
-      </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── Editor's Picks ─────────────────────────────── */}
+      {featuredDesigners.length > 0 && (
+        <section className="pb-16 md:pb-20">
+          <div className="mx-auto max-w-5xl px-6">
+            <div className="border-t border-sand pt-14 mb-10">
+              <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-2 text-center">
+                Editor's Picks
+              </h2>
+              <p className="text-warm-grey/40 text-xs text-center max-w-sm mx-auto leading-relaxed">
+                Designers our editors believe deserve your attention
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {featuredDesigners.map((d) => {
+                const city = (d as any).cities;
+                const country = city?.countries;
+                return (
+                  <Link
+                    key={d.id}
+                    href={`/designer/${d.slug}`}
+                    className="group block"
+                  >
+                    <div className="aspect-[3/4] bg-sand overflow-hidden mb-4">
+                      {d.photo ? (
+                        <img
+                          src={d.photo}
+                          alt={d.name}
+                          className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-sand-hover/40 text-4xl font-serif">
+                            {d.name.charAt(0)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="font-serif text-lg font-semibold mb-1 group-hover:text-terracotta transition-colors">
+                      {d.name}
+                    </h3>
+                    {(city || country) && (
+                      <p className="text-warm-grey/50 text-xs tracking-wide uppercase mb-2">
+                        {[city?.name, country?.name].filter(Boolean).join(", ")}
+                      </p>
+                    )}
+                    {d.bio && (
+                      <p className="text-warm-grey/70 text-sm leading-relaxed line-clamp-2">
+                        {d.bio}
+                      </p>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Recently Added ─────────────────────────────── */}
+      {recentDesigners.length > 0 && (
+        <section className="pb-20 md:pb-28">
+          <div className="mx-auto max-w-5xl px-6">
+            <div className="border-t border-sand pt-14 mb-10">
+              <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-2 text-center">
+                Recently Added
+              </h2>
+              <p className="text-warm-grey/40 text-xs text-center max-w-sm mx-auto leading-relaxed">
+                New designers joining the guide
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {recentDesigners.map((d) => {
+                const city = (d as any).cities;
+                const country = city?.countries;
+                return (
+                  <Link
+                    key={d.id}
+                    href={`/designer/${d.slug}`}
+                    className="group flex gap-4 p-4 hover:bg-warm-white transition-colors duration-300"
+                  >
+                    <div className="w-16 h-16 bg-sand shrink-0 overflow-hidden flex-shrink-0">
+                      {d.photo ? (
+                        <img
+                          src={d.photo}
+                          alt={d.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-sand-hover/40 text-lg font-serif">
+                            {d.name.charAt(0)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-serif text-base font-semibold mb-0.5 group-hover:text-terracotta transition-colors">
+                        {d.name}
+                      </h3>
+                      {(city || country) && (
+                        <p className="text-warm-grey/50 text-[11px] tracking-wide uppercase mb-1">
+                          {[city?.name, country?.name]
+                            .filter(Boolean)
+                            .join(", ")}
+                        </p>
+                      )}
+                      {d.bio && (
+                        <p className="text-warm-grey/60 text-xs leading-relaxed line-clamp-1">
+                          {d.bio}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

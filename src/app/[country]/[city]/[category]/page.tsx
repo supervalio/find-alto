@@ -123,62 +123,67 @@ export default async function CategoryPage({ params }: Props) {
   }) => cat.nameRu || cat.nameEn || cat.name;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12">
+    <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
       {/* Breadcrumb */}
-      <nav className="text-sm text-warm-grey mb-8">
+      <nav className="text-xs tracking-wider text-warm-grey/50 mb-12">
         <Link href="/" className="hover:text-terracotta transition-colors">
-          Главная
+          Home
         </Link>
-        <span className="mx-2">/</span>
+        <span className="mx-2 text-sand-hover">/</span>
         <Link
           href={`/${country.slug}`}
           className="hover:text-terracotta transition-colors"
         >
           {country.name}
         </Link>
-        <span className="mx-2">/</span>
+        <span className="mx-2 text-sand-hover">/</span>
         <Link
           href={`/${country.slug}/${city.slug}`}
           className="hover:text-terracotta transition-colors"
         >
           {city.name}
         </Link>
-        <span className="mx-2">/</span>
-        <span className="text-charcoal">{categoryLabel(category)}</span>
+        <span className="mx-2 text-sand-hover">/</span>
+        <span className="text-charcoal/70">{categoryLabel(category)}</span>
       </nav>
 
       {/* Category header */}
-      <div className="mb-12">
-        <h1 className="font-serif text-3xl font-bold tracking-tight mb-3">
-          {categoryLabel(category)} — {city.name}
+      <header className="mb-20">
+        <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          {categoryLabel(category)}
         </h1>
-      </div>
+        <p className="text-warm-grey/50 text-sm">
+          {city.name}, {country.name}
+        </p>
+      </header>
 
-      {/* Items list */}
+      {/* Items */}
       {categoryItems.length > 0 && (
-        <section className="mb-12">
-          <h2 className="font-serif text-xl font-semibold mb-4">
-            Вещи ({categoryItems.length})
+        <section className="mb-20">
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+            Items ({categoryItems.length})
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {categoryItems.map(({ item, designer }) => (
               <Link
                 key={item.id}
                 href={`/item/${item.slug}`}
-                className="block rounded-xl border border-sand bg-warm-white p-5 hover:border-sand-hover transition-colors"
+                className="group block p-5 hover:bg-warm-white transition-colors duration-300"
               >
-                <h3 className="font-medium text-charcoal">{item.name}</h3>
+                <h3 className="font-serif text-lg font-semibold mb-2 group-hover:text-terracotta transition-colors">
+                  {item.name}
+                </h3>
                 {item.description && (
-                  <p className="text-sm text-warm-grey mt-1 line-clamp-2 leading-relaxed">
+                  <p className="text-warm-grey/70 text-sm leading-relaxed line-clamp-2 mb-3">
                     {item.description}
                   </p>
                 )}
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="text-sm text-terracotta">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-terracotta">
                     {designer.name}
                   </span>
                   {item.priceLocal != null && item.priceLocal > 0 && (
-                    <span className="text-sm font-medium tabular-nums">
+                    <span className="text-sm tabular-nums text-charcoal/70">
                       {item.priceLocal.toLocaleString()}{" "}
                       {item.currency || "USD"}
                     </span>
@@ -193,17 +198,17 @@ export default async function CategoryPage({ params }: Props) {
       {/* Designers in this category */}
       {categoryDesigners.length > 0 && (
         <section>
-          <h2 className="font-serif text-xl font-semibold mb-4">
-            Дизайнеры в этой категории
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+            Designers in this category
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {categoryDesigners.map(({ designer }) => (
               <Link
                 key={designer.id}
                 href={`/designer/${designer.slug}`}
-                className="group flex gap-4 rounded-xl border border-sand bg-warm-white p-4 hover:border-sand-hover transition-colors"
+                className="group flex gap-5 p-5 hover:bg-warm-white transition-colors duration-300"
               >
-                <div className="w-20 h-20 rounded-lg bg-sand shrink-0 overflow-hidden">
+                <div className="w-20 h-20 bg-sand shrink-0 overflow-hidden flex-shrink-0">
                   {designer.photo ? (
                     <img
                       src={designer.photo}
@@ -211,19 +216,25 @@ export default async function CategoryPage({ params }: Props) {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-sand-hover text-xs">
-                      фото
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-sand-hover/40 text-xl font-serif">
+                        {designer.name.charAt(0)}
+                      </span>
                     </div>
                   )}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-medium text-charcoal group-hover:text-terracotta transition-colors truncate">
+                  <h3 className="font-serif text-base font-semibold mb-1 group-hover:text-terracotta transition-colors">
                     {designer.name}
                   </h3>
-                  <p className="text-sm text-warm-grey mt-1">{city.name}</p>
-                  <p className="text-sm text-warm-grey/70 mt-1 line-clamp-2">
-                    {designer.bio}
+                  <p className="text-warm-grey/50 text-[11px] tracking-wide uppercase mb-1">
+                    {city.name}
                   </p>
+                  {designer.bio && (
+                    <p className="text-warm-grey/60 text-sm leading-relaxed line-clamp-2">
+                      {designer.bio}
+                    </p>
+                  )}
                 </div>
               </Link>
             ))}
@@ -231,10 +242,9 @@ export default async function CategoryPage({ params }: Props) {
         </section>
       )}
 
-      {/* Empty state */}
       {categoryItems.length === 0 && (
-        <p className="text-warm-grey text-center py-12">
-          В этой категории пока нет вещей для {city.name}. Загляните позже.
+        <p className="text-warm-grey/50 text-sm text-center py-16">
+          No items in this category for {city.name} yet. Check back soon.
         </p>
       )}
     </div>

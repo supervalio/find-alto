@@ -33,21 +33,44 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-charcoal">
-        <header className="border-b border-sand bg-warm-white">
-          <div className="mx-auto max-w-5xl px-4 h-13 flex items-center justify-center">
+        {/* ── Minimal header ───────────────────────────── */}
+        <header className="border-b border-sand/50 bg-warm-white">
+          <div className="mx-auto max-w-5xl px-6 h-14 flex items-center justify-between">
             <Link
               href="/"
-              className="text-sm font-medium tracking-widest uppercase text-charcoal hover:text-terracotta transition-colors"
+              className="font-serif text-sm font-bold tracking-[3px] uppercase text-charcoal hover:text-emerald transition-colors"
             >
               Find Alto
             </Link>
+            <nav className="flex items-center gap-6">
+              <Link
+                href="/"
+                className="text-xs tracking-widest uppercase text-warm-grey/60 hover:text-charcoal transition-colors"
+              >
+                Home
+              </Link>
+              <Link
+                href="/admin"
+                className="text-xs tracking-widest uppercase text-warm-grey/60 hover:text-charcoal transition-colors"
+              >
+                Admin
+              </Link>
+            </nav>
           </div>
         </header>
+
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-sand bg-warm-white py-10 text-center text-sm text-warm-grey">
-          <p className="font-serif text-lg text-charcoal mb-1">Find Alto</p>
-          <p className="tracking-widest uppercase text-xs">
+
+        {/* ── Editorial footer ─────────────────────────── */}
+        <footer className="border-t border-sand/50 py-16 text-center">
+          <p className="font-serif text-base font-bold tracking-[2px] text-charcoal mb-2">
+            Find Alto
+          </p>
+          <p className="text-[10px] tracking-[3px] uppercase text-warm-grey/40 mb-6">
             discover local fashion
+          </p>
+          <p className="text-warm-grey/40 text-xs max-w-xs mx-auto leading-relaxed">
+            Editorial guide to independent designers around the world
           </p>
         </footer>
       </body>

@@ -108,49 +108,52 @@ export default async function CityPage({ params }: Props) {
   }) => cat.nameRu || cat.nameEn || cat.name;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12">
+    <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
       {/* Breadcrumb */}
-      <nav className="text-sm text-warm-grey mb-8">
+      <nav className="text-xs tracking-wider text-warm-grey/50 mb-12">
         <Link href="/" className="hover:text-terracotta transition-colors">
-          Главная
+          Home
         </Link>
-        <span className="mx-2">/</span>
+        <span className="mx-2 text-sand-hover">/</span>
         <Link
           href={`/${country.slug}`}
           className="hover:text-terracotta transition-colors"
         >
           {country.name}
         </Link>
-        <span className="mx-2">/</span>
-        <span className="text-charcoal">{city.name}</span>
+        <span className="mx-2 text-sand-hover">/</span>
+        <span className="text-charcoal/70">{city.name}</span>
       </nav>
 
       {/* City header */}
-      <div className="mb-12">
-        <h1 className="font-serif text-3xl md:text-4xl font-bold tracking-tight mb-3">
+      <header className="mb-20">
+        <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight mb-6">
           {city.name}
         </h1>
         {city.description && (
-          <p className="text-warm-grey text-lg max-w-2xl leading-relaxed">
+          <p className="text-warm-grey/70 text-lg md:text-xl max-w-2xl leading-relaxed">
             {city.description}
           </p>
         )}
-      </div>
+      </header>
 
-      {/* Ads */}
+      {/* Sponsored */}
       {(cityAds || []).length > 0 && (
-        <section className="mb-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <section className="mb-20">
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+            Sponsored
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {(cityAds || []).map((ad: any) => (
               <a
                 key={ad.id}
                 href={ad.link || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block rounded-xl border border-sand bg-warm-white overflow-hidden hover:border-sand-hover transition-colors"
+                className="group block p-5 hover:bg-warm-white transition-colors duration-300"
               >
                 {ad.photo && (
-                  <div className="aspect-[3/1] bg-sand overflow-hidden">
+                  <div className="aspect-[3/1] bg-sand overflow-hidden mb-4">
                     <img
                       src={ad.photo}
                       alt={ad.name}
@@ -158,36 +161,38 @@ export default async function CityPage({ params }: Props) {
                     />
                   </div>
                 )}
-                <div className="p-4">
-                  <h3 className="font-medium text-sm">{ad.name}</h3>
-                  {ad.description && (
-                    <p className="text-xs text-warm-grey mt-1 line-clamp-2">
-                      {ad.description}
-                    </p>
-                  )}
-                </div>
+                <h3 className="font-serif text-base font-semibold mb-1">
+                  {ad.name}
+                </h3>
+                {ad.description && (
+                  <p className="text-warm-grey/70 text-sm leading-relaxed line-clamp-2">
+                    {ad.description}
+                  </p>
+                )}
               </a>
             ))}
           </div>
         </section>
       )}
 
-      {/* Categories grid */}
+      {/* Categories */}
       {cityCategories.length > 0 && (
         <section>
-          <h2 className="font-serif text-xl font-semibold mb-4">Категории</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+            What to buy
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {cityCategories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/${country.slug}/${city.slug}/${cat.slug}`}
-                className="group block rounded-xl border border-sand bg-warm-white p-5 hover:border-sand-hover transition-colors"
+                className="group block p-6 hover:bg-warm-white transition-colors duration-300"
               >
-                <h3 className="text-lg font-medium text-charcoal group-hover:text-terracotta transition-colors">
+                <h3 className="font-serif text-xl font-semibold mb-2 group-hover:text-terracotta transition-colors">
                   {categoryLabel(cat)}
                 </h3>
-                <p className="text-warm-grey text-sm mt-1">
-                  {cat.itemCount} {cat.itemCount === 1 ? "вещь" : "вещей"}
+                <p className="text-warm-grey/50 text-sm">
+                  {cat.itemCount} {cat.itemCount === 1 ? "item" : "items"}
                 </p>
               </Link>
             ))}
@@ -195,11 +200,10 @@ export default async function CityPage({ params }: Props) {
         </section>
       )}
 
-      {/* Empty state */}
       {cityCategories.length === 0 && (
-        <p className="text-warm-grey text-center py-12">
-          В этом городе пока нет вещей. Загляните позже — мы постоянно добавляем
-          новых дизайнеров.
+        <p className="text-warm-grey/50 text-sm text-center py-16">
+          No items yet in this city. Check back soon — we're constantly adding
+          new designers.
         </p>
       )}
     </div>

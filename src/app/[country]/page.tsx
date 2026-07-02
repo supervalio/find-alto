@@ -68,23 +68,23 @@ export default async function CountryPage({ params }: Props) {
   if (adsError) throw adsError;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12">
-      {/* Breadcrumb */}
-      <nav className="text-sm text-warm-grey mb-8">
+    <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+      {/* ── Breadcrumb ─────────────────────────────────── */}
+      <nav className="text-xs tracking-wider text-warm-grey/50 mb-12">
         <Link href="/" className="hover:text-terracotta transition-colors">
-          Главная
+          Home
         </Link>
-        <span className="mx-2">/</span>
-        <span className="text-charcoal">{country.name}</span>
+        <span className="mx-2 text-sand-hover">/</span>
+        <span className="text-charcoal/70">{country.name}</span>
       </nav>
 
-      {/* Country header */}
-      <div className="mb-12">
-        <h1 className="font-serif text-3xl md:text-4xl font-bold tracking-tight mb-4">
+      {/* ── Country header ─────────────────────────────── */}
+      <header className="mb-20">
+        <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight mb-6">
           {country.name}
         </h1>
         {country.image && (
-          <div className="w-full aspect-[3/1] rounded-xl bg-sand overflow-hidden mb-4">
+          <div className="w-full aspect-[21/9] bg-sand overflow-hidden mb-8">
             <img
               src={country.image}
               alt={country.name}
@@ -93,63 +93,30 @@ export default async function CountryPage({ params }: Props) {
           </div>
         )}
         {country.description && (
-          <p className="text-warm-grey text-lg max-w-2xl leading-relaxed">
+          <p className="text-warm-grey/70 text-lg md:text-xl max-w-2xl leading-relaxed">
             {country.description}
           </p>
         )}
-      </div>
+      </header>
 
-      {/* Ads */}
-      {(countryAds || []).length > 0 && (
-        <section className="mb-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {(countryAds || []).map((ad: any) => (
-              <a
-                key={ad.id}
-                href={ad.link || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block rounded-xl border border-sand bg-warm-white overflow-hidden hover:border-sand-hover transition-colors"
-              >
-                {ad.photo && (
-                  <div className="aspect-[3/1] bg-sand overflow-hidden">
-                    <img
-                      src={ad.photo}
-                      alt={ad.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                <div className="p-4">
-                  <h3 className="font-medium text-sm">{ad.name}</h3>
-                  {ad.description && (
-                    <p className="text-xs text-warm-grey mt-1 line-clamp-2">
-                      {ad.description}
-                    </p>
-                  )}
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Cities grid */}
+      {/* ── Cities ─────────────────────────────────────── */}
       {(allCities || []).length > 0 && (
-        <section className="mb-12">
-          <h2 className="font-serif text-xl font-semibold mb-4">Города</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <section className="mb-20">
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+            Cities
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {(allCities || []).map((city: any) => (
               <Link
                 key={city.id}
                 href={`/${country.slug}/${city.slug}`}
-                className="group block rounded-xl border border-sand bg-warm-white p-5 hover:border-sand-hover transition-colors"
+                className="group block p-6 hover:bg-warm-white transition-colors duration-300"
               >
-                <h3 className="text-lg font-medium text-charcoal group-hover:text-terracotta transition-colors">
+                <h3 className="font-serif text-xl font-semibold mb-2 group-hover:text-terracotta transition-colors">
                   {city.name}
                 </h3>
                 {city.description && (
-                  <p className="text-warm-grey text-sm mt-1 line-clamp-2">
+                  <p className="text-warm-grey/70 text-sm leading-relaxed">
                     {city.description}
                   </p>
                 )}
@@ -159,18 +126,20 @@ export default async function CountryPage({ params }: Props) {
         </section>
       )}
 
-      {/* All designers in country */}
+      {/* ── Designers ──────────────────────────────────── */}
       {allDesigners.length > 0 && (
-        <section>
-          <h2 className="font-serif text-xl font-semibold mb-4">Дизайнеры</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <section className="mb-20">
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+            Designers
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {allDesigners.map((d: any) => (
               <Link
                 key={d.id}
                 href={`/designer/${d.slug}`}
-                className="group flex gap-4 rounded-xl border border-sand bg-warm-white p-4 hover:border-sand-hover transition-colors"
+                className="group flex gap-5 p-5 hover:bg-warm-white transition-colors duration-300"
               >
-                <div className="w-20 h-20 rounded-lg bg-sand shrink-0 overflow-hidden">
+                <div className="w-20 h-20 bg-sand shrink-0 overflow-hidden flex-shrink-0">
                   {d.photo ? (
                     <img
                       src={d.photo}
@@ -178,21 +147,65 @@ export default async function CountryPage({ params }: Props) {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-sand-hover text-xs">
-                      фото
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-sand-hover/40 text-xl font-serif">
+                        {d.name.charAt(0)}
+                      </span>
                     </div>
                   )}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-medium text-charcoal group-hover:text-terracotta transition-colors truncate">
+                  <h3 className="font-serif text-base font-semibold mb-1 group-hover:text-terracotta transition-colors">
                     {d.name}
                   </h3>
-                  <p className="text-sm text-warm-grey mt-1">{d.cities.name}</p>
-                  <p className="text-sm text-warm-grey/70 mt-1 line-clamp-2">
-                    {d.bio}
+                  <p className="text-warm-grey/50 text-[11px] tracking-wide uppercase mb-1.5">
+                    {d.cities?.name}
                   </p>
+                  {d.bio && (
+                    <p className="text-warm-grey/70 text-sm leading-relaxed line-clamp-2">
+                      {d.bio}
+                    </p>
+                  )}
                 </div>
               </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Sponsored ──────────────────────────────────── */}
+      {(countryAds || []).length > 0 && (
+        <section>
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-10">
+            Sponsored
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {(countryAds || []).map((ad: any) => (
+              <a
+                key={ad.id}
+                href={ad.link || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block p-5 hover:bg-warm-white transition-colors duration-300"
+              >
+                {ad.photo && (
+                  <div className="aspect-[3/1] bg-sand overflow-hidden mb-4">
+                    <img
+                      src={ad.photo}
+                      alt={ad.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <h3 className="font-serif text-base font-semibold mb-1">
+                  {ad.name}
+                </h3>
+                {ad.description && (
+                  <p className="text-warm-grey/70 text-sm leading-relaxed line-clamp-2">
+                    {ad.description}
+                  </p>
+                )}
+              </a>
             ))}
           </div>
         </section>

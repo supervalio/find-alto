@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .limit(1);
 
   const dbRow = data?.[0];
-  if (!dbRow) return { title: "Вещь не найдена" };
+  if (!dbRow) return { title: "Item not found" };
 
   const designer = (dbRow.designers as any[])?.[0] || {};
   const category = (dbRow.categories as any[])?.[0] || {};
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: dbRow.name,
     description:
       dbRow.description ||
-      `${categoryLabel} от ${designer.name} — ${city.name}, ${country.name}`,
+      `${categoryLabel} by ${designer.name} — ${city.name}, ${country.name}`,
   };
 }
 
@@ -74,11 +74,11 @@ export default async function ItemPage({ params }: Props) {
   const photoCount = photos.length;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12">
+    <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
       {/* ═══ Breadcrumb ═══════════════════════════════════ */}
-      <nav className="text-sm text-warm-grey mb-8 flex flex-wrap items-center gap-x-1.5">
+      <nav className="text-xs tracking-wider text-warm-grey/50 mb-12 flex flex-wrap items-center gap-x-1.5">
         <Link href="/" className="hover:text-terracotta transition-colors">
-          Главная
+          Home
         </Link>
         <span>/</span>
         <Link
@@ -102,14 +102,14 @@ export default async function ItemPage({ params }: Props) {
           {designer.name}
         </Link>
         <span>/</span>
-        <span className="text-charcoal">{item.name}</span>
+        <span className="text-warm-grey">{item.name}</span>
       </nav>
 
       {/* ═══ Photo Gallery ════════════════════════════════ */}
       {photoCount > 0 && (
-        <div className="mb-10">
+        <div className="mb-12">
           {photoCount === 1 ? (
-            <div className="rounded-xl overflow-hidden border border-sand">
+            <div className="overflow-hidden">
               <img
                 src={photos[0].url}
                 alt={photos[0].alt || item.name}
@@ -117,8 +117,8 @@ export default async function ItemPage({ params }: Props) {
               />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="rounded-xl overflow-hidden border border-sand md:row-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div className="overflow-hidden md:row-span-2">
                 <img
                   src={photos[0].url}
                   alt={photos[0].alt || item.name}
@@ -126,10 +126,7 @@ export default async function ItemPage({ params }: Props) {
                 />
               </div>
               {photos.slice(1).map((photo) => (
-                <div
-                  key={photo.id}
-                  className="rounded-xl overflow-hidden border border-sand"
-                >
+                <div key={photo.id} className="overflow-hidden">
                   <img
                     src={photo.url}
                     alt={photo.alt || item.name}
@@ -143,17 +140,17 @@ export default async function ItemPage({ params }: Props) {
       )}
 
       {/* ═══ Item header ══════════════════════════════════ */}
-      <div className="mb-8">
-        <div className="flex flex-wrap items-center gap-3 mb-3">
-          <h1 className="font-serif text-3xl md:text-4xl font-bold tracking-tight">
+      <div className="mb-10">
+        <div className="flex flex-wrap items-baseline gap-3 mb-3">
+          <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight">
             {item.name}
           </h1>
-          <span className="inline-flex items-center rounded-full bg-olive/10 px-3 py-0.5 text-sm text-olive">
+          <span className="text-xs tracking-[4px] uppercase text-warm-grey/50">
             {category.name_ru || category.name}
           </span>
         </div>
-        <p className="text-warm-grey">
-          Дизайнер:{" "}
+        <p className="text-warm-grey/70">
+          by{" "}
           <Link
             href={`/designer/${designer.slug}`}
             className="font-medium text-terracotta hover:text-terracotta-hover transition-colors underline underline-offset-2"
@@ -164,22 +161,22 @@ export default async function ItemPage({ params }: Props) {
       </div>
 
       {/* ═══ Two-column detail section ════════════════════ */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
         {/* ── Price ────────────────────────────────────── */}
-        <div className="rounded-xl border border-sand bg-warm-white p-5">
-          <h2 className="text-sm font-medium text-warm-grey uppercase tracking-wide mb-2">
-            Цена
+        <div>
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-3">
+            Price
           </h2>
           {item.price_local != null && item.price_local > 0 ? (
             <div>
-              <p className="text-2xl font-semibold text-charcoal tabular-nums">
+              <p className="text-2xl font-semibold tabular-nums">
                 {item.price_local.toLocaleString("ru-RU")}{" "}
-                <span className="text-base font-normal text-warm-grey">
+                <span className="text-base font-normal text-warm-grey/50">
                   {item.currency || "USD"}
                 </span>
               </p>
               {item.price_usd != null && item.price_usd > 0 && (
-                <p className="text-sm text-warm-grey mt-1 tabular-nums">
+                <p className="text-sm text-warm-grey/50 mt-1 tabular-nums">
                   ≈{" "}
                   {item.price_usd.toLocaleString("en-US", {
                     style: "currency",
@@ -189,16 +186,16 @@ export default async function ItemPage({ params }: Props) {
               )}
             </div>
           ) : (
-            <p className="text-warm-grey italic">Цена по запросу</p>
+            <p className="text-warm-grey/50 italic">Price upon request</p>
           )}
         </div>
 
         {/* ── Location ─────────────────────────────────── */}
-        <div className="rounded-xl border border-sand bg-warm-white p-5">
-          <h2 className="text-sm font-medium text-warm-grey uppercase tracking-wide mb-2">
-            Локация
+        <div>
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-3">
+            Location
           </h2>
-          <p className="text-lg font-medium text-charcoal">
+          <p className="text-lg font-medium">
             {city.name},{" "}
             <Link
               href={`/${country.slug}`}
@@ -212,40 +209,48 @@ export default async function ItemPage({ params }: Props) {
 
       {/* ═══ Material ═════════════════════════════════════ */}
       {item.material && (
-        <div className="rounded-xl border border-sand bg-warm-white p-5 mb-8">
-          <h2 className="text-sm font-medium text-warm-grey uppercase tracking-wide mb-2">
-            Материал
+        <div className="mb-10">
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-3">
+            Material
           </h2>
-          <p className="text-charcoal">{item.material}</p>
+          <p className="text-warm-grey/70">{item.material}</p>
         </div>
       )}
 
       {/* ═══ Story ════════════════════════════════════════ */}
       {item.story && (
-        <div className="rounded-xl border-l-4 border-terracotta bg-warm-white p-5 mb-8">
-          <h2 className="text-sm font-medium text-warm-grey uppercase tracking-wide mb-3">
-            История вещи
+        <div className="mb-10">
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-3">
+            Story
           </h2>
-          <p className="text-warm-grey italic leading-relaxed">{item.story}</p>
+          <div className="border-l-4 border-terracotta pl-6">
+            <p className="text-warm-grey/70 italic leading-relaxed max-w-2xl">
+              {item.story}
+            </p>
+          </div>
         </div>
       )}
 
       {/* ═══ Description ══════════════════════════════════ */}
       {item.description && (
-        <div className="mb-8">
-          <p className="text-warm-grey leading-relaxed">{item.description}</p>
+        <div className="mb-10">
+          <p className="text-warm-grey/70 leading-relaxed max-w-2xl">
+            {item.description}
+          </p>
         </div>
       )}
 
       {/* ═══ Designer link block ══════════════════════════ */}
-      <div className="mb-10">
+      <div className="mb-12">
         <Link
           href={`/designer/${designer.slug}`}
-          className="group block rounded-xl border border-sand bg-warm-white p-5 hover:border-sand-hover hover:shadow-md transition-all duration-200"
+          className="group block hover:bg-warm-white transition-colors duration-300 py-6"
         >
-          <h2 className="font-serif text-lg font-semibold mb-2">О дизайнере</h2>
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-4">
+            Designer
+          </h2>
           <div className="flex gap-4 items-start">
-            <div className="w-16 h-16 rounded-lg bg-sand shrink-0 overflow-hidden">
+            <div className="w-16 h-16 bg-warm-white shrink-0 overflow-hidden">
               {designer.photo ? (
                 <img
                   src={designer.photo}
@@ -253,27 +258,27 @@ export default async function ItemPage({ params }: Props) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-sand-hover text-xs">
-                  фото
+                <div className="w-full h-full flex items-center justify-center text-warm-grey/20 text-xs">
+                  photo
                 </div>
               )}
             </div>
             <div className="min-w-0">
-              <p className="font-medium text-charcoal group-hover:text-terracotta transition-colors">
+              <p className="font-medium group-hover:text-terracotta transition-colors">
                 {designer.name}
               </p>
               {designer.bio && (
-                <p className="text-sm text-warm-grey mt-1 line-clamp-2">
+                <p className="text-sm text-warm-grey/50 mt-1 line-clamp-2">
                   {designer.bio}
                 </p>
               )}
-              <p className="text-sm text-warm-grey mt-1">
+              <p className="text-sm text-warm-grey/50 mt-1">
                 {city.name}, {country.name}
               </p>
             </div>
           </div>
           <div className="mt-3 text-sm font-medium text-terracotta group-hover:text-terracotta-hover transition-colors">
-            Смотреть все вещи дизайнера →
+            View all items →
           </div>
         </Link>
       </div>
@@ -281,26 +286,26 @@ export default async function ItemPage({ params }: Props) {
       {/* ═══ Other items by this designer ═════════════════ */}
       {otherItems.length > 0 && (
         <section>
-          <h2 className="font-serif text-xl font-semibold mb-4">
-            Другие вещи {designer.name}
+          <h2 className="text-xs tracking-[4px] uppercase text-warm-grey/50 mb-4">
+            More from {designer.name}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {otherItems.map((other) => (
               <Link
                 key={other.id}
                 href={`/item/${other.slug}`}
-                className="group block rounded-xl border border-sand bg-warm-white p-4 hover:border-sand-hover hover:shadow-md transition-all duration-200"
+                className="group block p-4 hover:bg-warm-white transition-colors duration-300"
               >
-                <h3 className="font-medium text-charcoal group-hover:text-terracotta transition-colors">
+                <h3 className="font-medium group-hover:text-terracotta transition-colors">
                   {other.name}
                 </h3>
                 {other.material && (
-                  <p className="text-sm text-warm-grey mt-1">
+                  <p className="text-sm text-warm-grey/50 mt-1">
                     {other.material}
                   </p>
                 )}
                 {other.price_local != null && other.price_local > 0 && (
-                  <p className="text-sm text-warm-grey mt-1 tabular-nums">
+                  <p className="text-sm text-warm-grey/50 mt-1 tabular-nums">
                     {other.price_local.toLocaleString("ru-RU")}{" "}
                     {other.currency || "USD"}
                   </p>
