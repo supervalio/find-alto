@@ -38,9 +38,9 @@ export default function RootLayout({
           <div className="mx-auto max-w-5xl px-6 h-14 flex items-center justify-between">
             <Link
               href="/"
-              className="font-serif text-sm font-bold tracking-[3px] uppercase text-charcoal hover:text-emerald transition-colors"
+              className="flex items-center hover:opacity-80 transition-opacity"
             >
-              Find Alto
+              <img src="/logo.svg" alt="Find Alto" className="h-10 w-auto" />
             </Link>
             <nav className="flex items-center gap-6">
               <Link
@@ -63,9 +63,11 @@ export default function RootLayout({
 
         {/* ── Editorial footer ─────────────────────────── */}
         <footer className="border-t border-sand/50 py-16 text-center">
-          <p className="font-serif text-base font-bold tracking-[2px] text-charcoal mb-2">
-            Find Alto
-          </p>
+          <img
+            src="/logo.svg"
+            alt="Find Alto"
+            className="h-12 w-auto mx-auto mb-2"
+          />
           <p className="text-[10px] tracking-[3px] uppercase text-warm-grey/40 mb-6">
             discover local fashion
           </p>

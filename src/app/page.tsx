@@ -63,12 +63,11 @@ export default async function HomePage() {
   if (dbError) {
     return (
       <div className="mx-auto max-w-3xl px-6 py-32 text-center">
-        <p className="text-sm tracking-[4px] uppercase text-warm-grey/40 mb-6">
-          find
-        </p>
-        <h1 className="font-serif text-2xl font-bold tracking-[4px] text-emerald mb-3">
-          ALTO
-        </h1>
+        <img
+          src="/logo.svg"
+          alt="Find Alto"
+          className="h-20 w-auto mx-auto mb-6"
+        />
         <p className="text-xs tracking-[3px] uppercase text-warm-grey/50 mb-10">
           discover local fashion
         </p>
@@ -89,12 +88,11 @@ export default async function HomePage() {
       {/* ── Logo + tagline ─────────────────────────────── */}
       <section className="pt-20 pb-8 md:pt-28 md:pb-10 text-center">
         <div className="mx-auto max-w-3xl px-6">
-          <p className="text-[10px] md:text-xs tracking-[5px] uppercase text-warm-grey/40 mb-4">
-            find
-          </p>
-          <h1 className="font-serif text-2xl md:text-3xl font-bold tracking-[5px] text-emerald mb-3">
-            ALTO
-          </h1>
+          <img
+            src="/logo.svg"
+            alt="Find Alto"
+            className="h-20 md:h-24 w-auto mx-auto mb-6"
+          />
           <p className="text-[10px] md:text-xs tracking-[3px] uppercase text-warm-grey/50 mb-8">
             discover local fashion
           </p>
