@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Find Alto — гид по локальным дизайнерам",
+    default: "Find Alto — гид по локальной независимой моде",
     template: "%s | Find Alto",
   },
   description:
-    "Откройте локальных дизайнеров одежды, обуви и аксессуаров из стран СНГ. Find local.",
+    "Редакционный гид по локальной независимой моде из стран СНГ. Открывайте дизайнеров, которых трудно найти самостоятельно. Find local.",
 };
 
 export default function RootLayout({

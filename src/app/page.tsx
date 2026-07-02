@@ -42,8 +42,7 @@ export default async function HomePage() {
           find local
         </p>
         <p className="text-warm-grey text-lg max-w-xl mx-auto">
-          Откройте локальных дизайнеров одежды, обуви и аксессуаров из стран
-          СНГ.
+          Редакционный гид по локальной независимой моде из стран СНГ.
         </p>
         <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded-xl text-left max-w-2xl mx-auto">
           <p className="text-red-700 text-sm font-medium mb-1">
@@ -73,7 +72,7 @@ export default async function HomePage() {
             find local
           </p>
           <p className="text-warm-grey text-base md:text-lg max-w-md mx-auto leading-relaxed">
-            Гид по локальным дизайнерам одежды, обуви и аксессуаров из стран СНГ
+            Редакционный гид по локальной независимой моде из стран СНГ
           </p>
         </div>
       </section>
