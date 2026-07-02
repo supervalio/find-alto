@@ -40,7 +40,11 @@ export default function RootLayout({
               href="/"
               className="flex items-center hover:opacity-80 transition-opacity"
             >
-              <img src="/logo.svg" alt="Find Alto" className="h-10 w-auto" />
+              <img
+                src="/logo-header.svg"
+                alt="Find Alto"
+                className="h-8 w-auto"
+              />
             </Link>
             <nav className="flex items-center gap-6">
               <Link

@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 110" fill="none">
   <!-- Slash -->
-  <text x="100" y="38" font-family="'DM Sans', 'Inter', 'Geist', system-ui, sans-serif" font-weight="200" font-size="46" fill="#0D5C46" text-anchor="middle">/</text>
+  <text x="100" y="48" font-family="'DM Sans','Inter','Geist',system-ui,sans-serif" font-weight="200" font-size="48" fill="#0D5C46" text-anchor="middle">/</text>
   <!-- find -->
-  <text x="100" y="58" font-family="'DM Sans', 'Inter', 'Geist', system-ui, sans-serif" font-weight="200" font-size="12" fill="#999999" text-anchor="middle" letter-spacing="3">find</text>
+  <text x="100" y="72" font-family="'DM Sans','Inter','Geist',system-ui,sans-serif" font-weight="200" font-size="12" fill="#999" text-anchor="middle" letter-spacing="3">find</text>
   <!-- ALTO -->
-  <text x="100" y="78" font-family="'DM Sans', 'Inter', 'Geist', system-ui, sans-serif" font-weight="600" font-size="26" fill="#0D5C46" text-anchor="middle" letter-spacing="5">ALTO</text>
+  <text x="100" y="100" font-family="'DM Sans','Inter','Geist',system-ui,sans-serif" font-weight="600" font-size="28" fill="#0D5C46" text-anchor="middle" letter-spacing="5">ALTO</text>
 </svg>
