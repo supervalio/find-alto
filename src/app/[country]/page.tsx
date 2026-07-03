@@ -121,7 +121,7 @@ export default async function CountryPage({ params }: Props) {
             src={image}
             alt={name}
             loading="lazy"
-            className="aspect-[4/5] w-full max-w-sm object-cover"
+            className="w-full max-w-xs object-cover"
           />
         </div>
       )}

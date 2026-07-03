@@ -14,19 +14,27 @@ export default async function HomePage() {
       .select("*")
       .order("name");
     if (!error && data && data.length > 0) {
-      allCountries = data.map((c: any) => ({
-        slug: c.slug,
-        name: c.name,
-        cityLabel: "",
-        designerCount: 0,
-        intro: c.description?.slice(0, 60) || "",
-        description: c.description || "",
-        image: c.image || "",
-        whatToBuy: [] as string[],
-        designerSlugs: [] as string[],
-        stores: [] as { name: string; city: string; note: string }[],
-        events: [] as { name: string; when: string; where: string }[],
-      }));
+      // Merge DB countries with seed: seed provides images and extra fields
+      const dbSlugs = new Set(data.map((c: any) => c.slug));
+      const dbCountries = data.map((c: any) => {
+        const seed = seedCountries.find((s) => s.slug === c.slug);
+        return {
+          slug: c.slug,
+          name: c.name,
+          cityLabel: seed?.cityLabel || "",
+          designerCount: seed?.designerCount || 0,
+          intro: seed?.intro || c.description?.slice(0, 60) || "",
+          description: c.description || "",
+          image: seed?.image || c.image || "",
+          whatToBuy: seed?.whatToBuy || [],
+          designerSlugs: seed?.designerSlugs || [],
+          stores: seed?.stores || [],
+          events: seed?.events || [],
+        };
+      });
+      // Add seed countries not in DB
+      const missing = seedCountries.filter((s) => !dbSlugs.has(s.slug));
+      allCountries = [...dbCountries, ...missing];
     }
   } catch (err: any) {
     dbError = err?.message || "Unknown database error";
@@ -99,11 +107,6 @@ export default async function HomePage() {
                     {c.name}
                   </h3>
                 </div>
-                {c.designerCount > 0 && (
-                  <span className="text-sm tabular-nums text-muted shrink-0">
-                    {c.designerCount} designers
-                  </span>
-                )}
               </Link>
             </li>
           ))}
