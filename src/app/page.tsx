@@ -34,9 +34,14 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 sm:px-10">
-      {/* ── Opener ────────────────────────────────────── */}
+      {/* Opener */}
       <section className="grid gap-10 pt-16 pb-24 md:grid-cols-[1.4fr_1fr] md:gap-20 md:pt-28 md:pb-32">
         <div className="max-w-2xl">
+          <img
+            src="/find-alto_first page.png"
+            alt="Find Alto"
+            className="h-16 md:h-20 w-auto mb-8"
+          />
           <h1 className="font-serif text-5xl leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
             Discover local fashion.
           </h1>
