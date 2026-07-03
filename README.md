@@ -1,70 +1,68 @@
 # Find Alto
 
-Редакционный гид по локальной независимой моде из стран СНГ.  
-**Lonely Planet в мире локальной моды** — находим дизайнеров, которых трудно найти самостоятельно.
+An editorial guide to independent fashion designers across CIS countries.  
+Country by country, designer by designer — discover local fashion.
 
-## Миссия
+## What it is
 
-Find Alto помогает путешественникам открывать талантливых локальных дизайнеров, а дизайнерам — становиться заметнее за пределами своих стран. Мы верим, что будущее моды — за идентичностью, ремеслом и уникальностью.
+Find Alto helps you discover independent designers, workshops and concept stores — people who cut, sew and ship their own work. Browse by country, find a workshop near you, read the story behind each piece. We don't sell anything. We just connect you with the makers.
 
-## Проблема
+- **Editorial, not commercial** — no ads, no affiliate links, no press samples
+- **4 countries live:** Armenia, Georgia, Kazakhstan, Uzbekistan
+- **English-language public site**, admin panel in Russian
 
-Найти интересную локальную моду, не тратя часы на поиск и проверку. Проблема не в отсутствии информации — проблема в её избытке. Find Alto решает это редакционным отбором: в каталог попадают только бренды с собственным дизайном и производством, узнаваемым стилем и стабильной работой.
+## Status
 
-## Для кого
+🔄 **Phase 5** — Infrastructure (Supabase + deployment)
 
-- **Путешественники** — кто покупает вещи вместо сувениров
-- **Любители независимой моды** — кто следит за брендами до того, как они станут мейнстримом
-- **Стилисты** — кому нужен быстрый доступ к curated-каталогу
-- **Fashion-журналисты** — кто ищет темы и истории
+- ✅ 6 public pages, 7 admin pages, photo upload, SEO
+- ✅ Supabase PostgreSQL + Drizzle ORM
+- ✅ Deployed on Vercel with CI/CD
+- ⬜ Telegram AI-bot (planned)
 
-## Статус
-
-🔄 **Фаза 5** — Инфраструктура (Supabase + Telegram AI-бот)
-
-- ✅ 6 публичных страниц, 7 админ-страниц, загрузка фото, SEO
-- 🌍 4 армянских дизайнера (LOOM Weaving, Ariga Torosian, Kivera Naynomis, RUZANÉ)
-- 🗺 Планируется: Грузия, Казахстан, Узбекистан, Украина
-
-## Стек
+## Stack
 
 - **Framework:** Next.js 16 (App Router) + React 19
-- **Language:** TypeScript
+- **Language:** TypeScript 5
 - **Database:** Supabase PostgreSQL + Drizzle ORM
 - **Styling:** Tailwind CSS 4
+- **Fonts:** Playfair Display (serif), Inter (sans-serif)
 - **Hosting:** Vercel
 
-## Быстрый старт
+## Quick start
 
 ```bash
 npm install
-# Создать .env.local (см. SPECIFICATION.md)
-npm run dev                   # http://localhost:3000
-npm run seed                  # наполнить тестовыми данными
+# Create .env.local with DATABASE_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
+npm run dev     # http://localhost:3000
+npm run seed    # seed test data
+npm run build   # production build
 ```
 
-## Структура
+## Route structure
 
 ```
-src/
-├── app/
-│   ├── [country]/[city]/[category]/   # Гео-навигация
-│   ├── designer/[slug]/               # Профиль дизайнера
-│   ├── item/[slug]/                   # Страница вещи
-│   └── admin/                         # Админ-панель (CRUD)
-├── lib/supabase.ts                    # Supabase client
-└── db/                                # Drizzle ORM schema
+/                          → Homepage (logo + country list + stores + events)
+/[country]                 → Country page (image, description, designers, stores, events)
+/[country]/[city]          → City page (categories, ads)
+/[country]/[city]/[category] → Category page (item grid, designers)
+/designer/[slug]           → Designer profile (story, items, contacts)
+/item/[slug]               → Item detail (photos, price, material, story)
+/about                     → About page (minimal)
+/admin/*                   → Admin panel (CRUD — in Russian)
+/api/upload                → Photo upload API
 ```
 
-## Документация
+## Documentation
 
-- [SPECIFICATION.md](SPECIFICATION.md) — полная спецификация проекта
-- [.planning/PROJECT.md](.planning/PROJECT.md) — видение и архитектура
-- [.planning/ROADMAP.md](.planning/ROADMAP.md) — фазы разработки
-- [.planning/REQUIREMENTS.md](.planning/REQUIREMENTS.md) — 28 требований
-- [.planning/COMPETITORS.md](.planning/COMPETITORS.md) — конкурентный анализ
-- [.planning/ROI.md](.planning/ROI.md) — сценарии монетизации
+- [SPECIFICATION.md](SPECIFICATION.md) — full project specification
+- [.planning/PROJECT.md](.planning/PROJECT.md) — vision and core decisions
+- [.planning/ROADMAP.md](.planning/ROADMAP.md) — development phases
+- [.planning/REQUIREMENTS.md](.planning/REQUIREMENTS.md) — 28 requirements
+- [.planning/architecture.md](.planning/architecture.md) — data model and design system
+- [.planning/COMPETITORS.md](.planning/COMPETITORS.md) — competitor analysis
+- [.planning/ROI.md](.planning/ROI.md) — monetization scenarios
 
-## Лицензия
+## License
 
 MIT

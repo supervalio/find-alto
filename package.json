@@ -1,7 +1,7 @@
 {
   "name": "find-alto",
   "version": "0.1.0",
-  "private": true,
+  "description": "An editorial guide to independent fashion designers across CIS countries. Country by country, designer by designer.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
