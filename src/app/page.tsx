@@ -73,40 +73,41 @@ export default async function HomePage() {
 
       {/* ── Choose your destination ───────────────────── */}
       <Section title="Choose your destination">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="divide-y divide-hairline-hover border-t border-hairline-hover">
           {allCountries.map((c) => (
-            <Link key={c.slug} href={`/${c.slug}`} className="group block">
-              <div className="overflow-hidden bg-hairline">
+            <li key={c.slug}>
+              <Link
+                href={`/${c.slug}`}
+                className="group flex items-center gap-5 py-6 hover:bg-surface transition-colors duration-300 px-4 -mx-4"
+              >
                 {c.image ? (
                   <img
                     src={c.image}
-                    alt={`${c.name} — ${c.intro}`}
+                    alt={c.name}
                     loading="lazy"
-                    className="aspect-[4/5] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.02]"
+                    className="h-14 w-14 object-cover shrink-0"
                   />
                 ) : (
-                  <div className="aspect-[4/5] w-full flex items-center justify-center">
-                    <span className="text-hairline-hover/40 text-6xl font-serif">
+                  <div className="h-14 w-14 bg-hairline shrink-0 flex items-center justify-center">
+                    <span className="text-hairline-hover/40 text-xl font-serif">
                       {c.name.charAt(0)}
                     </span>
                   </div>
                 )}
-              </div>
-              <div className="mt-5 flex items-baseline justify-between gap-4">
-                <h3 className="font-serif text-2xl">{c.name}</h3>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-serif text-xl group-hover:text-accent transition-colors">
+                    {c.name}
+                  </h3>
+                </div>
                 {c.designerCount > 0 && (
-                  <span className="text-xs tabular-nums text-muted">
+                  <span className="text-sm tabular-nums text-muted shrink-0">
                     {c.designerCount} designers
                   </span>
                 )}
-              </div>
-              <p className="mt-1 text-sm text-muted">{c.cityLabel}</p>
-              <p className="mt-3 text-[15px] leading-relaxed text-ink/80">
-                {c.intro}
-              </p>
-            </Link>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </Section>
 
       {/* ── Concept stores ─────────────────────────────── */}
