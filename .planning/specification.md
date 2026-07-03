@@ -114,15 +114,13 @@ A bilingual (Russian + English) editorial web guide to local fashion designers f
 
 ### Color Palette
 ```
-Page background:  #FAF8F5  (warm cream)
-Card backgrounds: #FFFDF9  (warm white)
-Primary accent:   #C4735A  (terracotta)
-Primary hover:    #A85D47  (deep terracotta)
-Body text:        #2D2A26  (charcoal)
-Secondary text:   #6B6560  (warm grey)
-Olive accent:     #7C8C5E  (olive green)
-Borders:          #E8E0D5  (soft sand)
-Hover states:     #D4C9BC  (dark sand)
+Page background:  #f5f5f5  (light grey)
+Card backgrounds: #ffffff  (white)
+Primary accent:   #0d5c46  (dark green)
+Body text:        #1a1a1a  (near-black)
+Secondary text:   #6b6b6b  (grey)
+Borders:          #e5e5e5  (light grey)
+Hover states:     #cccccc  (mid grey)
 ```
 
 ### Typography

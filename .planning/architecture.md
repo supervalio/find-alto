@@ -125,15 +125,13 @@ countries
 ### Colors
 | Token | Hex | Usage |
 |-------|-----|-------|
-| Cream/Off-white | `#FAF8F5` | Page background |
-| Warm white | `#FFFDF9` | Card backgrounds |
-| Terracotta | `#C4735A` | Primary accent, buttons, links |
-| Deep terracotta | `#A85D47` | Button hover |
-| Charcoal | `#2D2A26` | Body text |
-| Warm grey | `#6B6560` | Secondary text, captions |
-| Olive | `#7C8C5E` | Secondary accent, tags |
-| Soft sand | `#E8E0D5` | Borders, dividers |
-| Dark sand | `#D4C9BC` | Hover states |
+| Light grey | `#f5f5f5` | Page background |
+| White | `#ffffff` | Card backgrounds |
+| Dark green | `#0d5c46` | Primary accent, buttons, links |
+| Near-black | `#1a1a1a` | Body text |
+| Grey | `#6b6b6b` | Secondary text, captions |
+| Light grey | `#e5e5e5` | Borders, dividers |
+| Mid grey | `#cccccc` | Hover states |
 
 ### Typography
 - **Headings:** Serif font (e.g. Playfair Display or Cormorant Garamond) — 700 weight
