@@ -142,7 +142,7 @@ export const seedCountries: CountrySeed[] = [
     intro: "Ikat, reimagined.",
     description:
       "Centuries-old silk weaving traditions meet a quiet, modern sensibility. Uzbek designers honour the ikat while cutting for today — unhurried, respectful, distinct.",
-    image: "/Uzbekistan_girl.webp",
+    image: "/Uzbekistan_girl1.png",
     whatToBuy: [
       "Hand-dyed ikat dresses",
       "Suzani-embroidered jackets",
