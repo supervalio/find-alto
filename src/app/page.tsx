@@ -35,13 +35,13 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl px-6 sm:px-10">
       {/* Opener */}
-      <section className="grid gap-10 pt-16 pb-24 md:grid-cols-[1.4fr_1fr] md:gap-20 md:pt-28 md:pb-32">
+      <section className="pt-16 pb-24 md:pt-28 md:pb-32">
+        <img
+          src="/find-alto_first page.png"
+          alt="Find Alto"
+          className="w-full max-w-3xl mx-auto mb-12 md:mb-16"
+        />
         <div className="max-w-2xl">
-          <img
-            src="/find-alto_first page.png"
-            alt="Find Alto"
-            className="h-16 md:h-20 w-auto mb-8"
-          />
           <h1 className="font-serif text-5xl leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
             Discover local fashion.
           </h1>
@@ -58,29 +58,6 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
-        <aside className="border-l border-hairline-hover pl-8 text-sm text-muted md:pt-2">
-          <p className="eyebrow">In this edition</p>
-          <ul className="mt-6 space-y-4 text-ink">
-            <li className="flex items-baseline justify-between gap-4 border-b border-hairline-hover pb-3">
-              <span>Countries</span>
-              <span className="tabular-nums text-muted">
-                {allCountries.length}
-              </span>
-            </li>
-            <li className="flex items-baseline justify-between gap-4 border-b border-hairline-hover pb-3">
-              <span>Designers</span>
-              <span className="tabular-nums text-muted">—</span>
-            </li>
-            <li className="flex items-baseline justify-between gap-4 border-b border-hairline-hover pb-3">
-              <span>Concept stores</span>
-              <span className="tabular-nums text-muted">—</span>
-            </li>
-            <li className="flex items-baseline justify-between gap-4">
-              <span>Upcoming events</span>
-              <span className="tabular-nums text-muted">—</span>
-            </li>
-          </ul>
-        </aside>
       </section>
 
       {dbError && (
